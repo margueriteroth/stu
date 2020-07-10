@@ -1,0 +1,153 @@
+@import "./../../styles/lib";
+
+.Header {
+    //Shrink height for react-headroom scrub peep
+
+    &__headroom {
+        z-index: 300;
+
+        .headroom:not(.headroom--scrolled) {
+            .Header__container--knockoutColors {
+                .Header__logo {
+                    .Logo {
+                        background: white;
+
+                        &__type {
+                            color: $blue-600;
+                        }
+                    }
+                }
+
+                .Header__link {
+                    color: white;
+                    font-family: 'Space Mono', monospace;
+
+                    &:hover {
+                        opacity: 0.75;
+                        color: white;
+                    }
+                }
+            }
+        }
+
+
+        .headroom--scrolled {
+            background: white;
+            box-shadow: 0 4px 20px 0 rgba(#000000, 0.1);
+
+            .Header__container {
+                padding-top: 0.5em;
+                padding-bottom: 0.5em;
+            }
+
+            .Header__logo {
+                .Logo {
+                    width: 55px;
+                    height: 44px;
+                    transition: all 100ms ease-out;
+                }
+            }
+        }
+    }
+
+    &__container {
+        padding-top: 1.5em;
+        padding-bottom: 1.5em;
+    }
+
+    &__content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__logo {
+        text-decoration: none;
+
+        &::after {
+            content: none;
+        }
+    }
+
+    &__link {
+        &s {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            grid-gap: 7em;
+            grid-gap: 4em;
+            justify-content: flex-end;
+            width: 100%;
+
+            @media(max-width: 600px) {
+                grid-gap: 2em;
+            }
+        }
+
+        color: currentColor;
+        text-decoration: none;
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+        font-size: 0.95em;
+        //height: 100%;
+        //padding-bottom: 1.25em;
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+        display: block;
+        position: relative;
+
+        &:after {
+            position: absolute;
+            content: "";
+            bottom: 0;
+            width: 18px;
+            height: 3px;
+            background: transparent;
+            bottom: -3px;
+            left: 0;
+            margin-right: -9px;
+            transition: 100ms ease-in-out background;
+        }
+
+        &:hover {
+            color: $grey-700;
+            // &:after {
+            //     background: $grey-400;
+            //     transition: 100ms ease-in-out background;
+            // }
+        }
+
+        &--is-active {
+            &:after {
+                background: $blue-500;
+                transition: 100ms ease-in-out background;
+            }
+
+            &:hover {
+                color: currentColor;
+            }
+        }
+
+        &--email {
+            span {
+                display: inline-block;
+                transition: transform 300ms ease-in-out;
+                opacity: 0;
+            }
+
+            &:hover {
+                color: $blue-600;
+
+                span {
+                    opacity: 1;
+                    transform: translateX(6px);
+                    transition: all 400ms ease-in-out;
+                }
+            }
+        }
+
+        @media(max-width: 767px) {
+            padding-bottom: 0.25em;
+        }
+
+    }
+}
