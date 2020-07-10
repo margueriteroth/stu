@@ -9,7 +9,7 @@ const MoviesPage = () => (
             <h1>
                 Movies Watched
             </h1>
-            <MoviesContainer/>
+            {/* <MoviesContainer/> */}
         </MaxWidth>
     </Layout>
 )
