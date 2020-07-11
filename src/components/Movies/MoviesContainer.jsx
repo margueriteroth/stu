@@ -6,8 +6,8 @@ import "./MoviesContainer.scss"
 import data from 'components/Movies/movies.csv'
 
 const parseDate = d3.timeParse("%Y-%m-%d")
-const dateAccessor = d => parseDate(d.Date)
-const ratingAccessor = d => d.Rating
+const dateAccessor = d => parseDate(d["Date"])
+const ratingAccessor = d => d["Rating"]
 
 const MoviesContainer = () => {
     return (

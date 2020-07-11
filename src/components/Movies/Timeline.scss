@@ -67,18 +67,6 @@
     .Circle {
         transition: all 0.15s ease-out;
         pointer-events: none;
-        mix-blend-mode: multiply;
-
-        &--exercise {
-            &-0 { fill: $paradiddle-green; }
-            &-1 { fill: $paradiddle-purple; }
-            &-2 { fill: $paradiddle-blue; }
-            &-3 { fill: $paradiddle-orange; }
-        }
-
-        &--isDimmed {
-            display: none;
-        }
     }
 
     &__hover-line {
@@ -105,90 +93,5 @@
             border-radius: 4px;
         }
 
-        &__date {
-            font-weight: 500;
-            font-size: 12px;
-            line-height: 14px;
-            text-align: center;
-            color: #969696;
-            margin-bottom: 1em;
-        }
-
-        &__variation {
-            display: grid;
-            grid-template-columns: 1em 100px 50px 65px;
-            margin: 0.5em 0;
-            font-size: 0.9em;
-
-            &-0 {
-                .Tooltip__variation__dot {
-                    background: $paradiddle-green;
-                }
-
-                .Tooltip__variation__bpm {
-                    color: $paradiddle-green;
-                }
-            }
-
-            &-1 {
-                .Tooltip__variation__dot {
-                    background: $paradiddle-purple;
-                }
-
-                .Tooltip__variation__bpm {
-                    color: $paradiddle-purple;
-                }
-            }
-
-            &-2 {
-                .Tooltip__variation__dot {
-                    background: $paradiddle-blue;
-                }
-
-                .Tooltip__variation__bpm {
-                    color: $paradiddle-blue;
-                }
-            }
-
-            &-3 {
-                .Tooltip__variation__dot {
-                    background: $paradiddle-orange;
-                }
-
-                .Tooltip__variation__bpm {
-                    color: $paradiddle-orange;
-                }
-            }
-
-            &--isDimmed {
-                opacity: 0.35;
-            }
-
-            &__name {
-                font-weight: 600;
-            }
-
-            &__dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 8px;
-                background: red;
-                transform: translateY(100%);
-            }
-
-            &__change {
-                text-align: right;
-                font-feature-settings: 'tnum'1;
-                font-size: 13px;
-                text-align: right;
-                color: #B9B9B9;
-            }
-
-            &__bpm {
-                font-weight: 700;
-                text-align: right;
-                font-feature-settings: 'tnum'1;
-            }
-        }
     }
 }
