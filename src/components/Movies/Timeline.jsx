@@ -6,7 +6,6 @@ import { useChartDimensions } from "components/utils"
 import Axis from "components/Movies/Axis"
 import Chart from 'components/Movies/Chart'
 import Circles from 'components/Movies/Circles'
-import Line from "components/Movies/Line"
 import './Timeline.scss'
 
 const formatMonths = d3.timeFormat("%B")
@@ -36,12 +35,12 @@ const Timeline = ({ data, xAccessor, yAccessor, label, className }) => {
     //     .range([timelineContextDimensions.boundedHeight, 0])
     //     .nice()
 
-    const xAccessorScaled = d => xScale(xAccessor(d))
-    const yAccessorScaled = d => yScale(yAccessor(d))
-
     // Note to self: All this "context" stuff is for figuring out brush/horiz scroll nonsense
     // const xAccessorScaledContext = d => xScaleContext(xAccessor(d))
     // const yAccessorScaledContext = d => yScaleContext(yAccessor(d))
+
+    const xAccessorScaled = d => xScale(xAccessor(d))
+    const yAccessorScaled = d => yScale(yAccessor(d))
 
     const onMouseMove = e => {
 
@@ -170,7 +169,7 @@ const Circle = ({ className, cx, cy, style }) => {
     )
 }
 
-const Tooltip = ({ currentHoveredCoords, currentHoveredData, dimensions, movieData }) => {
+const Tooltip = ({ currentHoveredCoords, dimensions, movieData }) => {
     let leftScrubCoord = currentHoveredCoords[0] + dimensions.marginLeft
     let topScrubCoord = currentHoveredCoords[1] + dimensions.marginTop
 
