@@ -22,6 +22,10 @@
         transform: rotate(-90deg);
     }
 
+    .Axis__label {
+        text-anchor: middle;
+    }
+
     .axis {
         color: #E0E0E0;
     }
@@ -44,7 +48,8 @@
     }
 
     .Line {
-        stroke: orange;
+        fill: orange;
+
         &--type {
             &-line {
                 fill: none;

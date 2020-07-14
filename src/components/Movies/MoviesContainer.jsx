@@ -27,6 +27,9 @@ let dataWithGenres = data.map(function(movie){
 })
 
 const MoviesContainer = () => {
+    const [sparklineBinsMax, setSparklineBinsMax] = useState(7)
+    let updateSparklineBinsMax = () => setSparklineBinsMax
+
     return (
         <div className="MoviesContainer">
             <Timeline
@@ -45,6 +48,8 @@ const MoviesContainer = () => {
                         metricAccessor={dateAccessor}
                         metricFilter={genre}
                         binThresholds={10}
+                        sparklineBinsMax={sparklineBinsMax}
+                        updateSparklineBinsMax={updateSparklineBinsMax}
                         key={index}
                     />
                 ))}
