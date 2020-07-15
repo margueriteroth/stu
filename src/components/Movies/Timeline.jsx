@@ -117,8 +117,6 @@ const Timeline = ({ data, xAccessor, yAccessor, label, className }) => {
                     numberOfTicks={10}
                 />
 
-
-
                 <Circles
                     data={data}
                     keyAccessor={keyAccessor}

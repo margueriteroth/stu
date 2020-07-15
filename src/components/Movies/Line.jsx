@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import * as d3 from "d3"
 import { accessorPropsType } from "components/utils";
 
-const Line = ({ className, type, data, xAccessor, yAccessor, y0Accessor, interpolation, ...props }) => {
+const Line = ({ className, type, data, xAccessor, yAccessor, y0Accessor, interpolation, fill, ...props }) => {
     const lineGenerator = d3[type]()
         .x(xAccessor)
         .y(yAccessor)
@@ -15,8 +15,9 @@ const Line = ({ className, type, data, xAccessor, yAccessor, y0Accessor, interpo
             .y1(yAccessor)
     }
 
-    return (
+return (
         <path {...props}
+            fill={fill}
             className={classNames(`Line Line--type-${type}`, className)}
             d={lineGenerator(data)}
         />

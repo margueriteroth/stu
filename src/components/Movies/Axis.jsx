@@ -4,6 +4,7 @@ import classNames from "classnames";
 import * as d3 from 'd3'
 import { dimensionsPropsType } from "components/utils";
 import { useChartDimensions } from "./Chart";
+import { min } from "lodash";
 
 const axisComponentsByDimension = {
     x: AxisHorizontal,
@@ -64,6 +65,8 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                     {formatTick(tick)}
                 </text>
             ))}
+
+
 
             {ticksYears.map((tick, i) => (
                 <text

@@ -26,6 +26,18 @@ let dataWithGenres = data.map(function(movie){
     return updatedMovie
 })
 
+let sampleColors = {
+    "comedy" : "#72DB83",
+    "romantic comedy" : "#DAA0F4",
+    "action" : "#F5955E",
+    "mystery" : "#9391FA",
+    "science fiction" : "#F5E86B",
+    "horror" : "#7CD4EB",
+    "animated" : "#86ABF3",
+    "fantasy" : "#F56B8D",
+    "epic" : "#75C19D",
+}
+
 const MoviesContainer = () => {
     const [sparklineBinsMax, setSparklineBinsMax] = useState(7)
     let updateSparklineBinsMax = () => setSparklineBinsMax
@@ -47,10 +59,11 @@ const MoviesContainer = () => {
                         xAccessor={dateAccessor}
                         metricAccessor={dateAccessor}
                         metricFilter={genre}
-                        binThresholds={10}
+                        binThresholds={6}
                         sparklineBinsMax={sparklineBinsMax}
                         updateSparklineBinsMax={updateSparklineBinsMax}
                         key={index}
+                        fill={sampleColors[genre]}
                     />
                 ))}
             </div>
