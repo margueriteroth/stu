@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import * as d3 from "d3"
 import GenreSparkline from 'components/Movies/GenreSparkline'
+import Table from 'components/Movies/Table'
 import Timeline from 'components/Movies/Timeline'
 import "./MoviesContainer.scss"
 
-import data from 'components/Movies/movies.csv'
+import movieData from 'components/Movies/movies.csv'
 import { update } from 'lodash'
 
 const parseDate = d3.timeParse("%Y-%m-%d")
-const dateAccessor = d => parseDate(d["Date"])
-const ratingAccessor = d => d["Rating"]
+const dateAccessor = d => parseDate(d["date"])
+const ratingAccessor = d => d["rating"]
 
 let genres = ["comedy", "romantic comedy", "action", "mystery",
         "science fiction", "horror", "animated", "fantasy", "epic"]
@@ -19,7 +20,7 @@ const genreFilterAccessor = (d, i) => {
 }
 
 // Will pull this into python bits
-let dataWithGenres = data.map(function(movie){
+let dataWithGenres = movieData.map(function(movie){
     let randomGenre = genres[Math.floor(Math.random() * genres.length)];
     let updatedMovie = movie
     updatedMovie["genre"] = randomGenre
@@ -38,7 +39,11 @@ let sampleColors = {
     "epic" : "#75C19D",
 }
 
+
 const MoviesContainer = () => {
+    const [isLoading, setIsLoading] = useState(true)
+    const [data, setData] = useState(movieData)
+    const [selection, setSelection] = useState({start: "2018-02-01", end: "2020-07-01"})
     const [sparklineBinsMax, setSparklineBinsMax] = useState(7)
     let updateSparklineBinsMax = () => setSparklineBinsMax
 
@@ -46,16 +51,22 @@ const MoviesContainer = () => {
         <div className="MoviesContainer">
             <Timeline
                 data={data}
+                selection={selection}
                 xAccessor={dateAccessor}
                 yAccessor={ratingAccessor}
                 label="TBD"
                 className="MoviesContainer__timeline"
             />
 
+            <Table
+                data={data}
+                selection={selection}
+            />
+
             <div className="MoviesContainer__genres">
                 {genres.map((genre, index) => (
                     <GenreSparkline
-                        data={dataWithGenres}
+                        data={data}
                         xAccessor={dateAccessor}
                         metricAccessor={dateAccessor}
                         metricFilter={genre}

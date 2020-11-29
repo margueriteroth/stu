@@ -15,10 +15,6 @@ const formatMonths = d3.timeFormat("%B")
 const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metricFilter, className, sparklineBinsMax, updateSparklineBinsMax, fill }) => {
     const [ref, dimensions] = useChartDimensions({marginBottom:20})
 
-
-    //dimensions.marginBottom = 10;
-    console.log(dimensions)
-
     const xScale = d3.scaleLinear()
         .domain(d3.extent(data, xAccessor))
         .range([0, dimensions.boundedWidth])

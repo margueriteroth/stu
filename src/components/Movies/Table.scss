@@ -1,0 +1,14 @@
+@import "./../../styles/lib";
+
+.Table {
+    $columns: 1fr 3.5fr 1fr 1fr 1.5fr 1fr 1.5fr 1fr;
+    &Header,
+    &Row {
+        display: grid;
+        grid-template-columns: $columns;
+    }
+
+    &Header {
+        font-size: 0.7rem;
+    }
+}
