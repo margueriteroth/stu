@@ -1,6 +1,5 @@
 import React, { useState} from 'react'
 import classNames from "classnames"
-import PropTypes from 'prop-types'
 import * as d3 from "d3"
 import { useChartDimensions } from "components/utils"
 import Axis from "components/Movies/Axis"
@@ -45,7 +44,7 @@ const Timeline = ({ data, xAccessor, yAccessor, label, className }) => {
     const onMouseMove = e => {
 
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
-        let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
+        //let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
 
         const hoveredDate = xScale.invert(x);
 

@@ -6,7 +6,7 @@ import Timeline from 'components/Movies/Timeline'
 import "./MoviesContainer.scss"
 
 import movieData from 'components/Movies/movies.csv'
-import { update } from 'lodash'
+//import { update } from 'lodash'
 
 const parseDate = d3.timeParse("%Y-%m-%d")
 const dateAccessor = d => parseDate(d["date"])
@@ -14,18 +14,18 @@ const ratingAccessor = d => d["rating"]
 
 let genres = ["comedy", "romantic comedy", "action", "mystery",
         "science fiction", "horror", "animated", "fantasy", "epic"]
-const lengthAccessor = d => d.length
-const genreFilterAccessor = (d, i) => {
-    return d["genre"]
-}
+// const lengthAccessor = d => d.length
+// const genreFilterAccessor = (d, i) => {
+//     return d["genre"]
+// }
 
 // Will pull this into python bits
-let dataWithGenres = movieData.map(function(movie){
-    let randomGenre = genres[Math.floor(Math.random() * genres.length)];
-    let updatedMovie = movie
-    updatedMovie["genre"] = randomGenre
-    return updatedMovie
-})
+// let dataWithGenres = movieData.map(function(movie){
+//     let randomGenre = genres[Math.floor(Math.random() * genres.length)];
+//     let updatedMovie = movie
+//     updatedMovie["genre"] = randomGenre
+//     return updatedMovie
+// })
 
 let sampleColors = {
     "comedy" : "#72DB83",
@@ -41,7 +41,7 @@ let sampleColors = {
 
 
 const MoviesContainer = () => {
-    const [isLoading, setIsLoading] = useState(true)
+    //const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState(movieData)
     const [selection, setSelection] = useState({start: "2018-02-01", end: "2020-07-01"})
     const [sparklineBinsMax, setSparklineBinsMax] = useState(7)

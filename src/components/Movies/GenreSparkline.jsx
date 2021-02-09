@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import classNames from "classnames"
-import PropTypes from 'prop-types'
+//import PropTypes from 'prop-types'
 import * as d3 from "d3"
 import { useChartDimensions } from "components/utils"
 import Axis from "components/Movies/Axis"
-import Bars from 'components/Movies/Bars'
+//import Bars from 'components/Movies/Bars'
 import Chart from 'components/Movies/Chart'
-import Circles from 'components/Movies/Circles'
+//import Circles from 'components/Movies/Circles'
 import Line from 'components/Movies/Line'
 import './GenreSparkline.scss'
 
@@ -30,7 +30,7 @@ const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metric
         if (!metricFilter) {
             return
         }
-        return d.filter(movie => movie.genre == metricFilter).length
+        return d.filter(movie => movie.genre === metricFilter).length
     }
 
     let yDomainExtent = d3.max(bins, yAccessor)
