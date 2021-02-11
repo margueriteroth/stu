@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { navigate } from "@reach/router"
+import { navigate } from "@reach/router";
+import { StaticQuery, graphql } from 'gatsby';
 import queryString from 'query-string';
+import Img from 'gatsby-image';
 import Link from "components/_ui/Link/Link";
 import './Feed.scss';
 
 import cardImg from './card-img.png';
+import { divide } from 'lodash';
 
 let windowGlobal = typeof window !== 'undefined' && window;
 let parsedParams = queryString.parse(windowGlobal.location.search);
@@ -49,87 +52,87 @@ const Feed = () => {
     }, [feedQuery]);
 
     return (
-        <div className="Feed__container">
-            <div className="Feed__nav">
+        <StaticQuery
+            query={WP_FEED_QUERY}
+            render={(data) => {
+                const content = data.allWpPost.edges;
 
-                {feedSections.map((section, i) => (
-                    <div className="Feed__nav__section" key={i}>
-                        <div className="Feed__nav__title">
-                            {section}
-                        </div>
+                let it = content[1]
 
-                        {section.indexOf("work") > -1 && (
-                            <div className="Feed__filters">
-                                {workSections.map((label, j) => (
-                                    <label className="Feed__filter" key={j}>
-                                        <input
-                                            className="Feed__checkbox"
-                                            name={label}
-                                            type="checkbox"
-                                            value={label}
-                                            onChange={onChange}
-                                        /> { label}
-                                    </label>
-                                ))}
-                            </div>
-                        )}
+                console.log(it.node.featuredImage.node)
 
-                    </div>
-                ))}
-            </div>
-            <div className="Feed__content">
-                <Link className="FeedCard" to="/movies">
-                    <div className="FeedCard__metas">
-                        <div className="FeedCard__title">
-                            Movies Consumed
-                        </div>
-                        <div className="FeedCard__category">
-                            Data Viz
-                        </div>
-                    </div>
-                    <div className="FeedCard__image">
-                        <img src={cardImg} alt=""/>
-                    </div>
-                    <div className="FeedCard__description">
-                        https://github.com/margueriteroth/stu/tree/master/python
-                    </div>
-                </Link>
+                return (
+                    <div className="Feed__container">
+                        <div className="Feed__nav">
+                            {feedSections.map((section, i) => (
+                                <div className="Feed__nav__section" key={i}>
+                                    <div className="Feed__nav__title">
+                                        {section}
+                                    </div>
 
-                <Link className="FeedCard" to="/movies">
-                    <div className="FeedCard__metas">
-                        <div className="FeedCard__title">
-                            Movies Consumed
-                        </div>
-                        <div className="FeedCard__category">
-                            Data Viz
-                        </div>
-                    </div>
-                    <div className="FeedCard__image">
-                        <img src={cardImg} alt=""/>
-                    </div>
-                    <div className="FeedCard__description">
-                        https://github.com/margueriteroth/stu/tree/master/python
-                    </div>
-                </Link>
+                                    {section.indexOf("work") > -1 && (
+                                        <div className="Feed__filters">
+                                            {workSections.map((label, j) => (
+                                                <label className="Feed__filter" key={j}>
+                                                    <input
+                                                        className="Feed__checkbox"
+                                                        name={label}
+                                                        type="checkbox"
+                                                        value={label}
+                                                        onChange={onChange}
+                                                    /> { label}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
 
-                <Link className="FeedCard" to="/movies">
-                    <div className="FeedCard__metas">
-                        <div className="FeedCard__title">
-                            Movies Consumed
+                                </div>
+                            ))}
                         </div>
-                        <div className="FeedCard__category">
-                            Data Viz
+                        <div className="Feed__content">
+                            {content.map((item, i) => (
+                                <Link key={i} className="FeedCard" to="/movies">
+                                    <div className="FeedCard__metas">
+                                        <div className="FeedCard__title">
+                                            {item.node.title}
+                                        </div>
+                                        <div className="FeedCard__category">
+                                            {item.node.categories.nodes[0].name}
+
+                                        </div>
+                                    </div>
+                                    {(item.node.featuredImage) && (
+                                        <div className="FeedCard__image">
+                                            <Img fluid={item.node.featuredImage.node.localFile.childImageSharp.fluid} />
+                                        </div>
+                                    )}
+                                    <div className="FeedCard__description">
+                                        https://github.com/margueriteroth/stu/tree/master/python
+                                    </div>
+                                </Link>
+                            ))}
+
+                            <Link className="FeedCard" to="/movies">
+                                <div className="FeedCard__metas">
+                                    <div className="FeedCard__title">
+                                        Movies Consumed
+                                    </div>
+                                    <div className="FeedCard__category">
+                                        Data Viz
+                                    </div>
+                                </div>
+                                <div className="FeedCard__image">
+                                    <img src={cardImg} alt="" />
+                                </div>
+                                <div className="FeedCard__description">
+                                    https://github.com/margueriteroth/stu/tree/master/python
+                                </div>
+                            </Link>
                         </div>
                     </div>
-                    <div className="FeedCard__image">
-                        <img src={cardImg} alt=""/>
-                    </div>
-                    <div className="FeedCard__description">
-                        https://github.com/margueriteroth/stu/tree/master/python
-                    </div>
-                </Link>
-            </div>
-        </div>
+                );
+            }}
+        />
     );
 };
 
@@ -138,3 +141,34 @@ Feed.propTypes = {
 };
 
 export default Feed;
+
+
+const WP_FEED_QUERY = graphql`
+    query WPFeedQuery {
+        allWpPost {
+            edges {
+                node {
+                    guid
+                    slug
+                    title
+                    categories {
+                        nodes {
+                            name
+                        }
+                    }
+                    featuredImage {
+                        node {
+                            localFile {
+                                childImageSharp {
+                                    fluid {
+                                        ...GatsbyImageSharpFluid
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
