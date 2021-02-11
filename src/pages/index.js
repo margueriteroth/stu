@@ -6,16 +6,12 @@ import MoviesContainer from "components/Movies/MoviesContainer"
 
 const HomePage = () => (
     <Layout>
-        <MaxWidth className="">
+        <MaxWidth size="l" className="">
             <div className="Home__greeting">
                 Hello! I'm Marguerite — a designer and software engineer.
             </div>
             <Feed />
         </MaxWidth>
-
-        {/* <MaxWidth className="">
-            <MoviesContainer/>
-        </MaxWidth> */}
     </Layout>
 )
 

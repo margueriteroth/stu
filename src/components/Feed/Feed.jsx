@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { navigate } from "@reach/router"
 import queryString from 'query-string';
+import Link from "components/_ui/Link/Link";
 import './Feed.scss';
+
+import cardImg from './card-img.png';
 
 let windowGlobal = typeof window !== 'undefined' && window;
 let parsedParams = queryString.parse(windowGlobal.location.search);
@@ -75,7 +78,56 @@ const Feed = () => {
                 ))}
             </div>
             <div className="Feed__content">
-                woo!
+                <Link className="FeedCard" to="/movies">
+                    <div className="FeedCard__metas">
+                        <div className="FeedCard__title">
+                            Movies Consumed
+                        </div>
+                        <div className="FeedCard__category">
+                            Data Viz
+                        </div>
+                    </div>
+                    <div className="FeedCard__image">
+                        <img src={cardImg} alt=""/>
+                    </div>
+                    <div className="FeedCard__description">
+                        https://github.com/margueriteroth/stu/tree/master/python
+                    </div>
+                </Link>
+
+                <Link className="FeedCard" to="/movies">
+                    <div className="FeedCard__metas">
+                        <div className="FeedCard__title">
+                            Movies Consumed
+                        </div>
+                        <div className="FeedCard__category">
+                            Data Viz
+                        </div>
+                    </div>
+                    <div className="FeedCard__image">
+                        <img src={cardImg} alt=""/>
+                    </div>
+                    <div className="FeedCard__description">
+                        https://github.com/margueriteroth/stu/tree/master/python
+                    </div>
+                </Link>
+
+                <Link className="FeedCard" to="/movies">
+                    <div className="FeedCard__metas">
+                        <div className="FeedCard__title">
+                            Movies Consumed
+                        </div>
+                        <div className="FeedCard__category">
+                            Data Viz
+                        </div>
+                    </div>
+                    <div className="FeedCard__image">
+                        <img src={cardImg} alt=""/>
+                    </div>
+                    <div className="FeedCard__description">
+                        https://github.com/margueriteroth/stu/tree/master/python
+                    </div>
+                </Link>
             </div>
         </div>
     );
