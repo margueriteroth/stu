@@ -24,3 +24,6 @@ npm install
 ```
 gatsby develop
 ```
+
+
+NOTE: TBD re local WP database
