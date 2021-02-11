@@ -165,6 +165,7 @@ module.exports = {
         `gatsby-plugin-lodash`,
         `gatsby-plugin-sitemap`,
         `gatsby-plugin-remove-serviceworker`,
+        `gatsby-plugin-use-query-params`,
         {
             resolve: `gatsby-plugin-parsely-analytics`,
             options: {

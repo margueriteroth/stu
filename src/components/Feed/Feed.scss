@@ -1,0 +1,25 @@
+@import "../../styles/lib.scss";
+
+.Feed {
+    display: flex;
+
+    &__nav {
+        display: flex;
+        flex-direction: column;
+
+        &__section {
+            margin: 1em 0;
+        }
+    }
+
+
+
+    &__filters {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__content {
+
+    }
+}

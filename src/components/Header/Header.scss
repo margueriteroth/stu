@@ -1,0 +1,12 @@
+@import "../../styles/lib.scss";
+
+.Header {
+    &__link {
+        display: inline;
+        text-decoration: none;
+    }
+
+    .Logo {
+        display: inline-flex;
+    }
+}

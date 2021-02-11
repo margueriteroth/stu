@@ -1,9 +1,9 @@
-// Utils from Fullstack D3 and Data Visualization by Amelia Wattenberger | https://www.newline.co/fullstack-d3
-// from https://wattenberger.com/
+// https://wattenberger.com/
 
 import PropTypes from 'prop-types'
 import { useEffect, useState, useRef } from "react"
 import ResizeObserver from "resize-observer-polyfill"
+
 
 export const accessorPropsType = (
     PropTypes.oneOfType([
@@ -28,7 +28,6 @@ export const dimensionsPropsType = (
 )
 
 export const combineChartDimensions = dimensions => {
-
     let parsedDimensions = {
         marginTop: 40,
         marginRight: 30,

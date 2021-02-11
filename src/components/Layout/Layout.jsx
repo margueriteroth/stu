@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import classNames from 'classnames'
 import { StaticQuery, graphql } from "gatsby"
+import Header from "components/Header/Header";
 import 'styles/globals.scss';
 
 if (typeof window !== "undefined") {
@@ -23,6 +24,7 @@ const Layout = ({ className, children }) => (
             render={data => (
                 <div className="div">
                     <div className="Layout">
+                        <Header/>
                         <main className={classNames("Layout__content", className)}>
                             {children}
                         </main>
