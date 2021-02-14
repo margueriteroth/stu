@@ -57,10 +57,6 @@ const Feed = () => {
             render={(data) => {
                 const content = data.allWpPost.edges;
 
-                let it = content[1]
-
-                console.log(it.node.featuredImage.node)
-
                 return (
                     <div className="Feed__container">
                         <div className="Feed__nav">
