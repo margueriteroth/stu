@@ -67,7 +67,6 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
             ))}
 
 
-
             {ticksYears.map((tick, i) => (
                 <text
                     key={tick}
@@ -81,7 +80,7 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
             {label && (
                 <text
                     className="Axis__label"
-                    transform={`translate(${dimensions.boundedWidth / 2}, 60)`}
+                    transform={`translate(${dimensions.boundedWidth / 2}, -${dimensions.boundedHeight + 10})`}
                 >
                     {label}
                 </text>

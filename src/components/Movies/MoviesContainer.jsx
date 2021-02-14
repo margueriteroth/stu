@@ -30,7 +30,7 @@ genres.forEach(genre => {
 let maxGenreCount = d3.max(Object.values(genreCounts))
 
 let genreSorted = Object.fromEntries(
-    Object.entries(genreCounts).sort(([,a],[,b]) => a-b).reverse()
+    Object.entries(genreCounts).sort(([, a], [, b]) => a - b).reverse()
 );
 
 const lengthAccessor = d => d.length
@@ -39,15 +39,15 @@ const genreFilterAccessor = (d, i) => {
 }
 
 let colors = {
-    "pastelgreen" : "#72DB83",
-    "pinkperfume" : "#DAA0F4",
-    "creamsicle" : "#F5955E",
-    "lilac" : "#9391FA",
-    "yellow" : "#F5E86B",
-    "skyblue" : "#7CD4EB",
-    "jordyblue" : "#86ABF3",
-    "peptopink" : "#F56B8D",
-    "sagegreen" : "#75C19D",
+    "pastelgreen": "#72DB83",
+    "pinkperfume": "#DAA0F4",
+    "creamsicle": "#F5955E",
+    "lilac": "#9391FA",
+    "yellow": "#F5E86B",
+    "skyblue": "#7CD4EB",
+    "jordyblue": "#86ABF3",
+    "peptopink": "#F56B8D",
+    "sagegreen": "#75C19D",
     "oldrose": "#C18D75",
     "amaranth": "#EB2454",
     "mediumpurple": "#9A48EF",
@@ -55,28 +55,30 @@ let colors = {
     "salmon": "#FF8C6B",
     "watermelon": "#FF6B78",
     "orchid": "#DD8D94",
-    "cornflower": "#5870F9",
+    "cornflower": "cornflowerblue",
     "mango": "#F9C358",
     "spaceblue": "#2b66ab",
-    "puce": "#C17593"
+    "puce": "#C17593",
+    "chantilly": "#F5ADDE",
+    "teagreen": "#C2ECC0",
 }
 
 let colorAssignments = {
-    "fantasy" : colors["mediumpurple"],
-    "horror" : colors["amaranth"],
-    "action" : colors["creamsicle"],
-    "drama" : colors["pomegranate"],
-    "documentary": colors["salmon"],
+    "fantasy": colors["mediumpurple"],
+    "horror": colors["watermelon"],
+    "action": colors["creamsicle"],
+    "drama": colors["pastelgreen"],
+    "documentary": colors["chantilly"],
     "thriller": colors["watermelon"],
-    "adventure": colors["pastelgreen"],
-    "crime": colors["orchid"],
-    "comedy" : colors["yellow"],
-    "mystery" : colors["lilac"],
-    "romance" : colors["perfumepink"],
+    "adventure": colors["teagreen"],
+    "crime": colors["cornflower"],
+    "comedy": colors["yellow"],
+    "mystery": colors["lilac"],
+    "romance": colors["pinkperfume"],
     "western": colors["oldrose"],
     "animation": colors["cornflower"],
     "music": colors["mango"],
-    "science fiction" : colors["spaceblue"],
+    "science fiction": colors["spaceblue"],
     "history": colors["puce"],
 }
 
@@ -84,23 +86,31 @@ let colorAssignments = {
 const MoviesContainer = () => {
     //const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState(movieData)
-    const [selection, setSelection] = useState({start: "2018-02-01", end: "2020-07-01"})
+    const [selection, setSelection] = useState({ start: "2018-02-01", end: "2020-07-01" })
 
     return (
         <div className="MoviesContainer">
-            <Timeline
-                data={data}
-                selection={selection}
-                xAccessor={dateAccessor}
-                yAccessor={ratingAccessor}
-                label="TBD"
-                className="MoviesContainer__timeline"
-            />
+            <div>
+                <Timeline
+                    data={data}
+                    selection={selection}
+                    xAccessor={dateAccessor}
+                    yAccessor={ratingAccessor}
+                    label="TBD"
+                    className="MoviesContainer__timeline"
+                />
 
-            <Table
-                data={data}
-                selection={selection}
-            />
+                <div className="MoviesContainer__table">
+                    <Table
+                        data={data}
+                        selection={selection}
+                        colors={colors}
+                        order={'reverse'}
+                        colorGenres={colorAssignments}
+                    />
+                </div>
+
+            </div>
 
             <div className="MoviesContainer__genres">
                 {Object.keys(genreSorted).map((genre, index) => (

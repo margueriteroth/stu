@@ -4,7 +4,7 @@ import MaxWidth from "components/_ui/MaxWidth/MaxWidth"
 import MoviesContainer from "components/Movies/MoviesContainer"
 
 const MoviesPage = () => (
-    <Layout>
+    <Layout className="MoviesPage">
         <MaxWidth className="">
             <MoviesContainer />
         </MaxWidth>

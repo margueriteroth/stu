@@ -144,6 +144,15 @@ button {
     }
 }
 
+.label-tab {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.6em;
+    display: inline-block;
+    padding: 2px 5px;
+}
+
 /**
  * Add back the container background-color, border-radius, padding, margin
  * and overflow that we removed from <pre>.
@@ -195,9 +204,11 @@ button {
     }
 }
 
+.MoviesPage {
+    background: $grey-100;
+}
+
 .Home {
-
-
     &__recent {
         padding-top: 10vh;
         padding-bottom: 8em;

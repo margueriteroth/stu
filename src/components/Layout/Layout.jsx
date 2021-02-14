@@ -24,7 +24,7 @@ const Layout = ({ className, children }) => (
             render={data => (
                 <div className="div">
                     <div className="Layout">
-                        <Header/>
+                        {/* <Header/> */}
                         <main className={classNames("Layout__content", className)}>
                             {children}
                         </main>

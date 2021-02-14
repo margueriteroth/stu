@@ -59,12 +59,12 @@ const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metric
                     formatTick={formatMonths}
                     numberOfTicks={0}
                     numberOfTicksYear={3}
+                    label={`${metricFilter}`}
                 />
                 <Axis
                     dimension="y"
-                    numberOfTicks={4}
+                    numberOfTicks={2}
                     scale={yScale}
-                    label={`${metricFilter} movies watched`}
                 />
                 {/* <Line
                     className={classNames(`Line`)}
