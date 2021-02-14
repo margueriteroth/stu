@@ -12,7 +12,7 @@ import './GenreSparkline.scss'
 
 const formatMonths = d3.timeFormat("%B")
 
-const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metricFilter, className, sparklineBinsMax, updateSparklineBinsMax, fill }) => {
+const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metricFilter, className, yDomainExtent, fill }) => {
     const [ref, dimensions] = useChartDimensions({marginBottom:20})
 
     const xScale = d3.scaleLinear()
@@ -30,21 +30,17 @@ const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metric
         if (!metricFilter) {
             return
         }
+
         return d.filter(movie => movie.genre === metricFilter).length
     }
 
-    let yDomainExtent = d3.max(bins, yAccessor)
-    if (yDomainExtent > sparklineBinsMax) {
-        updateSparklineBinsMax(yDomainExtent)
-    }
 
     const yScale = d3.scaleLinear()
-    // .domain([0, d3.max(bins, yAccessor)])
-        .domain([0, sparklineBinsMax])
+        // ToDo: figure out how to surface this "14" and set for all
+        .domain([0, 14])
+       // .domain([0, yDomainExtent])
         .range([dimensions.boundedHeight, 0])
         .nice()
-
-
 
     // X Accessor needs different 'xAccessorScaled' becuase it is dealing with bin'd data
     const xAccessorScaled = d => xScale(d.x0 + (d.x1 - d.x0) / 2)
@@ -66,7 +62,7 @@ const GenreSparkline = ({ data, xAccessor, metricAccessor, binThresholds, metric
                 />
                 <Axis
                     dimension="y"
-                    numberOfTicks={sparklineBinsMax}
+                    numberOfTicks={4}
                     scale={yScale}
                     label={`${metricFilter} movies watched`}
                 />

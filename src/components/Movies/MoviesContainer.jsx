@@ -5,38 +5,79 @@ import Table from 'components/Movies/Table'
 import Timeline from 'components/Movies/Timeline'
 import "./MoviesContainer.scss"
 
-import movieData from 'components/Movies/movies.csv'
+import movieData from 'components/Movies/movies.json'
 //import { update } from 'lodash'
+
+// console.table(movieData)
 
 const parseDate = d3.timeParse("%Y-%m-%d")
 const dateAccessor = d => parseDate(d["date"])
 const ratingAccessor = d => d["rating"]
 
-let genres = ["comedy", "romantic comedy", "action", "mystery",
-        "science fiction", "horror", "animated", "fantasy", "epic"]
-// const lengthAccessor = d => d.length
-// const genreFilterAccessor = (d, i) => {
-//     return d["genre"]
-// }
+let genreList = movieData.map(movie => movie.genre);
+genreList = [...new Set(genreList)];
 
-// Will pull this into python bits
-// let dataWithGenres = movieData.map(function(movie){
-//     let randomGenre = genres[Math.floor(Math.random() * genres.length)];
-//     let updatedMovie = movie
-//     updatedMovie["genre"] = randomGenre
-//     return updatedMovie
-// })
+let genres = movieData.map(movie => movie.genre)
+let genreCounts = {};
+genres.forEach(genre => {
+    if (!genreCounts[genre]) {
+        genreCounts[genre] = 1
+    } else {
+        genreCounts[genre] += 1;
+    }
+})
 
-let sampleColors = {
-    "comedy" : "#72DB83",
-    "romantic comedy" : "#DAA0F4",
-    "action" : "#F5955E",
-    "mystery" : "#9391FA",
-    "science fiction" : "#F5E86B",
-    "horror" : "#7CD4EB",
-    "animated" : "#86ABF3",
-    "fantasy" : "#F56B8D",
-    "epic" : "#75C19D",
+let maxGenreCount = d3.max(Object.values(genreCounts))
+
+let genreSorted = Object.fromEntries(
+    Object.entries(genreCounts).sort(([,a],[,b]) => a-b).reverse()
+);
+
+const lengthAccessor = d => d.length
+const genreFilterAccessor = (d, i) => {
+    return d["genre"]
+}
+
+let colors = {
+    "pastelgreen" : "#72DB83",
+    "pinkperfume" : "#DAA0F4",
+    "creamsicle" : "#F5955E",
+    "lilac" : "#9391FA",
+    "yellow" : "#F5E86B",
+    "skyblue" : "#7CD4EB",
+    "jordyblue" : "#86ABF3",
+    "peptopink" : "#F56B8D",
+    "sagegreen" : "#75C19D",
+    "oldrose": "#C18D75",
+    "amaranth": "#EB2454",
+    "mediumpurple": "#9A48EF",
+    "pomegranate": "#F5292E",
+    "salmon": "#FF8C6B",
+    "watermelon": "#FF6B78",
+    "orchid": "#DD8D94",
+    "cornflower": "#5870F9",
+    "mango": "#F9C358",
+    "spaceblue": "#2b66ab",
+    "puce": "#C17593"
+}
+
+let colorAssignments = {
+    "fantasy" : colors["mediumpurple"],
+    "horror" : colors["amaranth"],
+    "action" : colors["creamsicle"],
+    "drama" : colors["pomegranate"],
+    "documentary": colors["salmon"],
+    "thriller": colors["watermelon"],
+    "adventure": colors["pastelgreen"],
+    "crime": colors["orchid"],
+    "comedy" : colors["yellow"],
+    "mystery" : colors["lilac"],
+    "romance" : colors["perfumepink"],
+    "western": colors["oldrose"],
+    "animation": colors["cornflower"],
+    "music": colors["mango"],
+    "science fiction" : colors["spaceblue"],
+    "history": colors["puce"],
 }
 
 
@@ -44,8 +85,6 @@ const MoviesContainer = () => {
     //const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState(movieData)
     const [selection, setSelection] = useState({start: "2018-02-01", end: "2020-07-01"})
-    const [sparklineBinsMax, setSparklineBinsMax] = useState(7)
-    let updateSparklineBinsMax = () => setSparklineBinsMax
 
     return (
         <div className="MoviesContainer">
@@ -64,17 +103,16 @@ const MoviesContainer = () => {
             />
 
             <div className="MoviesContainer__genres">
-                {genres.map((genre, index) => (
+                {Object.keys(genreSorted).map((genre, index) => (
                     <GenreSparkline
                         data={data}
                         xAccessor={dateAccessor}
                         metricAccessor={dateAccessor}
                         metricFilter={genre}
                         binThresholds={6}
-                        sparklineBinsMax={sparklineBinsMax}
-                        updateSparklineBinsMax={updateSparklineBinsMax}
                         key={index}
-                        fill={sampleColors[genre]}
+                        yDomainExtent={maxGenreCount}
+                        fill={colorAssignments[genre]}
                     />
                 ))}
             </div>

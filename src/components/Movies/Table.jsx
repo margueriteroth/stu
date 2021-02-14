@@ -17,7 +17,6 @@ let headers =  [
 const Table = ({ data }) => {
     let rows = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-    console.log(headers)
 
     return (
         <div>
@@ -41,7 +40,7 @@ const Table = ({ data }) => {
 export default Table;
 
 const TableRow = ({ data }) => {
-    console.log(data)
+
     return (
         <div className="TableRow">
             {headers.map((label, i) => (
