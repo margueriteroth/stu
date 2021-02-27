@@ -1,7 +1,7 @@
 @import "./../../styles/lib";
 
 .Table {
-    $columns: 1.5fr 6fr 2fr 1fr 1fr;
+    $columns: 1.5fr 3fr 1fr 2fr 1fr;
 
     &Header,
     &Row {
@@ -47,6 +47,27 @@
         }
 
         &__genre {
+            position: relative;
+            color: currentColor;
+            filter: brightness(45%);
+        }
+    }
+
+    &Rating {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        &__plate {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            //background: red;
+        }
+
+        &__rating {
             position: relative;
             color: currentColor;
             filter: brightness(45%);

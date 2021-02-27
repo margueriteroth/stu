@@ -28,6 +28,7 @@ const Table = ({ data, ...props }) => {
             {Object.keys(data).reverse().map((row, i) => (
                 <TableRow
                     data={data[row]}
+                    genre={data[row].genre}
                     key={i}
                     props={props}
                 />
@@ -38,10 +39,12 @@ const Table = ({ data, ...props }) => {
 
 export default Table;
 
-const TableRow = ({ data, order, props }) => {
+const TableRow = ({ data, genre, order, props }) => {
     //let genreColor = props.colorGenres[data[label]];
+    console.log(genre)
 
-    let getGenreColor = d => props.colorGenres[data[d]];
+    let getGenreHex = d => props.colorGenres[d];
+    let genreHex = getGenreHex(genre);
 
     return (
         <div className="TableRow">
@@ -57,15 +60,32 @@ const TableRow = ({ data, order, props }) => {
                         <div key={i} className="TableLabel label-tab">
                             <div
                                 style={{
-                                    background: `${getGenreColor(label)}`
+                                    background: genreHex,
                                 }}
                                 className="TableLabel__plate"></div>
                             <div
                                 style={{
-                                    color: `${getGenreColor(label)}`
+                                    color: genreHex
                                 }}
                                 className={classNames("TableLabel__genre", `TableLabel__genre-${data[label]}`)}>
                                 {data[label]}
+                            </div>
+                        </div>
+                    ) : label == 'rating' ? (
+                        <div key={i} className="TableRating">
+                            <div
+                                style={{
+                                    background: 'cornflowerBlue',
+                                    width: `${data[label] * 10}%`
+                                }}
+                                className="TableRating__plate"></div>
+                            <div
+                                style={{
+                                    color: genreHex
+                                }}
+                                className={classNames("TableRating__rating")}>
+                                {data[label]}
+
                             </div>
                         </div>
                     ) : (
