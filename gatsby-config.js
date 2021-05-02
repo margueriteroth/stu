@@ -16,7 +16,6 @@ module.exports = {
         `gatsby-plugin-sass`,
         `gatsby-plugin-resolve-src`,
         `gatsby-plugin-remove-trailing-slashes`,
-        `gatsby-plugin-emotion`,
         `gatsby-remark-autolink-headers`,
         {
             resolve: `gatsby-plugin-canonical-urls`,
@@ -137,6 +136,7 @@ module.exports = {
                 background_color: `#663399`,
                 theme_color: `#663399`,
                 display: `minimal-ui`,
+                icon: `${__dirname}/src/images/gatsby-icon.png`,
             },
         },
         {

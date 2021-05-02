@@ -8,7 +8,7 @@ import './Footer.scss';
 const Footer = () => {
     return (
         <div className="Footer__container">
-            <MaxWidth size="l" className="Footer">
+            {/* <MaxWidth size="l" className="Footer">
                 <div className="Footer__pets">
                     <SpinningPets />
                 </div>
@@ -22,7 +22,7 @@ const Footer = () => {
                         Designed and developed by me.
                 </Link>
                 </div>
-            </MaxWidth>
+            </MaxWidth> */}
         </div>
     );
 };
