@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import * as d3 from "d3"
 import ScatterPlot from 'projects/DessertPerson/Scatterplot'
 
 import data from 'projects/DessertPerson/recipes.csv'
-console.table(data)
 
 let minutesAccessor = d => d["Minutes"]
 let difficultyAccessor = d => d["Difficulty"]

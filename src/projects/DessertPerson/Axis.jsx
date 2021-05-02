@@ -41,11 +41,10 @@ Axis.defaultProps = {
 
 export default Axis
 
-const formatYears = d3.timeFormat("%Y")
 
-function AxisHorizontal({ className, dimensions, label, formatTick, scale, numberOfTicks, numberOfTicksYear, ...props }) {
-    const ticks = scale.ticks(numberOfTicks)
-    const ticksYears = scale.ticks(numberOfTicksYear)
+function AxisHorizontal({ className, dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
+    const sectionTicks = scale.ticks(numberOfTicks)
+    const rulesTicks = scale.ticks(numberOfTicks * 7)
 
     return (
         <g
@@ -56,9 +55,28 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 x2={dimensions.boundedWidth}
             />
 
-            {ticks.map((tick, i) => (
+            {rulesTicks.map((tick, i) => (
+                <line
+                    key={i}
+                    className="Grid__rules"
+                    y1={`-${dimensions.boundedHeight}`}
+                    transform={`translate(${scale(tick)})`}
+                />
+            ))}
+
+            {sectionTicks.map((tick, i) => (
+                <line
+                    key={i}
+                    className="Grid__section-delineator"
+                    y1={`-${dimensions.boundedHeight}`}
+                    y2={30}
+                    transform={`translate(${scale(tick)})`}
+                />
+            ))}
+
+            {sectionTicks.map((tick, i) => (
                 <text
-                    key={tick}
+                    key={i}
                     className="Axis__tick"
                     transform={`translate(${scale(tick)}, 25)`}
                 >
@@ -66,21 +84,10 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 </text>
             ))}
 
-
-            {ticksYears.map((tick, i) => (
-                <text
-                    key={tick}
-                    className="Axis__tick Axis__tick__year"
-                    transform={`translate(${scale(tick)}, 41)`}
-                >
-                    {formatYears(tick)}
-                </text>
-            ))}
-
             {label && (
                 <text
                     className="Axis__label"
-                    transform={`translate(${dimensions.boundedWidth / 2}, -${dimensions.boundedHeight + 10})`}
+                    transform={`translate(${dimensions.boundedWidth / 2}, ${dimensions.marginBottom - 10})`}
                 >
                     {label}
                 </text>
@@ -90,9 +97,8 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
 }
 
 function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
-    //const numberOfTicks = dimensions.boundedHeight / 70
-
     const ticks = scale.ticks(numberOfTicks)
+    const rulesTicks = scale.ticks(numberOfTicks * 5)
 
     return (
         <g className="Axis AxisVertical" {...props}>
@@ -101,11 +107,37 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                 y2={dimensions.boundedHeight}
             />
 
+            {rulesTicks.map((tick, i) => (
+                <line
+                    key={i}
+                    className="Grid__rules"
+                    x2={dimensions.boundedWidth}
+                    transform={`translate(0, ${scale(tick)})`}
+                />
+            ))}
+
             {ticks.map((tick, i) => (
-                <text
-                    key={tick}
+                <line
+                    key={i}
+                    className="Grid__section-delineator"
+                    x1={-10}
+                    x2={dimensions.boundedWidth + 30}
+                    transform={`translate(-24, ${scale(tick)})`}
+                />
+            ))}
+
+            {ticks.map((tick, i) => (
+                <text // distance until the next tick div by 2
+                    key={i}
                     className="Axis__tick"
-                    transform={`translate(-26, ${scale(tick)})`}
+                    transform={
+                        `translate(
+                            -20,
+                            ${scale(tick) - (
+                                (scale(ticks[0]) - scale(ticks[1])) / 2
+                            )}
+                        )
+                    `}
                 >
                     {formatTick(tick)}
                 </text>

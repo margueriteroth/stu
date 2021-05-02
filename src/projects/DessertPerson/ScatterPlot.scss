@@ -1,5 +1,7 @@
 @import "./../../styles/lib";
 
+$dp-pink: hsla(354, 36%, 90%, 1.0);
+
 .ScatterPlot {
     height: 500px;
     min-width: 500px;
@@ -34,12 +36,22 @@
         text-anchor: middle;
     }
 
+    .Grid__section-delineator {
+        stroke: $dp-pink;
+        stroke-width: 2;
+    }
+
+    .Grid__rules {
+        stroke: $dp-pink;
+        stroke-width: 1;
+    }
+
     .AxisHorizontal,
     .AxisVertical {
         font-size: 0.8em;
 
         .Axis__line {
-            stroke: #E0E0E0;
+            stroke: $dp-pink;
         }
     }
 

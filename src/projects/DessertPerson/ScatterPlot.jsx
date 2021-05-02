@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import classNames from "classnames"
 import * as d3 from "d3"
 import { useChartDimensions } from "components/utils"
@@ -7,8 +7,6 @@ import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
 import './ScatterPlot.scss'
 
-const formatMonths = d3.timeFormat("%B")
-
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [ref, dimensions] = useChartDimensions()
     //const [contextRef, timelineContextDimensions] = useChartDimensions({height:100})
@@ -16,27 +14,14 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
 
-
-    const xScale = d3.scaleTime()
-        .domain(d3.extent(data, xAccessor))
+    const xScale = d3.scaleLinear()
+        .domain([0, d3.max(data, xAccessor)])
         .range([0, dimensions.boundedWidth])
 
     const yScale = d3.scaleLinear()
-        .domain([0, 10])
+        .domain([1, 5.5])
         .range([dimensions.boundedHeight, 0])
         .nice()
-
-    // const xScaleContext = d3.scaleTime()    //     .domain(d3.extent(data, xAccessor))
-    //     .range([0, timelineContextDimensions.boundedWidth])
-
-    // const yScaleContext = d3.scaleLinear()
-    //     .domain([0, 10])
-    //     .range([timelineContextDimensions.boundedHeight, 0])
-    //     .nice()
-
-    // Note to self: All this "context" stuff is for figuring out brush/horiz scroll nonsense
-    // const xAccessorScaledContext = d => xScaleContext(xAccessor(d))
-    // const yAccessorScaledContext = d => yScaleContext(yAccessor(d))
 
     const xAccessorScaled = d => xScale(xAccessor(d))
     const yAccessorScaled = d => yScale(yAccessor(d))
@@ -82,38 +67,32 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
     return (
         <div className={classNames("ScatterPlot", className)} ref={ref}>
-            {currentHoveredCoords && (
+            {/* {currentHoveredCoords && (
                 <Tooltip
                     currentHoveredData={currentHoveredData}
                     currentHoveredCoords={currentHoveredCoords}
                     dimensions={dimensions}
                     movieData={currentHoveredData}
                 />
-            )}
+            )} */}
+
             <Chart
                 dimensions={dimensions}
                 onMouseMove={onMouseMove}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
-                {isMouseMove && (
-                    <Circle
-                        className={classNames(`Circle`)}
-                        cx={currentHoveredCoords[0]}
-                        cy={currentHoveredCoords[1]}
-                    />
-                )}
                 <Axis
                     dimension="x"
                     scale={xScale}
-                    formatTick={formatMonths}
-                    numberOfTicksYear={4}
+                    numberOfTicks={10}
+                    label={'total minutes'}
                 />
                 <Axis
                     dimension="y"
                     scale={yScale}
-                    label={label}
-                    numberOfTicks={10}
+                    label={'difficulty'}
+                    numberOfTicks={5}
                 />
 
                 <Circles
@@ -123,7 +102,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     yAccessor={yAccessorScaled}
                 />
 
-                {isMouseMove && (
+                {/* {isMouseMove && (
                     <>
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
@@ -146,7 +125,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                             style={{ opacity: (isMouseMove ? 1 : 0) }}
                         />
                     </>
-                )}
+                )} */}
             </Chart>
         </div>
     );
@@ -155,9 +134,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 export default ScatterPlot;
 
 const Circle = ({ className, cx, cy, style }) => {
+    // For tooltip
     return (
         <circle className={classNames("Circle", className)}
-            r={5}
+            r={1}
             fill="red"
             cx={cx}
             cy={cy}
@@ -174,11 +154,11 @@ const Tooltip = ({ currentHoveredCoords, dimensions, movieData }) => {
 
     return (
         <div className="Tooltip__container"
-             style={{
+            style={{
                 opacity: 1,
                 left: `${leftScrubCoord}px`,
                 top: `${topScrubCoord}px`
-        }}>
+            }}>
             <div className="Tooltip">
                 <h4>
                     <i>
