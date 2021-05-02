@@ -4,7 +4,6 @@ import classNames from "classnames";
 import * as d3 from 'd3'
 import { dimensionsPropsType } from "components/utils";
 import { useChartDimensions } from "./Chart";
-//import { min } from "lodash";
 
 const axisComponentsByDimension = {
     x: AxisHorizontal,
@@ -43,14 +42,8 @@ export default Axis
 
 
 function AxisHorizontal({ className, dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
-    const sectionTicks = scale.ticks(numberOfTicks, "+f")
-    const rulesTicks = scale.ticks(numberOfTicks * 7, "+f")
-
-    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720]
-
-    let hourLabels = [5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 12]
-    // Think of these labels as strings (taken from book's x axis)
-
+    const sectionTicks = scale.ticks(numberOfTicks)
+    const rulesTicks = scale.ticks(numberOfTicks * 7)
 
     return (
         <g
@@ -70,7 +63,7 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 />
             ))}
 
-            {minuteSections.map((tick, i) => (
+            {sectionTicks.map((tick, i) => (
                 <line
                     key={i}
                     className="Grid__section-delineator"
@@ -80,28 +73,13 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 />
             ))}
 
-            {minuteSections.map((tick, i) => (
+            {sectionTicks.map((tick, i) => (
                 <text
                     key={i}
                     className="Axis__tick"
                     transform={`translate(${scale(tick)}, 25)`}
                 >
-                    {hourLabels[i]}
-                    {hourLabels[i] == 5 ? (
-                        `min`
-                    ) : (
-                        <>
-                            hour
-                            {hourLabels[i] != 1 && (
-                                `s`
-                            )}
-                        </>
-                    )}
-
-                    {hourLabels[i] == 12 && (
-                        ` +`
-                    )}
-
+                    {formatTick(tick)}
                 </text>
             ))}
 

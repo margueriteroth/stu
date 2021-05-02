@@ -1,9 +1,10 @@
 @import "./../../styles/lib";
 
-$dp-pink: hsla(354, 36%, 90%, 1.0);
+$dp-pink: hsla(354, 36%, 90%, 1);
+$dp-taupe: hsla(354, 18%, 81%, 1);
 
 .ScatterPlot {
-    height: 500px;
+    height: calc(90vh - 6em);
     min-width: 500px;
     width: calc(100% + 1em);
     //margin-bottom: 2em;
@@ -25,11 +26,11 @@ $dp-pink: hsla(354, 36%, 90%, 1.0);
     }
 
     .axis {
-        color: #E0E0E0;
+        color: #e0e0e0;
     }
 
     .tick {
-        color: #E0E0E0;
+        color: #e0e0e0;
     }
 
     .Axis__tick {
@@ -37,13 +38,25 @@ $dp-pink: hsla(354, 36%, 90%, 1.0);
     }
 
     .Grid__section-delineator {
-        stroke: $dp-pink;
+        stroke: darken($dp-pink, 2.55%);
         stroke-width: 2;
     }
 
     .Grid__rules {
         stroke: $dp-pink;
         stroke-width: 1;
+    }
+
+    .Grid__stripe {
+        fill: rgba($dp-taupe, 0.2);
+
+        &:nth-of-type(even) {
+            display: none;
+        }
+
+        &:first-of-type {
+            display: none;
+        }
     }
 
     .AxisHorizontal,
@@ -65,10 +78,18 @@ $dp-pink: hsla(354, 36%, 90%, 1.0);
         }
 
         &--exercise {
-            &-0 { stroke: $paradiddle-green; }
-            &-1 { stroke: $paradiddle-purple; }
-            &-2 { stroke: $paradiddle-blue; }
-            &-3 { stroke: $paradiddle-orange; }
+            &-0 {
+                stroke: $paradiddle-green;
+            }
+            &-1 {
+                stroke: $paradiddle-purple;
+            }
+            &-2 {
+                stroke: $paradiddle-blue;
+            }
+            &-3 {
+                stroke: $paradiddle-orange;
+            }
         }
 
         &--isDimmed {
@@ -104,6 +125,5 @@ $dp-pink: hsla(354, 36%, 90%, 1.0);
             box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.1);
             border-radius: 4px;
         }
-
     }
 }

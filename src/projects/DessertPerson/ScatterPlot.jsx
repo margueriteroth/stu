@@ -14,7 +14,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
 
-    const xScale = d3.scaleLinear()
+    const xScale = d3.scaleTime()
         .domain([0, d3.max(data, xAccessor)])
         .range([0, dimensions.boundedWidth])
 
