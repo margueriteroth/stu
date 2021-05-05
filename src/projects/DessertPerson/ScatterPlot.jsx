@@ -14,9 +14,28 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
 
+    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
+
+    let getVerticalMinIntervals = () => {
+        let verticalRuleMinutes = [];
+
+        minuteSections.forEach((min, i) => {
+            let interval = (minuteSections[i + 1] - min) / 5 || 72;
+            // calc the minutes for each vertical rule (as the sections have varying timespans)
+
+            for (i = 0; i <= 5; i++) {
+                verticalRuleMinutes.push(min + (i * interval))
+            }
+        })
+
+        return verticalRuleMinutes;
+    }
+    let ticks = getVerticalMinIntervals();
+
     const xScale = d3.scaleTime()
-        .domain([0, d3.max(data, xAccessor)])
+        .domain([5, d3.max(data, xAccessor)])
         .range([0, dimensions.boundedWidth])
+
 
     const yScale = d3.scaleLinear()
         .domain([1, 5.5])
@@ -67,14 +86,14 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
     return (
         <div className={classNames("ScatterPlot", className)} ref={ref}>
-            {/* {currentHoveredCoords && (
+            {currentHoveredCoords && (
                 <Tooltip
                     currentHoveredData={currentHoveredData}
                     currentHoveredCoords={currentHoveredCoords}
                     dimensions={dimensions}
-                    movieData={currentHoveredData}
+                    data={currentHoveredData}
                 />
-            )} */}
+            )}
 
             <Chart
                 dimensions={dimensions}
@@ -102,7 +121,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     yAccessor={yAccessorScaled}
                 />
 
-                {/* {isMouseMove && (
+                {isMouseMove && (
                     <>
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
@@ -125,7 +144,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                             style={{ opacity: (isMouseMove ? 1 : 0) }}
                         />
                     </>
-                )} */}
+                )}
             </Chart>
         </div>
     );
@@ -146,11 +165,13 @@ const Circle = ({ className, cx, cy, style }) => {
     )
 }
 
-const Tooltip = ({ currentHoveredCoords, dimensions, movieData }) => {
+const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
     let leftScrubCoord = currentHoveredCoords[0] + dimensions.marginLeft
     let topScrubCoord = currentHoveredCoords[1] + dimensions.marginTop
 
-    let movie = movieData.Movie
+    let name = data["Recipe"];
+    let difficulty = data["Difficulty"];
+    let time = data["Minutes"] / 60;
 
     return (
         <div className="Tooltip__container"
@@ -161,16 +182,14 @@ const Tooltip = ({ currentHoveredCoords, dimensions, movieData }) => {
             }}>
             <div className="Tooltip">
                 <h4>
-                    <i>
-                        {movie}
-                    </i>
+                    {name}
                 </h4>
-                <h6>
-                    Rating: {movieData.Rating} / 10
-                </h6>
-                <h6>
-                    {movieData.Provider}
-                </h6>
+                <p>
+                    Level: {difficulty}
+                </p>
+                <p>
+                    {time} hours, {data["Minutes"]} total minutes
+                </p>
             </div>
         </div>
     )

@@ -20,7 +20,7 @@ $dp-taupe: hsla(354, 18%, 81%, 1);
     }
 
     .y-axis-label {
-        font-size: 0.8em;
+        font-size: 0.9em;
         text-anchor: middle;
         transform: rotate(-90deg);
     }
@@ -34,7 +34,7 @@ $dp-taupe: hsla(354, 18%, 81%, 1);
     }
 
     .Axis__tick {
-        text-anchor: middle;
+        font-size: 0.7em;
     }
 
     .Grid__section-delineator {

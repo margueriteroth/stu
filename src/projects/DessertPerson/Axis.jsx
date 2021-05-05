@@ -43,14 +43,29 @@ export default Axis
 
 
 function AxisHorizontal({ className, dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
-    const sectionTicks = scale.ticks(numberOfTicks, "+f")
-    const rulesTicks = scale.ticks(numberOfTicks * 7, "+f")
-
-    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720]
-
-    let hourLabels = [5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 12]
+    let hourLabels = [5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 12];
     // Think of these labels as strings (taken from book's x axis)
 
+    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
+
+    let getVerticalMinIntervals = () => {
+        let verticalRuleMinutes = [];
+
+        minuteSections.forEach((min, i) => {
+            let interval = (minuteSections[i + 1] - min) / 5 || 72;
+            // calc the minutes for each vertical rule (as the sections have varying timespans)
+
+            for (i = 0; i <= 5; i++) {
+                verticalRuleMinutes.push(min + (i * interval))
+            }
+        })
+
+        return verticalRuleMinutes;
+    }
+
+    console.log(scale(50))
+
+    let minuteRules = getVerticalMinIntervals();
 
     return (
         <g
@@ -61,14 +76,15 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 x2={dimensions.boundedWidth}
             />
 
-            {rulesTicks.map((tick, i) => (
+            {/* Vertical lines */}
+            {/* {minuteRules.map((tick, i) => (
                 <line
                     key={i}
                     className="Grid__rules"
                     y1={`-${dimensions.boundedHeight}`}
                     transform={`translate(${scale(tick)})`}
                 />
-            ))}
+            ))} */}
 
             {minuteSections.map((tick, i) => (
                 <line
@@ -84,11 +100,11 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 <text
                     key={i}
                     className="Axis__tick"
-                    transform={`translate(${scale(tick)}, 25)`}
+                    transform={`translate(${scale(tick)}, 45)`}
                 >
                     {hourLabels[i]}
                     {hourLabels[i] == 5 ? (
-                        `min`
+                        ` min`
                     ) : (
                         <>
                             hour
@@ -119,7 +135,32 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
 
 function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
     const ticks = scale.ticks(numberOfTicks)
-    const rulesTicks = scale.ticks(numberOfTicks * 5)
+    const rulesTicks = scale.ticks(numberOfTicks * 7);
+
+    let mainLevels = [1, 2, 3, 4, 5];
+
+    let getHorizontalIntervals = () => {
+        let horizIntervals = [];
+
+        mainLevels.forEach((level, i) => {
+            let defaultInterval = 1 / 7;
+            let levelThreeInterval = 1 / 8;
+            // calc the minutes for each vertical rule (as the sections have varying timespans)
+
+            for (i = 0; i <= 7; i++) {
+                if (level != 3) {
+                    horizIntervals.push(level + (i * defaultInterval));
+                } else {
+                    horizIntervals.push(level + (i * levelThreeInterval));
+                }
+            }
+
+        })
+
+        return [...new Set(horizIntervals)];
+    }
+
+    let levelRules = getHorizontalIntervals();
 
     return (
         <g className="Axis AxisVertical" {...props}>
@@ -128,7 +169,8 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                 y2={dimensions.boundedHeight}
             />
 
-            {rulesTicks.map((tick, i) => (
+            {/* Horizontal lines */}
+            {levelRules.map((tick, i) => (
                 <line
                     key={i}
                     className="Grid__rules"
