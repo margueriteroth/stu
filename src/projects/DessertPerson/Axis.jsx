@@ -48,43 +48,35 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
 
-    let getVerticalMinIntervals = () => {
-        let verticalRuleMinutes = [];
-
-        minuteSections.forEach((min, i) => {
-            let interval = (minuteSections[i + 1] - min) / 5 || 72;
-            // calc the minutes for each vertical rule (as the sections have varying timespans)
-
-            for (i = 0; i <= 5; i++) {
-                verticalRuleMinutes.push(min + (i * interval))
-            }
-        })
-
-        return verticalRuleMinutes;
-    }
-
-    console.log(scale(50))
-
-    let minuteRules = getVerticalMinIntervals();
-
     return (
         <g
             className={classNames("Axis AxisHorizontal", className)}
             transform={`translate(0, ${dimensions.boundedHeight})`} {...props}>
+
             <line
                 className="Axis__line"
                 x2={dimensions.boundedWidth}
             />
 
             {/* Vertical lines */}
-            {/* {minuteRules.map((tick, i) => (
+            <line
+                className="Axis__line"
+                y1={`-${dimensions.boundedHeight}`}
+                style={{ strokeWidth: 2 }}
+                transform={`translate(${-(props.sectionwidth / 7)})`}
+            />
+
+            {props.minrules.map((tick, i) => (
                 <line
                     key={i}
                     className="Grid__rules"
                     y1={`-${dimensions.boundedHeight}`}
-                    transform={`translate(${scale(tick)})`}
+                    transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
+                        : tick <= 240 ? props.xscales.mins30(tick) + props.sectionwidth
+                            : tick <= 360 ? props.xscales.mins120(tick) + (props.sectionwidth * 7)
+                                : props.xscales.mins360(tick) + (props.sectionwidth * 8)})`}
                 />
-            ))} */}
+            ))}
 
             {minuteSections.map((tick, i) => (
                 <line
@@ -92,15 +84,23 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                     className="Grid__section-delineator"
                     y1={`-${dimensions.boundedHeight}`}
                     y2={30}
-                    transform={`translate(${scale(tick)})`}
+                    transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
+                        : tick <= 240 ? props.xscales.mins30(tick) + props.sectionwidth
+                            : tick <= 360 ? props.xscales.mins120(tick) + (props.sectionwidth * 7)
+                                : props.xscales.mins360(tick) + (props.sectionwidth * 8)
+                        })`}
                 />
             ))}
+
 
             {minuteSections.map((tick, i) => (
                 <text
                     key={i}
                     className="Axis__tick"
-                    transform={`translate(${scale(tick)}, 45)`}
+                    transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
+                        : tick <= 240 ? props.xscales.mins30(tick) + props.sectionwidth
+                            : tick <= 360 ? props.xscales.mins120(tick) + (props.sectionwidth * 7)
+                                : props.xscales.mins360(tick) + (props.sectionwidth * 8)}, 45)`}
                 >
                     {hourLabels[i]}
                     {hourLabels[i] == 5 ? (
@@ -206,7 +206,7 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                     className="Axis__tick"
                     transform={
                         `translate(
-                            -20,
+                            -25,
                             ${scale(tick) - (
                             (scale(ticks[0]) - scale(ticks[1])) / 2
                         )}
