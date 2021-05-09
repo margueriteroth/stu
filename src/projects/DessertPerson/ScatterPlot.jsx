@@ -14,7 +14,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
 
-    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
+    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360];
 
     let getVerticalMinIntervals = () => {
         let verticalRuleMinutes = [];
@@ -24,25 +24,69 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
             // calc the minutes for each vertical rule (as the sections have varying timespans)
 
             for (i = 0; i <= 5; i++) {
-                verticalRuleMinutes.push(min + (i * interval))
+                let totalMin = min + (i * interval)
+                if (totalMin < 720) verticalRuleMinutes.push(totalMin);
             }
         })
 
         return verticalRuleMinutes;
     }
-    let ticks = getVerticalMinIntervals();
 
-    const xScale = d3.scaleTime()
+    let minVertRules = getVerticalMinIntervals();
+
+    const xScale = d3.scaleLinear()
         .domain([5, d3.max(data, xAccessor)])
         .range([0, dimensions.boundedWidth])
 
+
+    let colsPerSection = {
+        mins55: 1,
+        mins30: 6,
+        mins120: 1,
+        mins360: 1
+    }
+    let sectionWidth = dimensions.boundedWidth
+        / Object.values(colsPerSection).reduce((a, b) => a + b, 0);
+
+    const xScale55mins = d3.scaleLinear()
+        .domain([5, 60])
+        .range([0, (sectionWidth * colsPerSection["mins55"])])
+
+    const xScale30mins = d3.scaleLinear()
+        .domain([60, 240])
+        .range([0, (sectionWidth * colsPerSection["mins30"])])
+
+    const xScale120mins = d3.scaleLinear()
+        .domain([240, 360])
+        .range([0, (sectionWidth * colsPerSection["mins120"])])
+
+    const xScale360mins = d3.scaleLinear()
+        .domain([360, 720])
+        .range([0, (sectionWidth * colsPerSection["mins360"])])
+
+    let xScales = {
+        mins55: xScale55mins,
+        mins30: xScale30mins,
+        mins120: xScale120mins,
+        mins360: xScale360mins
+    }
+
+    let getXScale = (val) => {
+        return val < 60 ? xScales.mins55
+            : val <= 240 ? xScales.mins30
+                : val <= 360 ? xScales.mins120
+                    : xScales.mins360
+    }
 
     const yScale = d3.scaleLinear()
         .domain([1, 5.5])
         .range([dimensions.boundedHeight, 0])
         .nice()
 
-    const xAccessorScaled = d => xScale(xAccessor(d))
+    const xAccessorScaled = d => xAccessor(d) < 60 ? xScales.mins55(xAccessor(d))
+        : xAccessor(d) <= 240 ? xScales.mins30(xAccessor(d)) + sectionWidth
+            : xAccessor(d) <= 360 ? xScales.mins120(xAccessor(d)) + (sectionWidth * 7)
+                : xScales.mins360(xAccessor(d)) + (sectionWidth * 8)
     const yAccessorScaled = d => yScale(yAccessor(d))
 
     const onMouseMove = e => {
@@ -104,7 +148,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 <Axis
                     dimension="x"
                     scale={xScale}
+                    minrules={minVertRules}
+                    xscales={xScales}
                     numberOfTicks={10}
+                    sectionwidth={sectionWidth}
                     label={'total minutes'}
                 />
                 <Axis
@@ -119,6 +166,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     keyAccessor={keyAccessor}
                     xAccessor={xAccessorScaled}
                     yAccessor={yAccessorScaled}
+                    xScales={xScales}
+
                 />
 
                 {isMouseMove && (
