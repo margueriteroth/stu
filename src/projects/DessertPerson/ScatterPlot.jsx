@@ -5,6 +5,7 @@ import { useChartDimensions } from "components/utils"
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
+import Label from 'projects/DessertPerson/Label'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
@@ -71,11 +72,20 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         mins360: xScale360mins
     }
 
+    // let xScaleCalc = (val) => {
+    //     let scaledNum = val < 60 ? xScales.mins55(val)
+    //         : val <= 240 ? xScales.mins30(val) + sectionWidth
+    //             : val <= 360 ? xScales.mins120(val) + (sectionWidth * 7)
+    //                 : xScales.mins360(val) + (sectionWidth * 8)
+
+    //     return scaledNum
+    // }
+
     let getXScale = (val) => {
         return val < 60 ? xScales.mins55
             : val <= 240 ? xScales.mins30
                 : val <= 360 ? xScales.mins120
-                    : xScales.mins360
+                    : xScales.mins360;
     }
 
     const yScale = d3.scaleLinear()
@@ -94,10 +104,12 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
         //let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
 
-        const hoveredDate = xScale.invert(x);
+        const hoveredMin =  xScale.invert(x);
+
+        //console.log(hoveredMin)
 
         const getDistanceFromHoveredDate = d => Math.abs(
-            xAccessor(d) - hoveredDate
+            xAccessor(d) - hoveredMin
         )
 
         // Scan for the the closest thing
@@ -109,8 +121,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         const closestXValue = xAccessor(closestDataPoint)
         const closestYValue = yAccessor(closestDataPoint)
 
+
         let hoveredData = data[closestIndex]
         let hoveredCoords = [xScale(closestXValue), yScale(closestYValue)]
+
 
         setIsMouseMove(true)
         setCurrentHoveredData(hoveredData)
@@ -130,14 +144,14 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
     return (
         <div className={classNames("ScatterPlot", className)} ref={ref}>
-            {currentHoveredCoords && (
+            {/* {currentHoveredCoords && (
                 <Tooltip
                     currentHoveredData={currentHoveredData}
                     currentHoveredCoords={currentHoveredCoords}
                     dimensions={dimensions}
                     data={currentHoveredData}
                 />
-            )}
+            )} */}
 
             <Chart
                 dimensions={dimensions}
@@ -162,8 +176,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 />
 
                 <Circles
+                    dimensions={dimensions}
                     data={data}
                     keyAccessor={keyAccessor}
+                    minrules={minVertRules}
                     xAccessor={xAccessorScaled}
                     yAccessor={yAccessorScaled}
                     xScales={xScales}
@@ -171,6 +187,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 />
 
                 {isMouseMove && (
+                    // Vertical rule
                     <>
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
@@ -182,7 +199,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                         />
                     </>
                 )}
-                {isMouseMove && (
+                {/* {isMouseMove && (
+                    // Horizontal rule
                     <>
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
@@ -193,7 +211,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                             style={{ opacity: (isMouseMove ? 1 : 0) }}
                         />
                     </>
-                )}
+                )} */}
             </Chart>
         </div>
     );

@@ -5,6 +5,7 @@ $dp-taupe: hsla(354, 18%, 81%, 1);
 
 .ScatterPlot {
     height: calc(90vh - 6em);
+    min-height: 620px;
     min-width: 500px;
     width: calc(100% + 1em);
     //margin-bottom: 2em;

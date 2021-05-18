@@ -58,13 +58,12 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 x2={dimensions.boundedWidth}
             />
 
-            {/* Vertical lines */}
-            <line
+            {/* <line
                 className="Axis__line"
                 y1={`-${dimensions.boundedHeight}`}
                 style={{ strokeWidth: 2 }}
                 transform={`translate(${-(props.sectionwidth / 7)})`}
-            />
+            /> */}
 
             {props.minrules.map((tick, i) => (
                 <line
@@ -154,9 +153,9 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                     horizIntervals.push(level + (i * levelThreeInterval));
                 }
             }
-
         })
 
+        horizIntervals = horizIntervals.filter(interval => interval < 5.5);
         return [...new Set(horizIntervals)];
     }
 
