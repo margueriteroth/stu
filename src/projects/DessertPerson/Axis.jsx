@@ -44,7 +44,7 @@ export default Axis
 
 function AxisHorizontal({ className, dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
     let hourLabels = [5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 12];
-    // Think of these labels as strings (taken from book's x axis)
+    // Think of these labels as strings (taken from matrix's x axis)
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
 
@@ -55,15 +55,16 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
 
             <line
                 className="Axis__line"
+                x1={`-${props.xscales.mins55(props.minrules[1]) + 1.5}`}
                 x2={dimensions.boundedWidth}
             />
 
-            {/* <line
+            {/* Real fake Y axis */}
+            <line
                 className="Axis__line"
                 y1={`-${dimensions.boundedHeight}`}
-                style={{ strokeWidth: 2 }}
-                transform={`translate(${-(props.sectionwidth / 7)})`}
-            /> */}
+                transform={`translate(-${props.xscales.mins55(props.minrules[1])})`}
+            />
 
             {props.minrules.map((tick, i) => (
                 <line
@@ -80,7 +81,7 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
             {minuteSections.map((tick, i) => (
                 <line
                     key={i}
-                    className="Grid__section-delineator"
+                    className={tick == 5 ? `Grid__rules` : `Grid__section-delineator`}
                     y1={`-${dimensions.boundedHeight}`}
                     y2={30}
                     transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
@@ -156,17 +157,18 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
         })
 
         horizIntervals = horizIntervals.filter(interval => interval < 5.5);
-        return [...new Set(horizIntervals)];
+        horizIntervals = [...new Set(horizIntervals)];
+
+        if (horizIntervals[0] == 1) {
+            horizIntervals.splice(0, 1);
+        }
+        return horizIntervals;
     }
 
     let levelRules = getHorizontalIntervals();
 
     return (
         <g className="Axis AxisVertical" {...props}>
-            <line
-                className="Axis__line"
-                y2={dimensions.boundedHeight}
-            />
 
             {/* Horizontal lines */}
             {levelRules.map((tick, i) => (
@@ -190,22 +192,26 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
             ))}
 
             {ticks.map((tick, i) => (
-                <line
-                    key={i}
-                    className="Grid__section-delineator"
-                    x1={-10}
-                    x2={dimensions.boundedWidth + 30}
-                    transform={`translate(-24, ${scale(tick)})`}
-                />
+                <React.Fragment key={i}>
+                    {tick != 1 && (
+                        <line
+                            key={i}
+                            className="Grid__section-delineator"
+                            x1={-10}
+                            x2={dimensions.boundedWidth + 30}
+                            transform={`translate(${props.xscales.mins55(-props.minrules[1] * 1.25)}, ${scale(tick)})`}
+                        />
+                    )}
+                </React.Fragment>
             ))}
 
             {ticks.map((tick, i) => (
                 <text // distance until the next tick div by 2
                     key={i}
-                    className="Axis__tick"
+                    className="Axis__tick Axis__tick--difficulty"
                     transform={
                         `translate(
-                            -25,
+                            ${props.xscales.mins55(-props.minrules[1]) - 3},
                             ${scale(tick) - (
                             (scale(ticks[0]) - scale(ticks[1])) / 2
                         )}
@@ -215,17 +221,6 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                     {formatTick(tick)}
                 </text>
             ))}
-
-            {label && (
-                <text
-                    className="Axis__label"
-                    style={{
-                        transform: `translate(-56px, ${dimensions.boundedHeight / 2}px) rotate(-90deg)`
-                    }}
-                >
-                    {label}
-                </text>
-            )}
         </g>
     )
 }

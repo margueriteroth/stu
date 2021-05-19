@@ -2,6 +2,9 @@
 
 $dp-pink: hsla(354, 36%, 90%, 1);
 $dp-taupe: hsla(354, 18%, 81%, 1);
+$db-dark: #501017;
+
+$dp-grids: rgba($dp-pink, 0.5);
 
 .ScatterPlot {
     height: calc(90vh - 6em);
@@ -36,15 +39,21 @@ $dp-taupe: hsla(354, 18%, 81%, 1);
 
     .Axis__tick {
         font-size: 0.7em;
+        fill: $db-dark;
+
+        &--difficulty {
+            font-size: 1em;
+            fill: $db-dark;
+        }
     }
 
     .Grid__section-delineator {
-        stroke: darken($dp-pink, 2.55%);
-        stroke-width: 2;
+        stroke: $dp-grids;
+        stroke-width: 1.5;
     }
 
     .Grid__rules {
-        stroke: $dp-pink;
+        stroke: $dp-grids;
         stroke-width: 1;
     }
 
@@ -66,6 +75,7 @@ $dp-taupe: hsla(354, 18%, 81%, 1);
 
         .Axis__line {
             stroke: $dp-pink;
+            stroke-width: 3;
         }
     }
 

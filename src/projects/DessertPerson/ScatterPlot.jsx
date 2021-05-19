@@ -9,7 +9,7 @@ import Label from 'projects/DessertPerson/Label'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
-    const [ref, dimensions] = useChartDimensions()
+    const [ref, dimensions] = useChartDimensions({marginLeft:100})
     //const [contextRef, timelineContextDimensions] = useChartDimensions({height:100})
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredData, setCurrentHoveredData] = useState()
@@ -170,6 +170,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 />
                 <Axis
                     dimension="y"
+                    minrules={minVertRules}
+                    xscales={xScales}
                     scale={yScale}
                     label={'difficulty'}
                     numberOfTicks={5}
