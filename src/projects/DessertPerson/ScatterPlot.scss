@@ -10,6 +10,7 @@ $dp-grids: rgba($dp-pink, 0.5);
     height: calc(90vh - 6em);
     min-height: 620px;
     min-width: 500px;
+    max-width: 2000px;
     width: calc(100% + 1em);
     //margin-bottom: 2em;
     width: 100%;
@@ -21,6 +22,17 @@ $dp-grids: rgba($dp-pink, 0.5);
 
     svg text {
         fill: #969696;
+    }
+
+    .Axis__label {
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        fill: $db-dark;
+
+        &__wrapper {
+
+        }
     }
 
     .y-axis-label {

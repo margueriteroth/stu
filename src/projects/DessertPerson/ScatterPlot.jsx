@@ -9,7 +9,7 @@ import Label from 'projects/DessertPerson/Label'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
-    const [ref, dimensions] = useChartDimensions({marginLeft:100})
+    const [ref, dimensions] = useChartDimensions({ marginLeft: 100 })
     //const [contextRef, timelineContextDimensions] = useChartDimensions({height:100})
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredData, setCurrentHoveredData] = useState()
@@ -34,6 +34,42 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     }
 
     let minVertRules = getVerticalMinIntervals();
+
+    let mainLevels = [1, 2, 3, 4, 5];
+
+    let getHorizontalIntervals = () => {
+        let horizIntervals = [];
+
+        mainLevels.forEach((level, i) => {
+            let defaultInterval = 1 / 7;
+            let levelThreeInterval = 1 / 8;
+            // calc the minutes for each vertical rule (as the sections have varying timespans)
+
+            for (i = 0; i <= 7; i++) {
+                if (level != 3) {
+                    horizIntervals.push(level + (i * defaultInterval));
+                } else {
+                    horizIntervals.push(level + (i * levelThreeInterval));
+                }
+            }
+        })
+
+        horizIntervals = horizIntervals.filter(interval => interval < 5.6);
+        horizIntervals = [...new Set(horizIntervals)];
+
+        if (horizIntervals[0] == 1) {
+            horizIntervals.splice(0, 1);
+        }
+        return horizIntervals;
+    }
+
+    const yScale = d3.scaleLinear()
+        .domain([1, 5.6])
+        .range([dimensions.boundedHeight, 0])
+
+    let levelRules = getHorizontalIntervals();
+    let yRuleDistance = yScale(levelRules[1]) - yScale(levelRules[2]);
+    let yRyleDistanceThrees = Math.abs(yScale(levelRules[16]) - yScale(levelRules[17]));
 
     const xScale = d3.scaleLinear()
         .domain([5, d3.max(data, xAccessor)])
@@ -72,14 +108,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         mins360: xScale360mins
     }
 
-    // let xScaleCalc = (val) => {
-    //     let scaledNum = val < 60 ? xScales.mins55(val)
-    //         : val <= 240 ? xScales.mins30(val) + sectionWidth
-    //             : val <= 360 ? xScales.mins120(val) + (sectionWidth * 7)
-    //                 : xScales.mins360(val) + (sectionWidth * 8)
-
-    //     return scaledNum
-    // }
+    let xRuleDistance = Math.abs(xScale55mins(minVertRules[1]) - xScale55mins(minVertRules[2]));
 
     let getXScale = (val) => {
         return val < 60 ? xScales.mins55
@@ -87,11 +116,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 : val <= 360 ? xScales.mins120
                     : xScales.mins360;
     }
-
-    const yScale = d3.scaleLinear()
-        .domain([1, 5.5])
-        .range([dimensions.boundedHeight, 0])
-        .nice()
 
     const xAccessorScaled = d => xAccessor(d) < 60 ? xScales.mins55(xAccessor(d))
         : xAccessor(d) <= 240 ? xScales.mins30(xAccessor(d)) + sectionWidth
@@ -104,7 +128,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
         //let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
 
-        const hoveredMin =  xScale.invert(x);
+        const hoveredMin = xScale.invert(x);
 
         //console.log(hoveredMin)
 
@@ -121,10 +145,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         const closestXValue = xAccessor(closestDataPoint)
         const closestYValue = yAccessor(closestDataPoint)
 
-
         let hoveredData = data[closestIndex]
         let hoveredCoords = [xScale(closestXValue), yScale(closestYValue)]
-
 
         setIsMouseMove(true)
         setCurrentHoveredData(hoveredData)
@@ -167,6 +189,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     numberOfTicks={10}
                     sectionwidth={sectionWidth}
                     label={'total minutes'}
+                    levelRules={levelRules}
+                    xRuleDistance={xRuleDistance}
+                    yRuleDistance={yRuleDistance}
+                    yRyleDistanceThrees={yRyleDistanceThrees}
                 />
                 <Axis
                     dimension="y"
@@ -175,6 +201,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     scale={yScale}
                     label={'difficulty'}
                     numberOfTicks={5}
+                    levelRules={levelRules}
+                    xRuleDistance={xRuleDistance}
+                    yRuleDistance={yRuleDistance}
+                    yRyleDistanceThrees={yRyleDistanceThrees}
                 />
 
                 <Circles

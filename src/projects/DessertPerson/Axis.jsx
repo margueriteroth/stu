@@ -42,7 +42,7 @@ Axis.defaultProps = {
 export default Axis
 
 
-function AxisHorizontal({ className, dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
+function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, xRuleDistance, yRuleDistance, yRyleDistanceThrees, scale, numberOfTicks, ...props }) {
     let hourLabels = [5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 12];
     // Think of these labels as strings (taken from matrix's x axis)
 
@@ -121,51 +121,29 @@ function AxisHorizontal({ className, dimensions, label, formatTick, scale, numbe
                 </text>
             ))}
 
-            {label && (
+
+            <g className="Axis__label__wrapper"
+               transform={`translate(0, ${yRuleDistance / 2 - 4})`}
+            >
+                <rect
+                    fill="white"
+                    width={125}
+                    height={xRuleDistance}
+                    transform={`translate(1, ${-xRuleDistance/2 - 4})`}
+                />
                 <text
+                    transform={`translate(${yRuleDistance / 3}, 0)`}
                     className="Axis__label"
-                    transform={`translate(${dimensions.boundedWidth / 2}, ${dimensions.marginBottom - 10})`}
                 >
                     {label}
                 </text>
-            )}
+            </g>
         </g>
     )
 }
 
-function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...props }) {
-    const ticks = scale.ticks(numberOfTicks)
-    const rulesTicks = scale.ticks(numberOfTicks * 7);
-
-    let mainLevels = [1, 2, 3, 4, 5];
-
-    let getHorizontalIntervals = () => {
-        let horizIntervals = [];
-
-        mainLevels.forEach((level, i) => {
-            let defaultInterval = 1 / 7;
-            let levelThreeInterval = 1 / 8;
-            // calc the minutes for each vertical rule (as the sections have varying timespans)
-
-            for (i = 0; i <= 7; i++) {
-                if (level != 3) {
-                    horizIntervals.push(level + (i * defaultInterval));
-                } else {
-                    horizIntervals.push(level + (i * levelThreeInterval));
-                }
-            }
-        })
-
-        horizIntervals = horizIntervals.filter(interval => interval < 5.5);
-        horizIntervals = [...new Set(horizIntervals)];
-
-        if (horizIntervals[0] == 1) {
-            horizIntervals.splice(0, 1);
-        }
-        return horizIntervals;
-    }
-
-    let levelRules = getHorizontalIntervals();
+function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDistanceThrees, formatTick, levelRules, scale, numberOfTicks, ...props }) {
+    const ticks = scale.ticks(numberOfTicks);
 
     return (
         <g className="Axis AxisVertical" {...props}>
@@ -175,6 +153,7 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                 <line
                     key={i}
                     className="Grid__rules"
+                    x1={`-${props.xscales.mins55(props.minrules[1]) + 1.5}`}
                     x2={dimensions.boundedWidth}
                     transform={`translate(0, ${scale(tick)})`}
                 />
@@ -212,15 +191,31 @@ function AxisVertical({ dimensions, label, formatTick, scale, numberOfTicks, ...
                     transform={
                         `translate(
                             ${props.xscales.mins55(-props.minrules[1]) - 3},
-                            ${scale(tick) - (
+                            ${scale(tick) + 3 - (
                             (scale(ticks[0]) - scale(ticks[1])) / 2
-                        )}
                         )
+                        })
                     `}
                 >
                     {formatTick(tick)}
                 </text>
             ))}
+
+            <g className="Axis__label__wrapper" transform={`translate(-${props.xscales.mins55(props.minrules[1]) - 3}, ${scale(levelRules[0])}), rotate(-90)`}>
+                <rect
+                    fill="white"
+                    width={92}
+                    height={xRuleDistance}
+                    transform={`translate(1, ${-xRuleDistance/2 - 4})`}
+                />
+                <text
+                    transform={`translate(${yRuleDistance / 3}, 0)`}
+                    className="Axis__label"
+                >
+                    {label}
+                </text>
+            </g>
+
         </g>
     )
 }
