@@ -48,23 +48,65 @@ function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, 
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
 
+    let arrowSize = 10;
+
     return (
         <g
             className={classNames("Axis AxisHorizontal", className)}
             transform={`translate(0, ${dimensions.boundedHeight})`} {...props}>
 
-            <line
-                className="Axis__line"
-                x1={`-${props.xscales.mins55(props.minrules[1]) + 1.5}`}
-                x2={dimensions.boundedWidth}
-            />
+            <g>
+                {/* Horiz Arrow Top */}
+                <line
+                    x1={`${dimensions.boundedWidth}`}
+                    x2={`${dimensions.boundedWidth - arrowSize - 3}`}
+                    y1={0}
+                    y2={-arrowSize - 1}
+                    className="Axis__arrow Axis__line Axis__line--left horiz"
+                />
+
+                {/* Horiz Arrow Bottom */}
+                <line
+                    x1={`${dimensions.boundedWidth}`}
+                    x2={`${dimensions.boundedWidth - arrowSize - 3}`}
+                    y1={0}
+                    y2={arrowSize + 1}
+                    className="Axis__arrow Axis__line Axis__line--right horiz"
+                />
+
+                <line
+                    className="Axis__line"
+                    x1={`-${props.xscales.mins55(props.minrules[1]) + 1.5}`}
+                    x2={dimensions.boundedWidth}
+                />
+            </g>
 
             {/* Real fake Y axis */}
-            <line
-                className="Axis__line"
-                y1={`-${dimensions.boundedHeight}`}
-                transform={`translate(-${props.xscales.mins55(props.minrules[1])})`}
-            />
+            <g>
+                {/* Vert Arrow Left */}
+                <line
+                    x1={-xRuleDistance + 1}
+                    x2={-xRuleDistance - arrowSize + 1}
+                    y1={`${-dimensions.boundedHeight}`}
+                    y2={`${-dimensions.boundedHeight + arrowSize}`}
+                    className="Axis__arrow Axis__line Axis__line--left vert"
+                />
+
+                {/* Vert Arrow Right */}
+                <line
+                    x1={-xRuleDistance - 1}
+                    x2={-xRuleDistance + arrowSize - 1}
+                    y1={`${-dimensions.boundedHeight}`}
+                    y2={`${-dimensions.boundedHeight + arrowSize}`}
+                    className="Axis__arrow Axis__line Axis__line--right vert"
+                />
+
+                <line
+                    className="Axis__line"
+                    y1={`-${dimensions.boundedHeight}`}
+                    transform={`translate(-${props.xscales.mins55(props.minrules[1])})`}
+                />
+            </g>
 
             {props.minrules.map((tick, i) => (
                 <line
@@ -123,13 +165,13 @@ function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, 
 
 
             <g className="Axis__label__wrapper"
-               transform={`translate(0, ${yRuleDistance / 2 - 4})`}
+                transform={`translate(0, ${yRuleDistance / 2 - 4})`}
             >
                 <rect
                     fill="white"
                     width={125}
                     height={xRuleDistance}
-                    transform={`translate(1, ${-xRuleDistance/2 - 4})`}
+                    transform={`translate(1, ${-xRuleDistance / 2 - 4})`}
                 />
                 <text
                     transform={`translate(${yRuleDistance / 3}, 0)`}
@@ -144,6 +186,8 @@ function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, 
 
 function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDistanceThrees, formatTick, levelRules, scale, numberOfTicks, ...props }) {
     const ticks = scale.ticks(numberOfTicks);
+
+    let arrowSize = 8;
 
     return (
         <g className="Axis AxisVertical" {...props}>
@@ -206,7 +250,7 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
                     fill="white"
                     width={92}
                     height={xRuleDistance}
-                    transform={`translate(1, ${-xRuleDistance/2 - 4})`}
+                    transform={`translate(1, ${-xRuleDistance / 2 - 4})`}
                 />
                 <text
                     transform={`translate(${yRuleDistance / 3}, 0)`}
