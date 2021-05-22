@@ -6,7 +6,7 @@ import "./dessert-person.scss"
 
 const DessertPage = () => (
     <Layout className="DessertPage">
-        <MaxWidth size="l" className="">
+        <MaxWidth size="xl" className="">
             <DessertPerson />
             {/* <div className="test">
                 <div style={{background: "red"}}></div>

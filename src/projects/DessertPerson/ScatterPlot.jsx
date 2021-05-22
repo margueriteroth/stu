@@ -8,7 +8,7 @@ import Circles from 'projects/DessertPerson/Circles'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
-    const [ref, dimensions] = useChartDimensions({ marginLeft: 100 })
+    const [ref, dimensions] = useChartDimensions({ marginLeft: 75, marginRight: 50 })
     //const [contextRef, timelineContextDimensions] = useChartDimensions({height:100})
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredData, setCurrentHoveredData] = useState()

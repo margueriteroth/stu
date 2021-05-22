@@ -61,7 +61,8 @@ $dp-grids: rgba($dp-pink, 0.5);
         fill: $db-dark;
 
         &--difficulty {
-            font-size: 1em;
+            font-size: 0.9em;
+            font-weight: 700;
             fill: $db-dark;
         }
     }

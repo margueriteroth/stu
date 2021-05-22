@@ -221,20 +221,38 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
                             key={i}
                             className="Grid__section-delineator"
                             x1={-10}
-                            x2={dimensions.boundedWidth + 30}
+                            x2={dimensions.boundedWidth + xRuleDistance * 6}
                             transform={`translate(${props.xscales.mins55(-props.minrules[1] * 1.25)}, ${scale(tick)})`}
                         />
                     )}
                 </React.Fragment>
             ))}
 
+            {/* Left Y Numbers */}
             {ticks.map((tick, i) => (
                 <text // distance until the next tick div by 2
                     key={i}
                     className="Axis__tick Axis__tick--difficulty"
                     transform={
                         `translate(
-                            ${props.xscales.mins55(-props.minrules[1]) - 3},
+                            ${-xRuleDistance * 2.25 - 3},
+                            ${scale(tick) + 3 - (
+                            (scale(ticks[0]) - scale(ticks[1])) / 2
+                        )
+                        })
+                    `}
+                >
+                    {formatTick(tick)}
+                </text>
+            ))}
+            {/* Right Y Numbers */}
+            {ticks.map((tick, i) => (
+                <text // distance until the next tick div by 2
+                    key={i}
+                    className="Axis__tick Axis__tick--difficulty"
+                    transform={
+                        `translate(
+                            ${dimensions.boundedWidth + xRuleDistance},
                             ${scale(tick) + 3 - (
                             (scale(ticks[0]) - scale(ticks[1])) / 2
                         )
@@ -245,6 +263,7 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
                 </text>
             ))}
 
+            {/* "Difficulty" label */}
             <g className="Axis__label__wrapper"
                transform={`translate(${-props.xscales.mins55(props.minrules[1]) + 4}, ${scale(levelRules[0])}), rotate(-90)`}>
                 <rect
