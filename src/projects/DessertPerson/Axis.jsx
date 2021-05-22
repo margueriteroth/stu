@@ -245,7 +245,8 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
                 </text>
             ))}
 
-            <g className="Axis__label__wrapper" transform={`translate(-${props.xscales.mins55(props.minrules[1]) - 3}, ${scale(levelRules[0])}), rotate(-90)`}>
+            <g className="Axis__label__wrapper"
+               transform={`translate(${-props.xscales.mins55(props.minrules[1]) + 4}, ${scale(levelRules[0])}), rotate(-90)`}>
                 <rect
                     fill="white"
                     width={92}

@@ -5,7 +5,6 @@ import { useChartDimensions } from "components/utils"
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
-import Label from 'projects/DessertPerson/Label'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
@@ -15,7 +14,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
 
-    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360];
+    let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
 
     let getVerticalMinIntervals = () => {
         let verticalRuleMinutes = [];
@@ -26,7 +25,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
             for (i = 0; i <= 5; i++) {
                 let totalMin = min + (i * interval)
-                if (totalMin < 720) verticalRuleMinutes.push(totalMin);
+                if (totalMin < 1080) verticalRuleMinutes.push(totalMin);
             }
         })
 
@@ -80,7 +79,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         mins55: 1,
         mins30: 6,
         mins120: 1,
-        mins360: 1
+        mins360: 2
     }
     let sectionWidth = dimensions.boundedWidth
         / Object.values(colsPerSection).reduce((a, b) => a + b, 0);
@@ -98,7 +97,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         .range([0, (sectionWidth * colsPerSection["mins120"])])
 
     const xScale360mins = d3.scaleLinear()
-        .domain([360, 720])
+        .domain([360, 1080])
         .range([0, (sectionWidth * colsPerSection["mins360"])])
 
     let xScales = {
@@ -244,14 +243,13 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     </>
                 )} */}
 
-
                 <g>
                     <text
                         x={-xRuleDistance * 2 - 10}
                         y={0}
-                        class="ScatterPlot__title">
+                        className="ScatterPlot__title">
                         Recipe Matrix
-                </text>
+                    </text>
                 </g>
             </Chart>
 
