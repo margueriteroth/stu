@@ -174,7 +174,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     data={currentHoveredData}
                 />
             )} */}
-
             <Chart
                 dimensions={dimensions}
                 onMouseMove={onMouseMove}
@@ -244,7 +243,18 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                         />
                     </>
                 )} */}
+
+
+                <g>
+                    <text
+                        x={-xRuleDistance * 2 - 10}
+                        y={0}
+                        class="ScatterPlot__title">
+                        Recipe Matrix
+                </text>
+                </g>
             </Chart>
+
         </div>
     );
 };

@@ -9,7 +9,7 @@ $dp-grids: rgba($dp-pink, 0.5);
 .ScatterPlot {
     height: calc(90vh - 6em);
     min-height: 620px;
-    min-width: 500px;
+    min-width: 700px;
     max-width: 2000px;
     width: calc(100% + 1em);
     //margin-bottom: 2em;
@@ -20,9 +20,16 @@ $dp-grids: rgba($dp-pink, 0.5);
         height: 100px;
     }
 
-    svg text {
-        fill: #969696;
+    &__title {
+        font-size: 3em;
+        font-style: italic;
+        font-weight: 600;
+        fill: saturate(darken($dp-pink, 16%), 5%);
     }
+
+    // svg text {
+    //     fill: #969696;
+    // }
 
     .Axis__label {
         text-transform: uppercase;

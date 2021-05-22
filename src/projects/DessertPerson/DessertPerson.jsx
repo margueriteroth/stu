@@ -12,7 +12,6 @@ chapterList = [...new Set(chapterList)]
 const DessertPerson = () => {
     return (
         <div>
-            Dessert person
             <ScatterPlot
                 data={data}
                 xAccessor={minutesAccessor}
