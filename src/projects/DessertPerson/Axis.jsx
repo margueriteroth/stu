@@ -49,11 +49,8 @@ function AxisHorizontal({ className, dimensions, label, levelRules, yScale, form
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
 
     let arrowSize = 10;
-
     let yArrowOffset = yRuleDistance * 3;
-
     let xTickOffset = yRuleDistance * 2 < 50 ? 50 : yRuleDistance * 2;
-    console.log(xTickOffset)
 
     return (
         <g
@@ -219,7 +216,7 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
 
             {ticks.map((tick, i) => (
                 <React.Fragment key={i}>
-                    {tick != 1 && (
+                    {(tick != 1 && tick != 6) && (
                         <line
                             key={i}
                             className="Grid__section-delineator"

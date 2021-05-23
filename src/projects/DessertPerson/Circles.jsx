@@ -14,9 +14,9 @@ const Circles = ({ data, keyAccessor, xAccessor, yAccessor, radius, xScales, dim
                         r={typeof radius == "function" ? radius(d) : radius}
                     />
                     <text
+                        className="Circle__label"
                         style={{
                             textAnchor: (xAccessor(d, i) > dimensions.boundedWidth - 100) ? "end" : "start",
-                            fontSize: "0.65rem",
                         }}
                         x={xAccessor(d, i) + 3}
                         y={yAccessor(d, i) - 3}>

@@ -70,10 +70,15 @@ $dp-grids: rgba($dp-pink, 0.5);
             font-weight: 700;
             fill: $db-dark;
         }
+
+        @media(max-width: 1000px) {
+            font-size: 0.7em;
+            font-weight: 500;
+        }
     }
 
     .Grid__section-delineator {
-        stroke: $dp-grids;
+        stroke: $dp-pink;
         stroke-width: 1.5;
     }
 
@@ -137,6 +142,11 @@ $dp-grids: rgba($dp-pink, 0.5);
     .Circle {
         transition: all 0.15s ease-out;
         pointer-events: none;
+
+        &__label {
+            font-size: 0.65rem;
+            fill: darken($db-dark, 0.6);
+        }
     }
 
     &__hover-line {
