@@ -59,8 +59,11 @@ $dp-grids: rgba($dp-pink, 0.5);
     }
 
     .Axis__tick {
-        font-size: 0.7em;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.08em;
         fill: $db-dark;
+        font-size: 0.9em;
 
         &--difficulty {
             font-size: 0.9em;

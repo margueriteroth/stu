@@ -52,6 +52,9 @@ function AxisHorizontal({ className, dimensions, label, levelRules, yScale, form
 
     let yArrowOffset = yRuleDistance * 3;
 
+    let xTickOffset = yRuleDistance * 2 < 50 ? 50 : yRuleDistance * 2;
+    console.log(xTickOffset)
+
     return (
         <g
             className={classNames("Axis AxisHorizontal", className)}
@@ -128,7 +131,7 @@ function AxisHorizontal({ className, dimensions, label, levelRules, yScale, form
                     key={i}
                     className={tick == 5 ? `Grid__rules` : `Grid__section-delineator`}
                     y1={`-${dimensions.boundedHeight}`}
-                    y2={30}
+                    y2={xTickOffset}
                     transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
                         : tick <= 240 ? props.xscales.mins30(tick) + props.sectionwidth
                             : tick <= 360 ? props.xscales.mins120(tick) + (props.sectionwidth * 7)
@@ -137,33 +140,34 @@ function AxisHorizontal({ className, dimensions, label, levelRules, yScale, form
                 />
             ))}
 
-
             {minuteSections.map((tick, i) => (
-                <text
-                    key={i}
-                    className="Axis__tick"
-                    transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
-                        : tick <= 240 ? props.xscales.mins30(tick) + props.sectionwidth
-                            : tick <= 360 ? props.xscales.mins120(tick) + (props.sectionwidth * 7)
-                                : props.xscales.mins360(tick) + (props.sectionwidth * 8)}, 45)`}
-                >
-                    {hourLabels[i]}
-                    {hourLabels[i] == 5 ? (
-                        ` min`
-                    ) : (
-                        <>
-                            hour
+                <g key={i} transform={`translate(${tick < 60 ? props.xscales.mins55(tick)
+                    : tick <= 240 ? props.xscales.mins30(tick) + props.sectionwidth
+                        : tick <= 360 ? props.xscales.mins120(tick) + (props.sectionwidth * 7)
+                            : props.xscales.mins360(tick) + (props.sectionwidth * 8)}, ${xTickOffset})`}>
+                    <text
+                        transform={`translate(5, 0)`}
+                        className="Axis__tick"
+                    >
+                        {hourLabels[i]}
+                        {hourLabels[i] == 5 ? (
+                            ` min`
+                        ) : (
+                            <>
+                               &#8202; hour
                             {hourLabels[i] != 1 && (
-                                `s`
-                            )}
-                        </>
-                    )}
+                                    `s`
+                                )}
+                            </>
+                        )}
 
-                    {hourLabels[i] == 12 && (
-                        ` +`
-                    )}
+                        {hourLabels[i] == 12 && (
+                            ` +`
+                        )}
 
-                </text>
+                    </text>
+                </g>
+
             ))}
 
             <g className="Axis__label__wrapper"
