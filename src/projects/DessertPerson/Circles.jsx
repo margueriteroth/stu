@@ -16,7 +16,7 @@ const Circles = ({ data, keyAccessor, xAccessor, yAccessor, radius, xScales, dim
                     <text
                         style={{
                             textAnchor: (xAccessor(d, i) > dimensions.boundedWidth - 100) ? "end" : "start",
-                            fontSize: "0.75rem",
+                            fontSize: "0.65rem",
                         }}
                         x={xAccessor(d, i) + 3}
                         y={yAccessor(d, i) - 3}>

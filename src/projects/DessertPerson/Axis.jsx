@@ -42,13 +42,15 @@ Axis.defaultProps = {
 export default Axis
 
 
-function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, xRuleDistance, yRuleDistance, yRyleDistanceThrees, scale, numberOfTicks, ...props }) {
+function AxisHorizontal({ className, dimensions, label, levelRules, yScale, formatTick, xRuleDistance, yRuleDistance, yRyleDistanceThrees, scale, numberOfTicks, ...props }) {
     let hourLabels = [5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 6, 12];
     // Think of these labels as strings (taken from matrix's x axis)
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720];
 
     let arrowSize = 10;
+
+    let yArrowOffset = yRuleDistance * 3;
 
     return (
         <g
@@ -58,53 +60,54 @@ function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, 
             <g>
                 {/* Horiz Arrow Top */}
                 <line
-                    x1={`${dimensions.boundedWidth}`}
-                    x2={`${dimensions.boundedWidth - arrowSize - 3}`}
-                    y1={0}
-                    y2={-arrowSize - 1}
+                    x1={`${(xRuleDistance * 1.5) + dimensions.boundedWidth}`}
+                    x2={`${(xRuleDistance * 1.5) + dimensions.boundedWidth - arrowSize - 3}`}
+                    y1={2}
+                    y2={-arrowSize - 2}
                     className="Axis__arrow Axis__line Axis__line--left horiz"
                 />
 
                 {/* Horiz Arrow Bottom */}
                 <line
-                    x1={`${dimensions.boundedWidth}`}
-                    x2={`${dimensions.boundedWidth - arrowSize - 3}`}
-                    y1={0}
+                    x1={`${(xRuleDistance * 1.5) + dimensions.boundedWidth}`}
+                    x2={`${(xRuleDistance * 1.5) + dimensions.boundedWidth - arrowSize - 3}`}
+                    y1={-2}
                     y2={arrowSize + 1}
                     className="Axis__arrow Axis__line Axis__line--right horiz"
                 />
 
                 <line
                     className="Axis__line"
-                    x1={`-${props.xscales.mins55(props.minrules[1]) + 1.5}`}
-                    x2={dimensions.boundedWidth}
+                    x1={-xRuleDistance - 1.5}
+                    x2={dimensions.boundedWidth + (xRuleDistance * 1.5) - 1}
                 />
             </g>
 
             {/* Real fake Y axis */}
             <g>
                 {/* Vert Arrow Left */}
-                <line
-                    x1={-xRuleDistance + 1}
-                    x2={-xRuleDistance - arrowSize + 1}
-                    y1={`${-dimensions.boundedHeight}`}
-                    y2={`${-dimensions.boundedHeight + arrowSize}`}
-                    className="Axis__arrow Axis__line Axis__line--left vert"
-                />
+                <g transform={`translate(0, ${yArrowOffset})`}>
+                    <line
+                        x1={-xRuleDistance + 1}
+                        x2={-xRuleDistance - arrowSize + 1}
+                        y1={`${-dimensions.boundedHeight}`}
+                        y2={`${-dimensions.boundedHeight + arrowSize}`}
+                        className="Axis__arrow Axis__line Axis__line--left vert"
+                    />
 
-                {/* Vert Arrow Right */}
-                <line
-                    x1={-xRuleDistance - 1}
-                    x2={-xRuleDistance + arrowSize - 1}
-                    y1={`${-dimensions.boundedHeight}`}
-                    y2={`${-dimensions.boundedHeight + arrowSize}`}
-                    className="Axis__arrow Axis__line Axis__line--right vert"
-                />
-
+                    {/* Vert Arrow Right */}
+                    <line
+                        x1={-xRuleDistance - 1}
+                        x2={-xRuleDistance + arrowSize - 1}
+                        y1={`${-dimensions.boundedHeight}`}
+                        y2={`${-dimensions.boundedHeight + arrowSize}`}
+                        className="Axis__arrow Axis__line Axis__line--right vert"
+                    />
+                </g>
                 <line
                     className="Axis__line"
-                    y1={`-${dimensions.boundedHeight}`}
-                    transform={`translate(-${props.xscales.mins55(props.minrules[1])})`}
+                    y1={`-${dimensions.boundedHeight - yArrowOffset}`}
+                    transform={`translate(-${xRuleDistance})`}
                 />
             </g>
 
@@ -163,7 +166,6 @@ function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, 
                 </text>
             ))}
 
-
             <g className="Axis__label__wrapper"
                 transform={`translate(0, ${yRuleDistance / 2 - 4})`}
             >
@@ -186,9 +188,6 @@ function AxisHorizontal({ className, dimensions, label, levelRules, formatTick, 
 
 function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDistanceThrees, formatTick, levelRules, scale, numberOfTicks, ...props }) {
     const ticks = scale.ticks(numberOfTicks);
-
-    let arrowSize = 8;
-
     return (
         <g className="Axis AxisVertical" {...props}>
 
@@ -207,10 +206,10 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
                 <rect
                     key={i}
                     className="Grid__stripe"
-                    x={dimensions.marginLeft}
-                    width={dimensions.boundedWidth}
+                    x={-xRuleDistance}
+                    width={dimensions.boundedWidth + xRuleDistance}
                     height={scale(ticks[0]) - scale(ticks[1])}
-                    transform={`translate(-${dimensions.marginLeft}, ${scale(tick)})`}
+                    transform={`translate(0, ${scale(tick)})`}
                 />
             ))}
 
@@ -221,8 +220,8 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
                             key={i}
                             className="Grid__section-delineator"
                             x1={-10}
-                            x2={dimensions.boundedWidth + xRuleDistance * 6}
-                            transform={`translate(${props.xscales.mins55(-props.minrules[1] * 1.25)}, ${scale(tick)})`}
+                            x2={dimensions.boundedWidth + (xRuleDistance * 4.25)}
+                            transform={`translate(${-xRuleDistance * 2.5}, ${scale(tick)})`}
                         />
                     )}
                 </React.Fragment>
@@ -265,7 +264,7 @@ function AxisVertical({ dimensions, label, xRuleDistance, yRuleDistance, yRyleDi
 
             {/* "Difficulty" label */}
             <g className="Axis__label__wrapper"
-               transform={`translate(${-props.xscales.mins55(props.minrules[1]) + 4}, ${scale(levelRules[0])}), rotate(-90)`}>
+                transform={`translate(${-props.xscales.mins55(props.minrules[1]) + 4}, ${scale(levelRules[0])}), rotate(-90)`}>
                 <rect
                     fill="white"
                     width={92}

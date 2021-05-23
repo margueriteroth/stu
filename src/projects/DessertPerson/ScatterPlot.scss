@@ -4,13 +4,15 @@ $dp-pink: hsla(354, 36%, 90%, 1);
 $dp-taupe: hsla(354, 18%, 81%, 1);
 $db-dark: #501017;
 
+$dp-stripe: hsla(353, 8%, 80%, 0.16);
+
 $dp-grids: rgba($dp-pink, 0.5);
 
 .ScatterPlot {
     height: calc(90vh - 6em);
     min-height: 620px;
     min-width: 700px;
-    max-width: 2000px;
+    max-width: 1700px;
     width: calc(100% + 1em);
     //margin-bottom: 2em;
     width: 100%;
@@ -79,6 +81,7 @@ $dp-grids: rgba($dp-pink, 0.5);
 
     .Grid__stripe {
         fill: rgba($dp-taupe, 0.2);
+        fill: $dp-stripe;
 
         &:nth-of-type(even) {
             display: none;
@@ -95,7 +98,7 @@ $dp-grids: rgba($dp-pink, 0.5);
 
         .Axis__line {
             stroke: $dp-pink;
-            stroke-width: 3;
+            stroke-width: 5;
         }
     }
 

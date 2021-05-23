@@ -8,7 +8,7 @@ import Circles from 'projects/DessertPerson/Circles'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
-    const [ref, dimensions] = useChartDimensions({ marginLeft: 75, marginRight: 50 })
+    const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
     //const [contextRef, timelineContextDimensions] = useChartDimensions({height:100})
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredData, setCurrentHoveredData] = useState()
@@ -36,6 +36,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
     let mainLevels = [1, 2, 3, 4, 5];
 
+    let yMax = 6;
+
     let getHorizontalIntervals = () => {
         let horizIntervals = [];
 
@@ -53,7 +55,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
             }
         })
 
-        horizIntervals = horizIntervals.filter(interval => interval < 5.6);
+        horizIntervals = horizIntervals.filter(interval => interval < yMax);
         horizIntervals = [...new Set(horizIntervals)];
 
         if (horizIntervals[0] == 1) {
@@ -63,7 +65,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     }
 
     const yScale = d3.scaleLinear()
-        .domain([1, 5.6])
+        .domain([1, yMax])
         .range([dimensions.boundedHeight, 0])
 
     let levelRules = getHorizontalIntervals();
@@ -108,6 +110,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     }
 
     let xRuleDistance = Math.abs(xScale55mins(minVertRules[1]) - xScale55mins(minVertRules[2]));
+    let yArrowOffset = xRuleDistance * 3;
 
     let getXScale = (val) => {
         return val < 60 ? xScales.mins55
@@ -181,7 +184,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
             >
                 <Axis
                     dimension="x"
-                    scale={xScale}
+                    yScale={yScale}
                     minrules={minVertRules}
                     xscales={xScales}
                     numberOfTicks={10}
@@ -243,10 +246,9 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     </>
                 )} */}
 
-                <g>
+                <g transform={`
+                    translate(${-xRuleDistance * 2.5}, ${yRuleDistance * 1.5})`}>
                     <text
-                        x={-xRuleDistance * 2 - 10}
-                        y={0}
                         className="ScatterPlot__title">
                         Recipe Matrix
                     </text>
