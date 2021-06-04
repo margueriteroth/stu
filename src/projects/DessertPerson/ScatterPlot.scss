@@ -150,7 +150,7 @@ $dp-grids: rgba($dp-pink, 0.5);
     }
 
     &__hover-line {
-        fill: rgba(#000000, 0.25);
+        fill: $db-dark;
         transition: all 0.15s ease-out;
         opacity: 0.5;
         pointer-events: none;

@@ -9,7 +9,6 @@ import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
-    //const [contextRef, timelineContextDimensions] = useChartDimensions({height:100})
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
@@ -76,13 +75,13 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         .domain([5, d3.max(data, xAccessor)])
         .range([0, dimensions.boundedWidth])
 
-
-    let colsPerSection = {
+    const colsPerSection = {
         mins55: 1,
         mins30: 6,
         mins120: 1,
         mins360: 2
     }
+
     let sectionWidth = dimensions.boundedWidth
         / Object.values(colsPerSection).reduce((a, b) => a + b, 0);
 
@@ -109,50 +108,70 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         mins360: xScale360mins
     }
 
+
+    let getXScale = (val) => {
+        let totalCols = Object.values(colsPerSection).reduce(function(a, b){ return a + b });
+        let hoveredCol = Math.ceil(val / (dimensions.boundedWidth / totalCols));
+        let scale;
+
+        if (hoveredCol == 1) {
+            console.log('mins 55')
+            scale = xScales.mins55;
+        } else if ( hoveredCol <= 7) {
+            console.log('mins 30')
+            scale = xScales.mins30;
+        } else if (hoveredCol == 8) {
+            console.log('mins 120')
+            scale = xScale120mins;
+        } else {
+            console.log('mins 360')
+            scale = xScale360mins;
+        }
+
+        return scale;
+    }
+
     let xRuleDistance = Math.abs(xScale55mins(minVertRules[1]) - xScale55mins(minVertRules[2]));
     let yArrowOffset = xRuleDistance * 3;
 
-    let getXScale = (val) => {
-        return val < 60 ? xScales.mins55
-            : val <= 240 ? xScales.mins30
-                : val <= 360 ? xScales.mins120
-                    : xScales.mins360;
-    }
-
-    const xAccessorScaled = d => xAccessor(d) < 60 ? xScales.mins55(xAccessor(d))
+    // Scales and shifts
+    const xAccessorScaled = d => xAccessor(d) <= 60 ? xScales.mins55(xAccessor(d))
         : xAccessor(d) <= 240 ? xScales.mins30(xAccessor(d)) + sectionWidth
             : xAccessor(d) <= 360 ? xScales.mins120(xAccessor(d)) + (sectionWidth * 7)
                 : xScales.mins360(xAccessor(d)) + (sectionWidth * 8)
     const yAccessorScaled = d => yScale(yAccessor(d))
+
 
     const onMouseMove = e => {
 
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
         //let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
 
-        const hoveredMin = xScale.invert(x);
+        let correctXScale = getXScale(x);
+        let hoveredMin = correctXScale.invert(x);
 
-        //console.log(hoveredMin)
 
-        const getDistanceFromHoveredDate = d => Math.abs(
-            xAccessor(d) - hoveredMin
-        )
+        console.log(hoveredMin)
 
-        // Scan for the the closest thing
-        const closestIndex = d3.scan(data, (a, b) => (
-            getDistanceFromHoveredDate(a) - getDistanceFromHoveredDate(b)
-        ))
-        const closestDataPoint = data[closestIndex]
+        // const getDistanceFromHoveredDate = d => Math.abs(
+        //     xAccessor(d) - hoveredMin
+        // )
 
-        const closestXValue = xAccessor(closestDataPoint)
-        const closestYValue = yAccessor(closestDataPoint)
+        // // Scan for the the closest thing
+        // const closestIndex = d3.scan(data, (a, b) => (
+        //     getDistanceFromHoveredDate(a) - getDistanceFromHoveredDate(b)
+        // ))
+        // const closestDataPoint = data[closestIndex]
 
-        let hoveredData = data[closestIndex]
-        let hoveredCoords = [xScale(closestXValue), yScale(closestYValue)]
+        // const closestXValue = xAccessor(closestDataPoint)
+        // const closestYValue = yAccessor(closestDataPoint)
 
-        setIsMouseMove(true)
-        setCurrentHoveredData(hoveredData)
-        setCurrentHoveredCoords(hoveredCoords)
+        // let hoveredData = data[closestIndex]
+        // let hoveredCoords = [xScale(closestXValue), yScale(closestYValue)]
+
+        // setIsMouseMove(true)
+        // setCurrentHoveredData(hoveredData)
+        // setCurrentHoveredCoords(hoveredCoords)
     }
 
     const onMouseEnter = e => {
@@ -171,11 +190,19 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
             {/* {currentHoveredCoords && (
                 <Tooltip
                     currentHoveredData={currentHoveredData}
-                    currentHoveredCoords={currentHoveredCoords}
+                    currentHoveredCoords={[xRuleDistance * 2, yRuleDistance * 3]}
                     dimensions={dimensions}
                     data={currentHoveredData}
                 />
             )} */}
+
+            <Tooltip
+                currentHoveredData={currentHoveredData}
+                currentHoveredCoords={[xRuleDistance * 2, yRuleDistance * 3]}
+                dimensions={dimensions}
+                data={currentHoveredData}
+            />
+
             <Chart
                 dimensions={dimensions}
                 onMouseMove={onMouseMove}
@@ -232,19 +259,19 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                         />
                     </>
                 )}
-                {/* {isMouseMove && (
+                {isMouseMove && (
                     // Horizontal rule
                     <>
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
-                            width={currentHoveredCoords[0]}
+                            width={currentHoveredCoords[0] + xRuleDistance}
                             height="1"
-                            x={0}
+                            x={-xRuleDistance}
                             y={currentHoveredCoords[1]}
                             style={{ opacity: (isMouseMove ? 1 : 0) }}
                         />
                     </>
-                )} */}
+                )}
 
                 <g transform={`
                     translate(${-xRuleDistance * 2.5}, ${yRuleDistance * 1.5})`}>
@@ -278,9 +305,10 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
     let leftScrubCoord = currentHoveredCoords[0] + dimensions.marginLeft
     let topScrubCoord = currentHoveredCoords[1] + dimensions.marginTop
 
-    let name = data["Recipe"];
-    let difficulty = data["Difficulty"];
-    let time = data["Minutes"] / 60;
+    let name = data ? data["Recipe"] : "recipe";
+    let difficulty = data ? data["Difficulty"] : "difficulty";
+    let mins = data ? data["Minutes"] : "mins"
+    let time = data ? data["Minutes"] / 60 : "00:00";
 
     return (
         <div className="Tooltip__container"
@@ -297,7 +325,7 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
                     Level: {difficulty}
                 </p>
                 <p>
-                    {time} hours, {data["Minutes"]} total minutes
+                    {time} hours, {mins} total minutes
                 </p>
             </div>
         </div>
