@@ -103,21 +103,21 @@ module.exports = {
                 ],
             },
         },
-        {
-            /**
-             * First up is the WordPress source plugin that connects Gatsby
-             * to your WordPress site.
-             *
-             * visit the plugin docs to learn more
-             * https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby-source-wordpress/README.md
-             *
-             */
-            resolve: `gatsby-source-wordpress`,
-            options: {
-              // the only required plugin option for WordPress is the GraphQL url.
-              url: `http://stu.local/graphql`,
-            },
-          },
+        // {
+        //     /**
+        //      * First up is the WordPress source plugin that connects Gatsby
+        //      * to your WordPress site.
+        //      *
+        //      * visit the plugin docs to learn more
+        //      * https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby-source-wordpress/README.md
+        //      *
+        //      */
+        //     resolve: `gatsby-source-wordpress`,
+        //     options: {
+        //       // the only required plugin option for WordPress is the GraphQL url.
+        //       url: `https://studb561641655.wpcomstaging.com/graphql`,
+        //     },
+        //   },
         {
             resolve: `gatsby-source-filesystem`,
             options: {

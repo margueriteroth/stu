@@ -53,7 +53,7 @@ const Feed = () => {
 
     return (
         <StaticQuery
-            query={WP_FEED_QUERY}
+
             render={(data) => {
                 const content = data.allWpPost.edges;
 
@@ -139,32 +139,32 @@ Feed.propTypes = {
 export default Feed;
 
 
-const WP_FEED_QUERY = graphql`
-    query WPFeedQuery {
-        allWpPost {
-            edges {
-                node {
-                    guid
-                    slug
-                    title
-                    categories {
-                        nodes {
-                            name
-                        }
-                    }
-                    featuredImage {
-                        node {
-                            localFile {
-                                childImageSharp {
-                                    fluid {
-                                        ...GatsbyImageSharpFluid
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
+// const WP_FEED_QUERY = graphql`
+//     query WPFeedQuery {
+//         allWpPost {
+//             edges {
+//                 node {
+//                     guid
+//                     slug
+//                     title
+//                     categories {
+//                         nodes {
+//                             name
+//                         }
+//                     }
+//                     featuredImage {
+//                         node {
+//                             localFile {
+//                                 childImageSharp {
+//                                     fluid {
+//                                         ...GatsbyImageSharpFluid
+//                                     }
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// `;
