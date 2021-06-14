@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import classNames from "classnames"
 import * as d3 from "d3"
+import { Delaunay } from "d3-delaunay";
 import { useChartDimensions } from "components/utils"
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
@@ -10,10 +11,23 @@ import './ScatterPlot.scss'
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
     const [isMouseMove, setIsMouseMove] = useState(false)
+    const [currentHoveredCol, setCurrentHoveredCol] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
 
+    const [dataDots, setDataDots] = useState([])
+    const [voronoiData, setVoronoiData] = useState()
+
+    const [fakeXY, setFakeXY] = useState([])
+
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
+
+    let covertMins = (mins) => {
+        // minutes to hours and mins
+        let hours = Math.floor(mins / 60);
+        let minutes = Math.round(mins % 60);
+        return { hours, minutes }
+    }
 
     let getVerticalMinIntervals = () => {
         let verticalRuleMinutes = [];
@@ -110,21 +124,24 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
 
     let getXScale = (val) => {
-        let totalCols = Object.values(colsPerSection).reduce(function(a, b){ return a + b });
-        let hoveredCol = Math.ceil(val / (dimensions.boundedWidth / totalCols));
+        let totalCols = Object.values(colsPerSection).reduce(function (a, b) { return a + b });
+
+        let currentCol = Math.ceil(val / (dimensions.boundedWidth / totalCols));
+        setCurrentHoveredCol(currentCol);
+
         let scale;
 
-        if (hoveredCol == 1) {
-            console.log('mins 55')
+        // # Invert Formula
+        // scale.invert - (sectionWidth * [sections before scale])
+        // maybe make something that getsScale AND shifts sections? ToDo
+
+        if (currentHoveredCol == 1) {
             scale = xScales.mins55;
-        } else if ( hoveredCol <= 7) {
-            console.log('mins 30')
+        } else if (currentHoveredCol <= 7) {
             scale = xScales.mins30;
-        } else if (hoveredCol == 8) {
-            console.log('mins 120')
+        } else if (currentHoveredCol == 8) {
             scale = xScale120mins;
         } else {
-            console.log('mins 360')
             scale = xScale360mins;
         }
 
@@ -142,36 +159,104 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const yAccessorScaled = d => yScale(yAccessor(d))
 
 
-    const onMouseMove = e => {
 
+
+
+    // Create Dots + coords, Voronoi cell data
+    useEffect(() => {
+        let dots = []
+
+        data.forEach((row, rowIndex) => {
+            let obj = {
+                x: xAccessorScaled(row, rowIndex),
+                y: yAccessorScaled(row, rowIndex),
+            };
+            dots.push(obj)
+        })
+
+        setDataDots(dots);
+
+        const delaunay = Delaunay.from(dots, d => d.x, d => d.y)
+        const voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
+        const voronoiPaths = dots.map((d, i) => ({
+            d: voronoi.renderCell(i),
+            ...d,
+        }))
+
+        setVoronoiData(voronoi);
+
+    }, [dimensions.boundedWidth]);
+
+
+    const {
+        dots,
+        voronoiPaths,
+        voronoiPath,
+    } = useMemo(() => {
+        // if (!pixelArray.length) return {
+        //   dots: [],
+        //   voronoiPaths: [],
+        // }
+
+        let dots = []
+
+        data.forEach((row, rowIndex) => {
+            let obj = {
+                x: xAccessorScaled(row, rowIndex),
+                y: yAccessorScaled(row, rowIndex),
+            };
+            dots.push(obj)
+        })
+
+        const delaunay = Delaunay.from(dots, d => d.x, d => d.y)
+        const voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
+        const voronoiPaths = dots.map((d, i) => ({
+            d: voronoi.renderCell(i),
+            ...d,
+        }))
+
+        const voronoiPath = voronoi.render();
+        return {
+            dots,
+            voronoiPaths,
+            voronoiPath,
+        }
+    }, [dimensions])
+
+
+
+
+    const onMouseMove = e => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
-        //let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
+        let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
+
+        setFakeXY([x, y]);
+
 
         let correctXScale = getXScale(x);
-        let hoveredMin = correctXScale.invert(x);
 
+        let sectionsToSubtract = (currentHoveredCol >= 2 && currentHoveredCol <= 7) ? 1
+            : (currentHoveredCol == 8) ? 7
+                : 8;
 
-        console.log(hoveredMin)
+        let hoveredMin = correctXScale.invert(x - (currentHoveredCol >= 2 ? sectionsToSubtract * sectionWidth : 0));
+        let hoveredDifficulty = yScale.invert(y);
 
-        // const getDistanceFromHoveredDate = d => Math.abs(
-        //     xAccessor(d) - hoveredMin
-        // )
+        let closestIndex = voronoiData.delaunay.find(x, y)
 
-        // // Scan for the the closest thing
-        // const closestIndex = d3.scan(data, (a, b) => (
-        //     getDistanceFromHoveredDate(a) - getDistanceFromHoveredDate(b)
-        // ))
-        // const closestDataPoint = data[closestIndex]
+        const closestDataPoint = data[closestIndex]
 
-        // const closestXValue = xAccessor(closestDataPoint)
-        // const closestYValue = yAccessor(closestDataPoint)
+        const closestXValue = xAccessor(closestDataPoint)
+        const closestYValue = yAccessor(closestDataPoint)
 
-        // let hoveredData = data[closestIndex]
-        // let hoveredCoords = [xScale(closestXValue), yScale(closestYValue)]
+        let hoveredData = data[closestIndex]
 
-        // setIsMouseMove(true)
-        // setCurrentHoveredData(hoveredData)
-        // setCurrentHoveredCoords(hoveredCoords)
+        //let hoveredCoords = [correctXScale(closestXValue), yScale(closestYValue)]
+        let hoveredCoords = dataDots[closestIndex];
+
+        setIsMouseMove(true)
+        setCurrentHoveredData(hoveredData)
+        setCurrentHoveredCoords(hoveredCoords)
     }
 
     const onMouseEnter = e => {
@@ -181,6 +266,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         setIsMouseMove(false)
         setCurrentHoveredData()
         setCurrentHoveredCoords()
+        setCurrentHoveredCol(0)
+        setFakeXY([])
     }
 
     const keyAccessor = (d, i) => i
@@ -209,6 +296,16 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
+
+                {/* <Voronoi paths={voronoiPaths} strokeWidth={1} /> */}
+                {/* {voronoiPaths.map((path, i) => (
+                    <g key={i}>
+                        <path d={path.d} fill="none" stroke="#6a6a85" strokeWidth={1} />
+                    </g>
+
+                ))} */}
+
+
                 <Axis
                     dimension="x"
                     yScale={yScale}
@@ -238,12 +335,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 <Circles
                     dimensions={dimensions}
                     data={data}
-                    keyAccessor={keyAccessor}
+                    dots={dots}
                     minrules={minVertRules}
                     xAccessor={xAccessorScaled}
                     yAccessor={yAccessorScaled}
-                    xScales={xScales}
-
                 />
 
                 {isMouseMove && (
@@ -252,9 +347,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
                             width="1"
-                            height={dimensions.boundedHeight - currentHoveredCoords[1]}
-                            x={currentHoveredCoords[0]}
-                            y={currentHoveredCoords[1]}
+                            height={dimensions.boundedHeight}
+                            x={currentHoveredCoords.x}
                             style={{ opacity: (isMouseMove ? 1 : 0) }}
                         />
                     </>
@@ -264,10 +358,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     <>
                         <rect
                             className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
-                            width={currentHoveredCoords[0] + xRuleDistance}
+                            width={dimensions.boundedWidth}
                             height="1"
                             x={-xRuleDistance}
-                            y={currentHoveredCoords[1]}
+                            y={currentHoveredCoords.y}
                             style={{ opacity: (isMouseMove ? 1 : 0) }}
                         />
                     </>
@@ -287,6 +381,19 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 };
 
 export default ScatterPlot;
+
+const Voronoi = React.memo(({ paths, strokeWidth }) => (
+    <g className="Voronoi">
+        {paths.map((d, i) => (
+            <path
+                key={i}
+                d={d.d}
+                stroke="red"
+                strokeWidth={strokeWidth}
+            />
+        ))}
+    </g>
+))
 
 const Circle = ({ className, cx, cy, style }) => {
     // For tooltip

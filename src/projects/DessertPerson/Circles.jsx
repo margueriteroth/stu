@@ -2,15 +2,15 @@ import React from "react"
 import PropTypes from "prop-types"
 import { accessorPropsType } from "components/utils";
 
-const Circles = ({ data, keyAccessor, xAccessor, yAccessor, radius, xScales, dimensions }) => {
+const Circles = ({ data, dots, xAccessor, yAccessor, radius, dimensions }) => {
     return (
         <React.Fragment>
-            {data.map((d, i) => (
+            {dots.map((d, i) => (
                 <g key={i}>
                     <circle
                         className="Circles__circle"
-                        cx={xAccessor(d, i)}
-                        cy={yAccessor(d, i)}
+                        cx={d.x}
+                        cy={d.y}
                         r={typeof radius == "function" ? radius(d) : radius}
                     />
                     <text
@@ -18,9 +18,9 @@ const Circles = ({ data, keyAccessor, xAccessor, yAccessor, radius, xScales, dim
                         style={{
                             textAnchor: (xAccessor(d, i) > dimensions.boundedWidth - 100) ? "end" : "start",
                         }}
-                        x={xAccessor(d, i) + 3}
-                        y={yAccessor(d, i) - 3}>
-                        { d["Recipe"] }
+                        x={d.x + 3}
+                        y={d.y - 3}>
+                        { data[i]["Recipe"] }
                     </text>
                 </g>
             ))}
