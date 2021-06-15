@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import classNames from "classnames"
 import * as d3 from "d3"
 import { Delaunay } from "d3-delaunay";
@@ -159,11 +159,13 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const yAccessorScaled = d => yScale(yAccessor(d))
 
 
-
-
-
-    // Create Dots + coords, Voronoi cell data
+    //Create Dots + coords, Voronoi cell data
     useEffect(() => {
+        if (!dataDots.length) {
+            setVoronoiData([]);
+            setDataDots([]);
+        }
+
         let dots = []
 
         data.forEach((row, rowIndex) => {
@@ -185,18 +187,15 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
         setVoronoiData(voronoi);
 
-    }, [dimensions.boundedWidth]);
+    }, [dimensions.boundedWidth, dimensions.boundedHeight]);
 
 
-    const {
-        dots,
-        voronoiPaths,
-        voronoiPath,
-    } = useMemo(() => {
-        // if (!pixelArray.length) return {
-        //   dots: [],
-        //   voronoiPaths: [],
-        // }
+
+    const { dots } = useMemo(() => {
+        if (!dataDots.length) return {
+            dots: [],
+            voronoiPaths: [],
+        }
 
         let dots = []
 
@@ -208,30 +207,18 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
             dots.push(obj)
         })
 
-        const delaunay = Delaunay.from(dots, d => d.x, d => d.y)
-        const voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
-        const voronoiPaths = dots.map((d, i) => ({
-            d: voronoi.renderCell(i),
-            ...d,
-        }))
+        let delaunay = Delaunay.from(dots, d => d.x, d => d.y)
+        let voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
 
-        const voronoiPath = voronoi.render();
         return {
-            dots,
-            voronoiPaths,
-            voronoiPath,
+            dots
         }
     }, [dimensions])
-
-
 
 
     const onMouseMove = e => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
         let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
-
-        setFakeXY([x, y]);
-
 
         let correctXScale = getXScale(x);
 
@@ -239,19 +226,16 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
             : (currentHoveredCol == 8) ? 7
                 : 8;
 
-        let hoveredMin = correctXScale.invert(x - (currentHoveredCol >= 2 ? sectionsToSubtract * sectionWidth : 0));
-        let hoveredDifficulty = yScale.invert(y);
+        // let hoveredMin = correctXScale.invert(x - (currentHoveredCol >= 2 ? sectionsToSubtract * sectionWidth : 0));
+        // let hoveredDifficulty = yScale.invert(y);
 
         let closestIndex = voronoiData.delaunay.find(x, y)
+        let closestDataPoint = data[closestIndex]
 
-        const closestDataPoint = data[closestIndex]
-
-        const closestXValue = xAccessor(closestDataPoint)
-        const closestYValue = yAccessor(closestDataPoint)
+        // let closestXValue = xAccessor(closestDataPoint)
+        // let closestYValue = yAccessor(closestDataPoint)
 
         let hoveredData = data[closestIndex]
-
-        //let hoveredCoords = [correctXScale(closestXValue), yScale(closestYValue)]
         let hoveredCoords = dataDots[closestIndex];
 
         setIsMouseMove(true)
@@ -270,25 +254,17 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         setFakeXY([])
     }
 
-    const keyAccessor = (d, i) => i
-
     return (
         <div className={classNames("ScatterPlot", className)} ref={ref}>
-            {/* {currentHoveredCoords && (
-                <Tooltip
-                    currentHoveredData={currentHoveredData}
-                    currentHoveredCoords={[xRuleDistance * 2, yRuleDistance * 3]}
-                    dimensions={dimensions}
-                    data={currentHoveredData}
-                />
-            )} */}
-
-            <Tooltip
+            {/* <Tooltip
                 currentHoveredData={currentHoveredData}
-                currentHoveredCoords={[xRuleDistance * 2, yRuleDistance * 3]}
+                currentHoveredCoords={currentHoveredCoords ? [currentHoveredCoords.x, currentHoveredCoords.y] : [0,0]}
                 dimensions={dimensions}
                 data={currentHoveredData}
-            />
+                style={{
+                    opacity: currentHoveredCoords ? 1 : 0
+                }}
+            /> */}
 
             <Chart
                 dimensions={dimensions}
@@ -296,15 +272,12 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
-
-                {/* <Voronoi paths={voronoiPaths} strokeWidth={1} /> */}
                 {/* {voronoiPaths.map((path, i) => (
                     <g key={i}>
                         <path d={path.d} fill="none" stroke="#6a6a85" strokeWidth={1} />
                     </g>
 
                 ))} */}
-
 
                 <Axis
                     dimension="x"
@@ -366,6 +339,20 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                         />
                     </>
                 )}
+                {/* {isMouseMove && (
+                    <Circle cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} />
+                )} */}
+
+                {isMouseMove && (
+                    <text
+                        width="10"
+                        height="10"
+                        style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
+                        x={currentHoveredCoords.x}
+                        y={currentHoveredCoords.y}>
+                            💛
+                    </text>
+                )}
 
                 <g transform={`
                     translate(${-xRuleDistance * 2.5}, ${yRuleDistance * 1.5})`}>
@@ -382,28 +369,14 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
 export default ScatterPlot;
 
-const Voronoi = React.memo(({ paths, strokeWidth }) => (
-    <g className="Voronoi">
-        {paths.map((d, i) => (
-            <path
-                key={i}
-                d={d.d}
-                stroke="red"
-                strokeWidth={strokeWidth}
-            />
-        ))}
-    </g>
-))
-
 const Circle = ({ className, cx, cy, style }) => {
     // For tooltip
     return (
         <circle className={classNames("Circle", className)}
-            r={1}
+            r={6}
             fill="red"
             cx={cx}
             cy={cy}
-            style={style}
         />
     )
 }
@@ -420,7 +393,6 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
     return (
         <div className="Tooltip__container"
             style={{
-                opacity: 1,
                 left: `${leftScrubCoord}px`,
                 top: `${topScrubCoord}px`
             }}>

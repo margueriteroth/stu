@@ -9,7 +9,7 @@ $dp-stripe: hsla(353, 8%, 80%, 0.16);
 $dp-grids: rgba($dp-pink, 0.5);
 
 .ScatterPlot {
-    height: calc(90vh - 6em);
+    height: calc(98vh - 6em);
     min-height: 620px;
     min-width: 700px;
     max-width: 1700px;
@@ -139,30 +139,34 @@ $dp-grids: rgba($dp-pink, 0.5);
         }
     }
 
+    .Circles {
+        &__circle {
+            fill: rgba($db-dark, 0.26);
+        }
+    }
+
     .Circle {
-        transition: all 0.15s ease-out;
+        transition: all 100ms ease-out;
         pointer-events: none;
 
         &__label {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             fill: darken($db-dark, 0.6);
         }
     }
 
     &__hover-line {
-        fill: $db-dark;
-        //transition: all 0.001s ease-out;
-        opacity: 0.5;
+        fill: rgba($db-dark, 0.5);
+        transition: all 100ms ease-out;
         pointer-events: none;
     }
 
     .Tooltip {
         &__container {
-            opacity: 0;
             position: absolute;
             top: 0;
             left: 0;
-            transform: translate(-50%, -100%);
+            transform: translate(-103%, -103%);
             padding: 1em 1.75em;
             background: #fff;
             line-height: 1.4em;
