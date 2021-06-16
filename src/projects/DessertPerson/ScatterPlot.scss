@@ -9,7 +9,7 @@ $dp-stripe: hsla(353, 8%, 80%, 0.16);
 $dp-grids: rgba($dp-pink, 0.5);
 
 .ScatterPlot {
-    height: calc(98vh - 6em);
+    height: calc(90vh - 6em);
     min-height: 620px;
     min-width: 700px;
     max-width: 1700px;
@@ -32,6 +32,10 @@ $dp-grids: rgba($dp-pink, 0.5);
     // svg text {
     //     fill: #969696;
     // }
+
+    .filters__container {
+        padding: 2em 4.5rem;
+    }
 
     .Axis__label {
         text-transform: uppercase;

@@ -6,6 +6,7 @@ import { useChartDimensions } from "components/utils"
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
+import FilterBar from 'projects/DessertPerson/FilterBar'
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
@@ -14,9 +15,12 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     const [currentHoveredCol, setCurrentHoveredCol] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
+    const [bookSections, setBookSections] = useState([])
 
     const [dataDots, setDataDots] = useState([])
     const [voronoiData, setVoronoiData] = useState()
+
+    let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
     const [fakeXY, setFakeXY] = useState([])
 
@@ -46,7 +50,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     }
 
     let minVertRules = getVerticalMinIntervals();
-
     let mainLevels = [1, 2, 3, 4, 5];
 
     let yMax = 6;
@@ -85,9 +88,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
     let yRuleDistance = yScale(levelRules[1]) - yScale(levelRules[2]);
     let yRyleDistanceThrees = Math.abs(yScale(levelRules[16]) - yScale(levelRules[17]));
 
-    const xScale = d3.scaleLinear()
-        .domain([5, d3.max(data, xAccessor)])
-        .range([0, dimensions.boundedWidth])
 
     const colsPerSection = {
         mins55: 1,
@@ -189,7 +189,19 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
     }, [dimensions.boundedWidth, dimensions.boundedHeight]);
 
+    useEffect(() => {
+        if (!data.length) {
+            setBookSections([]);
+        }
 
+        let sections = []
+        data.forEach((row) => {
+            sections.push(row.Section)
+        })
+
+        sections = Array.from(new Set(sections))
+        setBookSections(sections);
+    }, [data]);
 
     const { dots } = useMemo(() => {
         if (!dataDots.length) return {
@@ -362,7 +374,9 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                     </text>
                 </g>
             </Chart>
-
+            <div className="filters__container">
+                <FilterBar filters={bookSections} sectionColors={sectionColors}/>
+            </div>
         </div>
     );
 };

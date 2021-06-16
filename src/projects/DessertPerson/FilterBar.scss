@@ -1,0 +1,39 @@
+@import "./../../styles/lib";
+
+$dp-pink: hsla(354, 36%, 90%, 1);
+$dp-taupe: hsla(354, 18%, 81%, 1);
+$db-dark: #501017;
+
+$dp-stripe: hsla(353, 8%, 80%, 0.16);
+
+$dp-grids: rgba($dp-pink, 0.5);
+
+.FilterBar {
+    &__button {
+        border: 1px solid lighten($dp-taupe, 10%);
+        background: white;
+        font-size: 0.8em;
+        padding: 0.5em 1em;
+        border-radius: 3px;
+
+        &:hover {
+            background: #f7f6f6;
+            cursor: pointer;
+        }
+
+        &--active {
+            background: #f7f6f6;
+        }
+
+    }
+
+    &__main {
+        display: flex;
+        flex-wrap: wrap;
+
+        .FilterBar__button {
+            margin-right: 0.75em;
+            margin-bottom: 0.75em;
+        }
+    }
+}
