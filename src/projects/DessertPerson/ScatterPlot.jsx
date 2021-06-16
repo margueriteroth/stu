@@ -1,24 +1,30 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import classNames from "classnames"
+import queryString from 'query-string';
 import * as d3 from "d3"
 import { Delaunay } from "d3-delaunay";
 import { useChartDimensions } from "components/utils"
+import { usePrevious } from "hooks"
+import { Link } from 'gatsby'
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
 import FilterBar from 'projects/DessertPerson/FilterBar'
 import './ScatterPlot.scss'
 
-const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
+const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredCol, setCurrentHoveredCol] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
     const [bookSections, setBookSections] = useState([])
+    const [parsedQueryParams, setParsedQueryParams] = useState({ category: [] })
 
     const [dataDots, setDataDots] = useState([])
     const [voronoiData, setVoronoiData] = useState()
+
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -122,7 +128,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         mins360: xScale360mins
     }
 
-
     let getXScale = (val) => {
         let totalCols = Object.values(colsPerSection).reduce(function (a, b) { return a + b });
 
@@ -160,7 +165,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
 
 
     //Create Dots + coords, Voronoi cell data
-    useEffect(() => {
+    let setData = () => {
         if (!dataDots.length) {
             setVoronoiData([]);
             setDataDots([]);
@@ -186,8 +191,12 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         }))
 
         setVoronoiData(voronoi);
+    }
+    useEffect(() => {
+        setData();
 
     }, [dimensions.boundedWidth, dimensions.boundedHeight]);
+
 
     useEffect(() => {
         if (!data.length) {
@@ -225,7 +234,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
         return {
             dots
         }
-    }, [dimensions])
+    }, [dimensions.boundedWidth, dimensions.boundedHeight])
 
 
     const onMouseMove = e => {
@@ -362,7 +371,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                         style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
                         x={currentHoveredCoords.x}
                         y={currentHoveredCoords.y}>
-                            💛
+                        💛
                     </text>
                 )}
 
@@ -375,7 +384,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className }) => {
                 </g>
             </Chart>
             <div className="filters__container">
-                <FilterBar filters={bookSections} sectionColors={sectionColors}/>
+                <FilterBar filters={bookSections} sectionColors={sectionColors} setParsedQueryParams={setParsedQueryParams}/>
             </div>
         </div>
     );

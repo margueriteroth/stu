@@ -8,36 +8,8 @@ import './FilterBar.scss'
 let windowGlobal = typeof window !== 'undefined' && window;
 let parsedParams = queryString.parse(windowGlobal.location.search);
 
-const FilterBar = ({ filters, sectionColors }) => {
+const FilterBar = ({ filters, sectionColors, setParsedQueryParams }) => {
     const [filterQuery, setFilterQuery] = useState(parsedParams || '');
-
-    const onChange = (event) => {
-        let value = event.target.value;
-        let params = { ...filterQuery } || {};
-        let isCategoryString = (typeof params.category == 'string') ? true : false;
-        let isCategoryArray = (Array.isArray(params.category)) ? true : false;
-
-        if (isCategoryArray) {
-            // Aka multiple filter params
-            if (params.category.indexOf(value) > -1) {
-                let idx = params.category.indexOf(value)
-                params.category.splice(idx, 1);
-            } else {
-                params.category.push(value);
-            }
-        } else if (isCategoryString) {
-            // Aka only one filter param
-            if (params.category == value) {
-                params = {}
-            } else {
-                params = { category: [params.category, value] }
-            }
-        } else {
-            params = { category: value }
-        }
-
-        setFilterQuery(params)
-    };
 
     let changeQueryParams = (filter) => {
         let value = filter.toLowerCase();
@@ -64,6 +36,7 @@ const FilterBar = ({ filters, sectionColors }) => {
             params = { category: value }
         }
 
+        setParsedQueryParams(params)
         setFilterQuery(params)
     }
 
