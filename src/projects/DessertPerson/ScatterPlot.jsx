@@ -22,9 +22,9 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
     const [bookSections, setBookSections] = useState([])
     const [parsedQueryParams, setParsedQueryParams] = useState({ category: [] })
 
+    const [currentData, setCurrentData] = useState(data)
     const [dataDots, setDataDots] = useState([])
     const [voronoiData, setVoronoiData] = useState()
-
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -163,17 +163,28 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
                 : xScales.mins360(xAccessor(d)) + (sectionWidth * 8)
     const yAccessorScaled = d => yScale(yAccessor(d))
 
+    //Function for filtering data
+    let getFilteredData = (currentData) => {
+        currentData = currentData.filter( row => parsedQueryParams.category.includes(row.Section.toLowerCase()));
+        return currentData;
+    }
 
     //Create Dots + coords, Voronoi cell data
     let setData = () => {
         if (!dataDots.length) {
             setVoronoiData([]);
             setDataDots([]);
+            setCurrentData({});
         }
 
         let dots = []
+        let currentData = data;
 
-        data.forEach((row, rowIndex) => {
+        if (parsedQueryParams.category && parsedQueryParams.category.length) {
+            currentData = getFilteredData(currentData);
+        }
+
+        currentData.forEach((row, rowIndex) => {
             let obj = {
                 x: xAccessorScaled(row, rowIndex),
                 y: yAccessorScaled(row, rowIndex),
@@ -181,6 +192,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
             dots.push(obj)
         })
 
+        setCurrentData(currentData);
         setDataDots(dots);
 
         const delaunay = Delaunay.from(dots, d => d.x, d => d.y)
@@ -192,10 +204,15 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
 
         setVoronoiData(voronoi);
     }
+
     useEffect(() => {
         setData();
-
     }, [dimensions.boundedWidth, dimensions.boundedHeight]);
+
+    useEffect(() => {
+        console.log('filter data')
+        setData();
+    }, [parsedQueryParams]);
 
 
     useEffect(() => {
@@ -212,29 +229,29 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
         setBookSections(sections);
     }, [data]);
 
-    const { dots } = useMemo(() => {
-        if (!dataDots.length) return {
-            dots: [],
-            voronoiPaths: [],
-        }
+    // const { dots } = useMemo(() => {
+    //     if (!dataDots.length) return {
+    //         dots: [],
+    //         voronoiPaths: [],
+    //     }
 
-        let dots = []
+    //     let dots = []
 
-        data.forEach((row, rowIndex) => {
-            let obj = {
-                x: xAccessorScaled(row, rowIndex),
-                y: yAccessorScaled(row, rowIndex),
-            };
-            dots.push(obj)
-        })
+    //     data.forEach((row, rowIndex) => {
+    //         let obj = {
+    //             x: xAccessorScaled(row, rowIndex),
+    //             y: yAccessorScaled(row, rowIndex),
+    //         };
+    //         dots.push(obj)
+    //     })
 
-        let delaunay = Delaunay.from(dots, d => d.x, d => d.y)
-        let voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
+    //     let delaunay = Delaunay.from(dots, d => d.x, d => d.y)
+    //     let voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
 
-        return {
-            dots
-        }
-    }, [dimensions.boundedWidth, dimensions.boundedHeight])
+    //     return {
+    //         dots
+    //     }
+    // }, [dimensions.boundedWidth, dimensions.boundedHeight])
 
 
     const onMouseMove = e => {
@@ -329,7 +346,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
                 <Circles
                     dimensions={dimensions}
                     data={data}
-                    dots={dots}
+                    dots={dataDots}
                     minrules={minVertRules}
                     xAccessor={xAccessorScaled}
                     yAccessor={yAccessorScaled}

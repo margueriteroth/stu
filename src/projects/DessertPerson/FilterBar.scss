@@ -22,9 +22,14 @@ $dp-grids: rgba($dp-pink, 0.5);
         }
 
         &--active {
-            background: #f7f6f6;
-        }
+            background: $dp-taupe;
+            border-color: $dp-taupe;
 
+            &:hover {
+                background: $dp-taupe;
+                border-color: $dp-taupe;
+            }
+        }
     }
 
     &__main {

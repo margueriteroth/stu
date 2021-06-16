@@ -36,13 +36,13 @@ const FilterBar = ({ filters, sectionColors, setParsedQueryParams }) => {
             params = { category: value }
         }
 
-        setParsedQueryParams(params)
         setFilterQuery(params)
     }
 
     useEffect(() => {
         let newParams = queryString.stringify(filterQuery)
         navigate(`/dessert-person/?${newParams}`)
+        setParsedQueryParams(filterQuery);
     }, [filterQuery]);
 
     return (
