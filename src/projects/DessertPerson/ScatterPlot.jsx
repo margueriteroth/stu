@@ -240,31 +240,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
         setBookSections(sections);
     }, [data]);
 
-    // const { dots, voronoiPaths } = useMemo(() => {
-    //     if (!dataDots.length) return {
-    //         dots: [],
-    //         voronoiPaths: [],
-    //     }
-
-    //     let dots = []
-
-    //     data.forEach((row, rowIndex) => {
-    //         let obj = {
-    //             x: xAccessorScaled(row, rowIndex),
-    //             y: yAccessorScaled(row, rowIndex),
-    //         };
-    //         dots.push(obj)
-    //     })
-
-    //     let delaunay = Delaunay.from(dots, d => d.x, d => d.y)
-    //     let voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
-
-    //     return {
-    //         dots
-    //     }
-    // }, [dimensions.boundedWidth, dimensions.boundedHeight])
-
-
     const onMouseMove = e => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
         let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
