@@ -11,29 +11,30 @@ let parsedParams = queryString.parse(windowGlobal.location.search);
 const FilterBar = ({ filters, sectionColors, setParsedQueryParams }) => {
     const [filterQuery, setFilterQuery] = useState(parsedParams || '');
 
-    let changeQueryParams = (filter) => {
-        let value = filter.toLowerCase();
-        let params = { ...filterQuery } || {};
-        let isCategoryString = (typeof params.category == 'string') ? true : false;
-        let isCategoryArray = (Array.isArray(params.category)) ? true : false;
+    let changeQueryParams = (filter, key) => {
+        let value = filter.toLowerCase().split(' ')[0];
+        // Using only first word
 
-        if (isCategoryArray) {
-            // Aka multiple filter params
-            if (params.category.indexOf(value) > -1) {
-                let idx = params.category.indexOf(value)
-                params.category.splice(idx, 1);
+        let params = { ...filterQuery } || {};
+
+        if (Array.isArray(params[key])) {
+            // multiple filter params
+            if (params[key].includes(value)) {
+                let idx = params[key].indexOf(value);
+                params[key].splice(idx, 1);
             } else {
-                params.category.push(value);
+                params[key].push(value);
             }
-        } else if (isCategoryString) {
-            // Aka only one filter param
-            if (params.category == value) {
-                params = {}
+        } else if (!Array.isArray(params[key])) {
+            // one filter param
+            if (params[key] == value) {
+                params = []
             } else {
-                params = { category: [params.category, value] }
+                params[key] = [params[key], value];
+                console.log(params[key])
             }
         } else {
-            params = { category: value }
+            params[key] = value;
         }
 
         setFilterQuery(params)
@@ -49,11 +50,17 @@ const FilterBar = ({ filters, sectionColors, setParsedQueryParams }) => {
         <div className="FilterBar">
             <div className="FilterBar__main">
                 {filters.map((filter, i) => (
-                    <button className={classNames("FilterBar__button", { "FilterBar__button--active": filterQuery.category && filterQuery.category.includes(filter.toLowerCase()) })}
-                        key={i} onClick={(e) => { changeQueryParams(filter) }}>
-                        { filter}
+                    <button className={classNames("FilterBar__button", { "FilterBar__button--active": filterQuery.category && filterQuery.category.includes(filter.toLowerCase().split(' ')[0]) })}
+                        key={i} onClick={(e) => { changeQueryParams(filter, 'category') }}>
+                        {filter}
                     </button>
                 ))}
+            </div>
+            <div className="FilterBar__extra">
+                <button className={classNames("FilterBar__button", { "FilterBar__button--active": filterQuery.extra && filterQuery.extra.includes('voronoi') })}
+                    onClick={(e) => { changeQueryParams('voronoi', 'extra') }}>
+                    Voronoi
+                </button>
             </div>
         </div>
     )

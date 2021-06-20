@@ -20,11 +20,12 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
     const [bookSections, setBookSections] = useState([])
-    const [parsedQueryParams, setParsedQueryParams] = useState({ category: [] })
+    const [parsedQueryParams, setParsedQueryParams] = useState({ category: [], extra: [] })
 
     const [currentData, setCurrentData] = useState(data)
     const [dataDots, setDataDots] = useState([])
     const [voronoiData, setVoronoiData] = useState()
+    const [voronoiPaths, setVoronoiPaths] = useState()
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -163,28 +164,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
                 : xScales.mins360(xAccessor(d)) + (sectionWidth * 8)
     const yAccessorScaled = d => yScale(yAccessor(d))
 
-    //Function for filtering data
-    let getFilteredData = (currentData) => {
-        currentData = currentData.filter( row => parsedQueryParams.category.includes(row.Section.toLowerCase()));
-        return currentData;
-    }
+    let calculateDotCoords = (data) => {
+        let dots = [];
 
-    //Create Dots + coords, Voronoi cell data
-    let setData = () => {
-        if (!dataDots.length) {
-            setVoronoiData([]);
-            setDataDots([]);
-            setCurrentData({});
-        }
-
-        let dots = []
-        let currentData = data;
-
-        if (parsedQueryParams.category && parsedQueryParams.category.length) {
-            currentData = getFilteredData(currentData);
-        }
-
-        currentData.forEach((row, rowIndex) => {
+        data.forEach((row, rowIndex) => {
             let obj = {
                 x: xAccessorScaled(row, rowIndex),
                 y: yAccessorScaled(row, rowIndex),
@@ -192,9 +175,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
             dots.push(obj)
         })
 
-        setCurrentData(currentData);
-        setDataDots(dots);
+        return dots;
+    }
 
+    let calculateVoronoi = (dots) => {
         const delaunay = Delaunay.from(dots, d => d.x, d => d.y)
         const voronoi = delaunay.voronoi([0, 0, dimensions.boundedWidth, dimensions.boundedHeight])
         const voronoiPaths = dots.map((d, i) => ({
@@ -202,7 +186,36 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
             ...d,
         }))
 
-        setVoronoiData(voronoi);
+        return { voronoi, voronoiPaths }
+    }
+
+    //Create Dots + coords, Voronoi cell data
+    let setData = () => {
+        if (!dataDots.length) {
+            setVoronoiData([]);
+            setVoronoiPaths();
+            setDataDots([]);
+            setCurrentData({});
+        }
+
+        let filteredDots, filteredData;
+        let dots = calculateDotCoords(data);
+
+        let voronoi = calculateVoronoi(dots)
+
+        if (parsedQueryParams.category) {
+            // filter the data
+            filteredData = data.filter(row => parsedQueryParams.category.includes(row.Section.toLowerCase().split(' ')[0]));
+            filteredDots = calculateDotCoords(filteredData);
+
+            voronoi = calculateVoronoi(filteredDots)
+        }
+
+        setVoronoiPaths(voronoi.voronoiPaths)
+        setVoronoiData(voronoi.voronoi);
+
+        setCurrentData(currentData);
+        setDataDots(dots);
     }
 
     useEffect(() => {
@@ -210,10 +223,8 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
     }, [dimensions.boundedWidth, dimensions.boundedHeight]);
 
     useEffect(() => {
-        console.log('filter data')
         setData();
     }, [parsedQueryParams]);
-
 
     useEffect(() => {
         if (!data.length) {
@@ -229,7 +240,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
         setBookSections(sections);
     }, [data]);
 
-    // const { dots } = useMemo(() => {
+    // const { dots, voronoiPaths } = useMemo(() => {
     //     if (!dataDots.length) return {
     //         dots: [],
     //         voronoiPaths: [],
@@ -304,19 +315,16 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
                 }}
             /> */}
 
+            <div className="filters__container">
+                <FilterBar filters={bookSections} sectionColors={sectionColors} setParsedQueryParams={setParsedQueryParams} parsedQueryParams={parsedQueryParams} />
+            </div>
+
             <Chart
                 dimensions={dimensions}
                 onMouseMove={onMouseMove}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
-                {/* {voronoiPaths.map((path, i) => (
-                    <g key={i}>
-                        <path d={path.d} fill="none" stroke="#6a6a85" strokeWidth={1} />
-                    </g>
-
-                ))} */}
-
                 <Axis
                     dimension="x"
                     yScale={yScale}
@@ -350,6 +358,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
                     minrules={minVertRules}
                     xAccessor={xAccessorScaled}
                     yAccessor={yAccessorScaled}
+                    parsedQueryParams={parsedQueryParams}
                 />
 
                 {isMouseMove && (
@@ -399,10 +408,18 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
                         Recipe Matrix
                     </text>
                 </g>
+
+                {parsedQueryParams.extra && parsedQueryParams.extra.includes("voronoi") && (
+                    <>
+                        {voronoiPaths && voronoiPaths.map((path, i) => (
+                            <g key={i}>
+                                <path d={path.d} fill="none" stroke="#6a6a85" strokeWidth={1} />
+                            </g>
+                        ))}
+                    </>
+                )}
             </Chart>
-            <div className="filters__container">
-                <FilterBar filters={bookSections} sectionColors={sectionColors} setParsedQueryParams={setParsedQueryParams}/>
-            </div>
+
         </div>
     );
 };

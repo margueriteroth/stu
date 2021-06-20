@@ -22,6 +22,10 @@ $dp-grids: rgba($dp-pink, 0.5);
         height: 100px;
     }
 
+    path {
+        transition: all 400ms ease-out;
+    }
+
     &__title {
         font-size: 3em;
         font-style: italic;
