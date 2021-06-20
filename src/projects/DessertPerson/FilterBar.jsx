@@ -14,25 +14,26 @@ const FilterBar = ({ filters, sectionColors, setParsedQueryParams }) => {
     let changeQueryParams = (filter, key) => {
         let value = filter.toLowerCase().split(' ')[0];
         // Using only first word
-
         let params = { ...filterQuery } || {};
 
         if (Array.isArray(params[key])) {
             // multiple filter params
-            if (params[key].includes(value)) {
+            if (params[key].includes(value) && params[key].length == 1) {
+                // destroy
+                delete params[key];
+            } else if (params[key].includes(value) && params[key].length > 1) {
+                // remove
                 let idx = params[key].indexOf(value);
                 params[key].splice(idx, 1);
             } else {
+                // add
                 params[key].push(value);
             }
         } else if (!Array.isArray(params[key])) {
             // one filter param
-            if (params[key] == value) {
-                params = []
-            } else {
-                params[key] = [params[key], value];
-                console.log(params[key])
-            }
+            // create arr
+            let paramArr = value.split(" ");
+            params[key] = paramArr;
         } else {
             params[key] = value;
         }
