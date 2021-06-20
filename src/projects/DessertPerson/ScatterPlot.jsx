@@ -26,6 +26,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
     const [dataDots, setDataDots] = useState([])
     const [voronoiData, setVoronoiData] = useState()
     const [voronoiPaths, setVoronoiPaths] = useState()
+    const [filteredVoronoiPaths, setFilteredVoronoiPaths] = useState()
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -191,32 +192,31 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
 
     //Create Dots + coords, Voronoi cell data
     let setData = () => {
-        if (!dataDots.length) {
-            setVoronoiData([]);
-            setVoronoiPaths();
-            setDataDots([]);
-            setCurrentData({});
-        }
-
         let filteredDots, filteredData;
         let dots = calculateDotCoords(data);
 
-        let voronoi = calculateVoronoi(dots)
+        let voronoi = calculateVoronoi(dots);
+        let voronoiPaths = voronoi.voronoiPaths;
+        let voronoiData = voronoi.voronoi;
 
         if (parsedQueryParams.category) {
             // filter the data
             filteredData = data.filter(row => parsedQueryParams.category.includes(row.Section.toLowerCase().split(' ')[0]));
             filteredDots = calculateDotCoords(filteredData);
 
-            voronoi = calculateVoronoi(filteredDots)
+            voronoiPaths = calculateVoronoi(filteredDots)["voronoiPaths"];
         }
 
-        setVoronoiPaths(voronoi.voronoiPaths)
-        setVoronoiData(voronoi.voronoi);
+        setVoronoiPaths(voronoiPaths)
+        setVoronoiData(voronoiData);
 
         setCurrentData(currentData);
         setDataDots(dots);
     }
+
+    useEffect(() => {
+        setData();
+    }, []);
 
     useEffect(() => {
         setData();
@@ -300,7 +300,6 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
         setCurrentHoveredData()
         setCurrentHoveredCoords()
         setCurrentHoveredCol(0)
-        setFakeXY([])
     }
 
     return (
