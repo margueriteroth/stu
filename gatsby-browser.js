@@ -4,4 +4,7 @@
  * See: https://www.gatsbyjs.org/docs/browser-apis/
  */
 
-// You can delete this file if you're not using it
+exports.shouldUpdateScroll = ({ routerProps: { location } }) => {
+    // Preserve scroll position when toggling query params / navivate()
+    if (location.pathname.includes("/dessert-person/")) return false
+}
