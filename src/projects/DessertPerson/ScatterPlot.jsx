@@ -24,9 +24,10 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
 
     const [currentData, setCurrentData] = useState(data)
     const [dataDots, setDataDots] = useState([])
+
     const [voronoiData, setVoronoiData] = useState()
     const [voronoiPaths, setVoronoiPaths] = useState()
-    const [filteredVoronoiPaths, setFilteredVoronoiPaths] = useState()
+    const [filteredDots, setFilteredDots] = useState()
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -192,8 +193,9 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
 
     //Create Dots + coords, Voronoi cell data
     let setData = () => {
-        let filteredDots, filteredData;
+        let filteredData = data;
         let dots = calculateDotCoords(data);
+        let filteredDots = dots;
 
         let voronoi = calculateVoronoi(dots);
         let voronoiPaths = voronoi.voronoiPaths;
@@ -201,25 +203,27 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
 
         if (parsedQueryParams.category) {
             // filter the data
-            filteredData = data.filter(row => parsedQueryParams.category.includes(row.Section.toLowerCase().split(' ')[0]));
+            filteredData = filteredData.filter(row => parsedQueryParams.category.includes(row.Section.toLowerCase().split(' ')[0]));
             filteredDots = calculateDotCoords(filteredData);
 
             voronoiPaths = calculateVoronoi(filteredDots)["voronoiPaths"];
+            voronoiData = calculateVoronoi(filteredDots)["voronoi"];
         }
 
         setVoronoiPaths(voronoiPaths)
         setVoronoiData(voronoiData);
 
-        setCurrentData(currentData);
+        setCurrentData(filteredData);
         setDataDots(dots);
+        setFilteredDots(filteredDots);
     }
 
     useEffect(() => {
-        setData();
+        setData()
     }, []);
 
     useEffect(() => {
-        setData();
+        setData()
     }, [dimensions.boundedWidth, dimensions.boundedHeight]);
 
     useEffect(() => {
@@ -237,7 +241,7 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
         })
 
         sections = Array.from(new Set(sections))
-        setBookSections(sections);
+        setBookSections(sections)
     }, [data]);
 
     const onMouseMove = e => {
@@ -254,13 +258,13 @@ const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props })
         // let hoveredDifficulty = yScale.invert(y);
 
         let closestIndex = voronoiData.delaunay.find(x, y)
-        let closestDataPoint = data[closestIndex]
+        let closestDataPoint = currentData[closestIndex]
 
         // let closestXValue = xAccessor(closestDataPoint)
         // let closestYValue = yAccessor(closestDataPoint)
 
-        let hoveredData = data[closestIndex]
-        let hoveredCoords = dataDots[closestIndex];
+        let hoveredData = closestDataPoint
+        let hoveredCoords = filteredDots[closestIndex]
 
         setIsMouseMove(true)
         setCurrentHoveredData(hoveredData)
