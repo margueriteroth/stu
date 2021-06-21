@@ -1,32 +1,31 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react"
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { getUrlArgs } from "components/utils"
-import globalThis from '@ungap/global-this';
-import "intersection-observer";
-
+import globalThis from "@ungap/global-this"
+import "intersection-observer"
 
 // from https://wattenberger.com/blog/react-hooks
 export const useIsInView = (margin = "0px") => {
     // State and setter for storing whether element is visible
-    const [isIntersecting, setIntersecting] = useState(false);
+    const [isIntersecting, setIntersecting] = useState(false)
     const ref = useRef()
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // Update our state when observer callback fires
-                setIntersecting(entry.isIntersecting);
-            },
+                setIntersecting(entry.isIntersecting)
+            }
             // { margin }
-        );
-        if (ref.current) observer.observe(ref.current);
+        )
+        if (ref.current) observer.observe(ref.current)
         return () => {
-            observer.unobserve(ref.current);
-        };
-    }, []);
+            observer.unobserve(ref.current)
+        }
+    }, [])
 
-    return [ref, isIntersecting];
+    return [ref, isIntersecting]
 }
-
 
 // from https://github.com/janosh/janosh.io/blob/master/src/hooks
 export const useEventListener = (eventNames, handler, element = globalThis) => {
@@ -54,7 +53,6 @@ export const useEventListener = (eventNames, handler, element = globalThis) => {
     }, [element, eventNames])
 }
 
-
 // from https://github.com/janosh/janosh.io/blob/master/src/hooks
 export const useOnClickOutside = (ref, handler, events) => {
     if (!events) events = [`mousedown`, `touchstart`]
@@ -73,10 +71,15 @@ export const useUrlParams = () => {
 }
 
 //https://blog.logrocket.com/how-to-get-previous-props-state-with-react-hooks/
-export const usePrevious = (value) => {
-    const ref = useRef();
+export const usePrevious = value => {
+    const ref = useRef()
     useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  }
+        ref.current = value
+    })
+    return ref.current
+}
+
+//https://dev.to/gedalyakrycer/5-remarkable-react-router-features-anchor-links-query-params-more-2aeg#withRouter
+export const useQuery = () => {
+    return new URLSearchParams(useLocation().search)
+}
