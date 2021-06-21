@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import classNames from "classnames"
-import queryString from 'query-string';
 import * as d3 from "d3"
 import { Delaunay } from "d3-delaunay";
 import { useChartDimensions } from "components/utils"
-import { usePrevious } from "hooks"
+import { usePrevious, useQuery } from "hooks"
 import { Link } from 'gatsby'
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
@@ -15,23 +13,24 @@ import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, xAccessor, yAccessor, label, className, ...props }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
-    const [isMouseMove, setIsMouseMove] = useState(false)
-    const [currentHoveredCol, setCurrentHoveredCol] = useState()
-    const [currentHoveredData, setCurrentHoveredData] = useState()
-    const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
-    const [bookSections, setBookSections] = useState([])
-    const [parsedQueryParams, setParsedQueryParams] = useState({ category: [], extra: [] })
 
     const [currentData, setCurrentData] = useState(data)
     const [dataDots, setDataDots] = useState([])
-
     const [voronoiData, setVoronoiData] = useState()
     const [voronoiPaths, setVoronoiPaths] = useState()
     const [filteredDots, setFilteredDots] = useState()
 
+    const [bookSections, setBookSections] = useState([])
+    const [parsedQueryParams, setParsedQueryParams] = useState({ category: [], extra: [] })
+
+    const [isMouseMove, setIsMouseMove] = useState(false)
+    const [currentHoveredCol, setCurrentHoveredCol] = useState()
+    const [currentHoveredData, setCurrentHoveredData] = useState()
+    const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
+
+
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
-    const [fakeXY, setFakeXY] = useState([])
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
 
