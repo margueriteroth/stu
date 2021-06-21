@@ -31,7 +31,6 @@ const Circles = ({ data, dots, xAccessor, yAccessor, radius, dimensions, parsedQ
     )
 }
 
-
 Circles.propTypes = {
     data: PropTypes.array,
     keyAccessor: accessorPropsType,
