@@ -37,7 +37,7 @@ const Note = ({ agreeToSeen }) => {
                     Got it!
                 </Button>
                 <div className="DessertPersonNote__mute">
-                    Mutes for 15 days
+                    And mute note for 15 days
                 </div>
             </div>
         </div>

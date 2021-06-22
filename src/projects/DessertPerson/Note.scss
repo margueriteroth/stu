@@ -81,10 +81,11 @@ $dp-grids: rgba($dp-pink, 0.5);
 
     &__button {
         margin-top: auto;
-        align-self: flex-end;
+        //align-self: flex-end;
         width: 10em;
         font-size: 1em;
         position: relative;
+        margin-top: 2em;
 
         .Button {
             color: blue;
@@ -94,7 +95,7 @@ $dp-grids: rgba($dp-pink, 0.5);
 
     &__mute {
         padding-top: 0.4em;
-        text-align: right;
+        //text-align: right;
         font-size: 0.7em;
         opacity: 0.7;
     }
