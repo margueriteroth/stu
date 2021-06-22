@@ -1,0 +1,92 @@
+@import "./../../styles/lib";
+
+$dp-pink: hsla(354, 36%, 90%, 1);
+$dp-taupe: hsla(354, 18%, 81%, 1);
+$db-dark: #501017;
+
+$dp-stripe: hsla(353, 8%, 80%, 0.16);
+
+$dp-grids: rgba($dp-pink, 0.5);
+
+.DessertPersonNote {
+    &__container {
+        background: rgba(blue, 0.95);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4em 4em 6em;
+
+        @media(max-width: 600px) {
+            padding: 1em;
+        }
+    }
+
+    max-width: 900px;
+    min-height: 500px;
+    width: 100%;
+    border: 1px solid;
+    font-family: "Space Mono", monospace;
+    color: white;
+    padding: 2em 3em 3em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &:after {
+        width: 5em;
+        height: 5em;
+        border-left: 1px solid;
+        position: absolute;
+        content: "";
+        bottom: 0;
+        right: 0;
+        transform: translate(50%, 50%) rotate(45deg);
+    }
+
+    h1 span {
+        font-size: 0.75em;
+    }
+
+    h2 {
+        margin-bottom: 2.5em;
+    }
+
+    @media(max-width: 600px) {
+        h1 {
+            font-size: 1.7em;
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+        font-family: "Space Mono", monospace;
+    }
+
+    h4 {
+        line-height: 1.3;
+    }
+
+    &__links {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 2em;
+    }
+
+    &__button {
+        margin-top: auto;
+        align-self: flex-end;
+        width: 10em;
+        font-size: 1em;
+
+        .Button {
+            color: blue;
+            width: 100%;
+        }
+    }
+}
