@@ -55,6 +55,7 @@ $dp-grids: rgba($dp-pink, 0.5);
 
     h2 {
         margin-bottom: 2.5em;
+        line-height: 1.2;
     }
 
     @media(max-width: 600px) {
@@ -83,10 +84,18 @@ $dp-grids: rgba($dp-pink, 0.5);
         align-self: flex-end;
         width: 10em;
         font-size: 1em;
+        position: relative;
 
         .Button {
             color: blue;
             width: 100%;
         }
+    }
+
+    &__mute {
+        padding-top: 0.4em;
+        text-align: right;
+        font-size: 0.7em;
+        opacity: 0.7;
     }
 }

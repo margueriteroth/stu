@@ -11,7 +11,7 @@ import Circles from 'projects/DessertPerson/Circles'
 import FilterBar from 'projects/DessertPerson/FilterBar'
 import './ScatterPlot.scss'
 
-const ScatterPlot = ({ data, parsedQueryParams, setParsedQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
+const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
 
     const [currentData, setCurrentData] = useState(data)
@@ -293,7 +293,7 @@ const ScatterPlot = ({ data, parsedQueryParams, setParsedQueryParams, xAccessor,
             /> */}
 
             <div className="filters__container">
-                <FilterBar filters={bookSections} sectionColors={sectionColors} setParsedQueryParams={setParsedQueryParams} parsedQueryParams={parsedQueryParams} />
+                <FilterBar filters={bookSections} sectionColors={sectionColors} changeQueryParams={changeQueryParams} parsedQueryParams={parsedQueryParams} />
             </div>
 
             <Chart
