@@ -27,6 +27,8 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
     const [currentHoveredCol, setCurrentHoveredCol] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
+    const [currentLockedData, setLockedData] = useState()
+    const [currentLockedCoords, setLockedCoords] = useState()
 
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
@@ -270,7 +272,9 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
         setCurrentHoveredCoords(hoveredCoords)
     }
 
-    const onMouseEnter = e => {
+    const onMouseClick = e => {
+        setLockedCoords(currentHoveredCoords)
+        setLockedData(currentHoveredData)
     }
 
     const onMouseLeave = e => {
@@ -299,8 +303,8 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
             <Chart
                 dimensions={dimensions}
                 onMouseMove={onMouseMove}
-                onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                onMouseClick={onMouseClick}
             >
                 <Axis
                     dimension="x"

@@ -5,7 +5,7 @@ import "./Chart.scss"
 const ChartContext = createContext()
 export const useChartDimensions = () => useContext(ChartContext)
 
-const Chart = ({ hasNoListener, dimensions, children, onMouseMove, onMouseEnter, onMouseLeave }) => (
+const Chart = ({ hasNoListener, dimensions, children, onMouseMove, onMouseClick, onMouseLeave }) => (
     <ChartContext.Provider value={dimensions}>
         <svg
             className="Chart"
@@ -24,7 +24,7 @@ const Chart = ({ hasNoListener, dimensions, children, onMouseMove, onMouseEnter,
                     width={dimensions.boundedWidth}
                     onMouseMove={onMouseMove}
                     onMouseLeave={onMouseLeave}
-                    onMouseEnter={onMouseEnter}
+                    onClick={onMouseClick}
                 />
             )}
         </svg>
