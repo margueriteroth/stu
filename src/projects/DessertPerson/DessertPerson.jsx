@@ -23,8 +23,7 @@ const DessertPerson = () => {
     //const [isLoading, setIsLoading] = useState(true);
     const [parsedQueryParams, setParsedQueryParams] = useState({})
     const [bookSections, setBookSections] = useState([])
-
-    const [currentLockedData, setCurrentLockedData] = useState({})
+    const [currentLockedData, setCurrentLockedData] = useState()
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -145,6 +144,7 @@ const DessertPerson = () => {
                 changeQueryParams={changeQueryParams}
                 xAccessor={minutesAccessor}
                 yAccessor={difficultyAccessor}
+                currentLockedData={currentLockedData}
                 setCurrentLockedData={setCurrentLockedData}
                 className="DessertPerson__plot"
             />

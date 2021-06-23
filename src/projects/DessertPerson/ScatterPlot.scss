@@ -151,6 +151,7 @@ $dp-grids: rgba($dp-pink, 0.5);
     .Circles {
         &__circle {
             fill: rgba($db-dark, 0.26);
+            transition: 500ms ease-in-out all;
         }
     }
 
@@ -161,6 +162,7 @@ $dp-grids: rgba($dp-pink, 0.5);
         &__label {
             font-size: 0.55rem;
             fill: darken($db-dark, 0.6);
+            transition: 500ms ease-in-out all;
         }
     }
 

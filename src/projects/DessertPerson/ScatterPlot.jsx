@@ -11,8 +11,10 @@ import Circles from 'projects/DessertPerson/Circles'
 
 import './ScatterPlot.scss'
 
-const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
+const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
+
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const [currentData, setCurrentData] = useState(data)
     const [dataDots, setDataDots] = useState([])
@@ -212,7 +214,13 @@ const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQuer
     }
 
     useEffect(() => {
-        setData()
+        setData();
+
+        if (dataDots) {
+            setTimeout(function () {
+                setIsLoaded(true)
+            }, 1000);
+        }
     }, []);
 
     useEffect(() => {
@@ -221,6 +229,7 @@ const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQuer
 
     useEffect(() => {
         setData();
+        parsedQueryParams.note ? setIsLoaded(false) : setIsLoaded(true);
     }, [parsedQueryParams]);
 
     const onMouseMove = e => {
@@ -251,8 +260,13 @@ const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQuer
     }
 
     const onMouseClick = e => {
-        setCurrentLockedCoords(currentHoveredCoords)
-        setCurrentLockedData(currentHoveredData)
+        if (!currentLockedData || currentLockedData.recipe != currentHoveredData.recipe) {
+            setCurrentLockedCoords(currentHoveredCoords)
+            setCurrentLockedData(currentHoveredData)
+        } else {
+            setCurrentLockedCoords()
+            setCurrentLockedData()
+        }
     }
 
     const onMouseLeave = e => {
@@ -314,6 +328,7 @@ const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQuer
                     xAccessor={xAccessorScaled}
                     yAccessor={yAccessorScaled}
                     parsedQueryParams={parsedQueryParams}
+                    isLoaded={isLoaded}
                 />
 
                 {isMouseMove && (
@@ -351,7 +366,7 @@ const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQuer
                         style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
                         x={currentHoveredCoords.x}
                         y={currentHoveredCoords.y}>
-                        { currentHoveredData.recipe }
+                        {currentHoveredData.recipe}
                     </text>
                 )}
 
@@ -373,14 +388,6 @@ const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQuer
                         />
                     </>
                 )}
-
-                <g transform={`
-                    translate(${-xRuleDistance * 2.5}, ${yRuleDistance * 1.5})`}>
-                    <text
-                        className="ScatterPlot__title">
-                        Dessert Person Recipes
-                    </text>
-                </g>
 
                 {parsedQueryParams.extra && parsedQueryParams.extra.includes("voronoi") && (
                     <>
