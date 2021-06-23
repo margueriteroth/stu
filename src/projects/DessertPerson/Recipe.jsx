@@ -6,7 +6,7 @@ import Link from "components/_ui/Link/Link";
 import './Recipe.scss'
 
 const Recipe = ({ className, currentLockedData }) => {
-    let { recipe, difficulty, page, section, minutes } = {...currentLockedData}
+    let { recipe, difficulty, page, section, minutes } = { ...currentLockedData }
 
 
     return (
@@ -21,7 +21,7 @@ const Recipe = ({ className, currentLockedData }) => {
             </div>
             <div className="Recipe__info">
                 <div className="Recipe__time">
-                   {minutes}
+                    {minutes}
                 </div>
                 <div className="Recipe__page">
                     p.{page}
