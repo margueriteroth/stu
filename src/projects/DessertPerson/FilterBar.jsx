@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import classNames from "classnames";
 import { navigate } from "gatsby";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import queryString from 'query-string';
-import classNames from "classnames"
 import './FilterBar.scss'
 
 
-const FilterBar = ({ filters, sectionColors, changeQueryParams, parsedQueryParams }) => {
-
+const FilterBar = ({ className, filters, sectionColors, changeQueryParams, parsedQueryParams }) => {
 
     return (
-        <div className="FilterBar">
+        <div className={classNames("FilterBar", className)}>
             <div className="FilterBar__main">
                 {filters.map((filter, i) => (
                     <button className={classNames("FilterBar__button", { "FilterBar__button--active": parsedQueryParams.category && parsedQueryParams.category.includes(filter.toLowerCase().split(' ')[0]) })}

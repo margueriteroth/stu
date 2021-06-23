@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import queryString from 'query-string';
 import { navigate } from "gatsby"
 import { globalHistory } from '@reach/router'
-import queryString from 'query-string';
+import FilterBar from 'projects/DessertPerson/FilterBar'
 import Note from "projects/DessertPerson/Note"
+import Recipe from "projects/DessertPerson/Recipe"
 import ScatterPlot from 'projects/DessertPerson/Scatterplot'
 import data from 'projects/DessertPerson/recipes.csv'
+import './DessertPerson.scss'
 
 let minutesAccessor = d => d["Minutes"]
 let difficultyAccessor = d => d["Difficulty"]
@@ -17,6 +20,9 @@ let windowGlobal = typeof window !== 'undefined' && window
 const DessertPerson = () => {
     //const [isLoading, setIsLoading] = useState(true);
     const [parsedQueryParams, setParsedQueryParams] = useState({})
+    const [bookSections, setBookSections] = useState([])
+
+    let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
     let getQueryParams = (params) => {
         Object.keys(params).forEach(key => {
@@ -37,7 +43,7 @@ const DessertPerson = () => {
             let params = getQueryParams(queryString.parse(windowGlobal.location.search));
 
             if (!params.note) {
-                let newParams = {...params, note: "credits"}
+                let newParams = { ...params, note: "credits" }
                 newParams = queryString.stringify(newParams)
                 navigate(`/dessert-person/?${newParams}`);
             }
@@ -45,7 +51,7 @@ const DessertPerson = () => {
     }
 
     let agreeToSeen = () => {
-        let params = {...parsedQueryParams}
+        let params = { ...parsedQueryParams }
         if (params.note) delete params.note;
 
         let expire = new Date();
@@ -93,6 +99,20 @@ const DessertPerson = () => {
     }
 
     useEffect(() => {
+        if (!data.length) {
+            setBookSections([]);
+        }
+
+        let sections = []
+        data.forEach((row) => {
+            sections.push(row.Section)
+        })
+
+        sections = Array.from(new Set(sections))
+        setBookSections(sections)
+    }, [data]);
+
+    useEffect(() => {
         let paramObj = getQueryParams(queryString.parse(windowGlobal.location.search));
         setParsedQueryParams(paramObj);
         setDisplayNote();
@@ -106,7 +126,7 @@ const DessertPerson = () => {
     }, [])
 
     return (
-        <div>
+        <div className="DessertPerson">
             {parsedQueryParams.note && (
                 <Note agreeToSeen={agreeToSeen} />
             )}
@@ -119,6 +139,16 @@ const DessertPerson = () => {
                 yAccessor={difficultyAccessor}
                 label="TBD"
                 className="DessertPerson__plot"
+            />
+
+            <Recipe className="DessertPerson__recipe" />
+
+            <FilterBar
+                className="DessertPerson__filter"
+                filters={bookSections}
+                sectionColors={sectionColors}
+                changeQueryParams={changeQueryParams}
+                parsedQueryParams={parsedQueryParams}
             />
 
         </div>

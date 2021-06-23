@@ -3,4 +3,23 @@
 .DessertPerson {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas:
+        "scatter recipe"
+        "filter foo";
+
+    &__plot {
+        grid-area: scatter;
+    }
+
+    &__recipe {
+        grid-area: recipe;
+    }
+
+    &__filter {
+        grid-area: filter;
+        padding-left: 4.7em;
+    }
 }

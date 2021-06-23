@@ -8,7 +8,7 @@ import { Link } from 'gatsby'
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
-import FilterBar from 'projects/DessertPerson/FilterBar'
+
 import './ScatterPlot.scss'
 
 const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
@@ -20,19 +20,12 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
     const [voronoiPaths, setVoronoiPaths] = useState()
     const [filteredDots, setFilteredDots] = useState()
 
-    const [bookSections, setBookSections] = useState([])
-
-
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredCol, setCurrentHoveredCol] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
     const [currentLockedData, setLockedData] = useState()
     const [currentLockedCoords, setLockedCoords] = useState()
-
-
-    let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
-
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
 
@@ -231,20 +224,6 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
         setData();
     }, [parsedQueryParams]);
 
-    useEffect(() => {
-        if (!data.length) {
-            setBookSections([]);
-        }
-
-        let sections = []
-        data.forEach((row) => {
-            sections.push(row.Section)
-        })
-
-        sections = Array.from(new Set(sections))
-        setBookSections(sections)
-    }, [data]);
-
     const onMouseMove = e => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
         let y = e.clientY - e.currentTarget.getBoundingClientRect().y;
@@ -295,10 +274,6 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
                     opacity: currentHoveredCoords ? 1 : 0
                 }}
             /> */}
-
-            <div className="filters__container">
-                <FilterBar filters={bookSections} sectionColors={sectionColors} changeQueryParams={changeQueryParams} parsedQueryParams={parsedQueryParams} />
-            </div>
 
             <Chart
                 dimensions={dimensions}
@@ -386,7 +361,7 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
                     translate(${-xRuleDistance * 2.5}, ${yRuleDistance * 1.5})`}>
                     <text
                         className="ScatterPlot__title">
-                        Recipe Matrix
+                        Dessert Person Recipes
                     </text>
                 </g>
 
@@ -400,7 +375,6 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
                     </>
                 )}
             </Chart>
-
         </div>
     );
 };
