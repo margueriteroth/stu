@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { navigate } from "gatsby";
+import React from 'react';
 import PropTypes from "prop-types"
-import classNames from "classnames"
 import Button from "components/_ui/Button/Button";
 import Link from "components/_ui/Link/Link";
 import './Note.scss'
@@ -46,10 +44,7 @@ const Note = ({ agreeToSeen }) => {
 
 
 Note.propTypes = {
-    data: PropTypes.array,
-}
-
-Note.defaultProps = {
+    agreeToSeen: PropTypes.func,
 }
 
 export default Note
