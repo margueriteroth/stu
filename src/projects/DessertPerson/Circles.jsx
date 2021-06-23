@@ -7,7 +7,7 @@ const Circles = ({ data, dots, xAccessor, yAccessor, radius, dimensions, parsedQ
         <React.Fragment>
             {dots.map((d, i) => (
                 <g key={i} style={{ opacity:
-                        !parsedQueryParams.category || parsedQueryParams.category.includes(data[i].Section.toLowerCase().split(' ')[0]) ? 1
+                        !parsedQueryParams.category || parsedQueryParams.category.includes(data[i].section.toLowerCase().split(' ')[0]) ? 1
                             : 0.2 }}>
                     <circle
                         className="Circles__circle"
@@ -23,7 +23,7 @@ const Circles = ({ data, dots, xAccessor, yAccessor, radius, dimensions, parsedQ
                         }}
                         x={d.x + 3}
                         y={d.y - 3}>
-                        { data[i]["Recipe"] }
+                        { data[i]["recipe"] }
                     </text>
                 </g>
             ))}

@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react'
 import queryString from 'query-string';
 import { navigate } from "gatsby"
 import { globalHistory } from '@reach/router'
+import Button from "components/_ui/Button/Button";
 import FilterBar from 'projects/DessertPerson/FilterBar'
+import Link from "components/_ui/Link/Link";
 import Note from "projects/DessertPerson/Note"
 import Recipe from "projects/DessertPerson/Recipe"
 import ScatterPlot from 'projects/DessertPerson/Scatterplot'
 import data from 'projects/DessertPerson/recipes.csv'
 import './DessertPerson.scss'
 
-let minutesAccessor = d => d["Minutes"]
-let difficultyAccessor = d => d["Difficulty"]
+let minutesAccessor = d => d["minutes"]
+let difficultyAccessor = d => d["difficulty"]
 
-let chapterList = data.map(recipe => recipe["Section"])
+let chapterList = data.map(recipe => recipe["section"])
 chapterList = [...new Set(chapterList)]
 
 let windowGlobal = typeof window !== 'undefined' && window
@@ -21,6 +23,8 @@ const DessertPerson = () => {
     //const [isLoading, setIsLoading] = useState(true);
     const [parsedQueryParams, setParsedQueryParams] = useState({})
     const [bookSections, setBookSections] = useState([])
+
+    const [currentLockedData, setCurrentLockedData] = useState({})
 
     let sectionColors = ["#84B5FF", "#FFCE9C", "#7BEFB5", "#A5A5F7", "#FFA5D6", "#FFEF8C", "#BDEFFF"]
 
@@ -105,7 +109,7 @@ const DessertPerson = () => {
 
         let sections = []
         data.forEach((row) => {
-            sections.push(row.Section)
+            sections.push(row.section)
         })
 
         sections = Array.from(new Set(sections))
@@ -131,21 +135,26 @@ const DessertPerson = () => {
                 <Note agreeToSeen={agreeToSeen} />
             )}
 
+            <Button onClick={() => {changeQueryParams('credits', 'note')}}>
+                Note
+            </Button>
+
             <ScatterPlot
                 data={data}
                 parsedQueryParams={parsedQueryParams}
                 changeQueryParams={changeQueryParams}
                 xAccessor={minutesAccessor}
                 yAccessor={difficultyAccessor}
-                label="TBD"
+                setCurrentLockedData={setCurrentLockedData}
                 className="DessertPerson__plot"
             />
 
-            <Recipe className="DessertPerson__recipe" />
+            <Recipe className="DessertPerson__recipe" currentLockedData={currentLockedData}/>
 
             <FilterBar
                 className="DessertPerson__filter"
                 filters={bookSections}
+                currentLockedData={currentLockedData}
                 sectionColors={sectionColors}
                 changeQueryParams={changeQueryParams}
                 parsedQueryParams={parsedQueryParams}

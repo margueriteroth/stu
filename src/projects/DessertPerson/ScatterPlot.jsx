@@ -11,7 +11,7 @@ import Circles from 'projects/DessertPerson/Circles'
 
 import './ScatterPlot.scss'
 
-const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
+const ScatterPlot = ({ data, setCurrentLockedData, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
 
     const [currentData, setCurrentData] = useState(data)
@@ -24,8 +24,7 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
     const [currentHoveredCol, setCurrentHoveredCol] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
-    const [currentLockedData, setLockedData] = useState()
-    const [currentLockedCoords, setLockedCoords] = useState()
+    const [currentLockedCoords, setCurrentLockedCoords] = useState()
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
 
@@ -197,7 +196,7 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
 
         if (parsedQueryParams.category) {
             // filter the data
-            filteredData = filteredData.filter(row => parsedQueryParams.category.includes(row.Section.toLowerCase().split(' ')[0]));
+            filteredData = filteredData.filter(row => parsedQueryParams.category.includes(row.section.toLowerCase().split(' ')[0]));
             filteredDots = calculateDotCoords(filteredData);
 
             voronoiPaths = calculateVoronoi(filteredDots)["voronoiPaths"];
@@ -252,8 +251,8 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
     }
 
     const onMouseClick = e => {
-        setLockedCoords(currentHoveredCoords)
-        setLockedData(currentHoveredData)
+        setCurrentLockedCoords(currentHoveredCoords)
+        setCurrentLockedData(currentHoveredData)
     }
 
     const onMouseLeave = e => {
@@ -329,6 +328,9 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
                         />
                     </>
                 )}
+                {/* {isMouseMove && (
+                    <Circle cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} />
+                )} */}
                 {isMouseMove && (
                     // Horizontal rule
                     <>
@@ -342,10 +344,6 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
                         />
                     </>
                 )}
-                {/* {isMouseMove && (
-                    <Circle cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} />
-                )} */}
-
                 {isMouseMove && (
                     <text
                         width="10"
@@ -353,8 +351,27 @@ const ScatterPlot = ({ data, parsedQueryParams, changeQueryParams, xAccessor, yA
                         style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
                         x={currentHoveredCoords.x}
                         y={currentHoveredCoords.y}>
-                        💛
+                        { currentHoveredData.recipe }
                     </text>
+                )}
+
+                {currentLockedCoords && (
+                    <>
+                        <rect
+                            className="ScatterPlot__locked-line ScatterPlot__locked-line--vertical"
+                            width={dimensions.boundedWidth}
+                            height="1"
+                            x={-xRuleDistance}
+                            y={currentLockedCoords.y}
+
+                        />
+                        <rect
+                            className="ScatterPlot__locked-line ScatterPlot__locked-line--vertical"
+                            width="1"
+                            height={dimensions.boundedHeight}
+                            x={currentLockedCoords.x}
+                        />
+                    </>
                 )}
 
                 <g transform={`
@@ -397,10 +414,10 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
     let leftScrubCoord = currentHoveredCoords[0] + dimensions.marginLeft
     let topScrubCoord = currentHoveredCoords[1] + dimensions.marginTop
 
-    let name = data ? data["Recipe"] : "recipe";
-    let difficulty = data ? data["Difficulty"] : "difficulty";
-    let mins = data ? data["Minutes"] : "mins"
-    let time = data ? data["Minutes"] / 60 : "00:00";
+    let name = data ? data["recipe"] : "recipe";
+    let difficulty = data ? data["difficulty"] : "difficulty";
+    let mins = data ? data["minutes"] : "mins"
+    let time = data ? data["minutes"] / 60 : "00:00";
 
     return (
         <div className="Tooltip__container"
