@@ -10,6 +10,10 @@
     width: 100%;
     position: relative;
 
+    &:hover {
+        cursor: pointer;
+    }
+
     &Context {
         height: 100px;
     }

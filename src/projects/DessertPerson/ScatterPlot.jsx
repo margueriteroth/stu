@@ -24,6 +24,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
 
     const [isMouseMove, setIsMouseMove] = useState(false)
     const [currentHoveredCol, setCurrentHoveredCol] = useState()
+    const [currentHoveredIndex, setCurrentHoveredIndex] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
     const [currentLockedCoords, setCurrentLockedCoords] = useState()
@@ -217,7 +218,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
         if (dataDots) {
             setTimeout(function () {
                 setIsLoaded(true)
-            }, 1000);
+            }, 500);
         }
     }
 
@@ -260,6 +261,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
         let hoveredCoords = filteredDots[closestIndex]
 
         setIsMouseMove(true)
+        setCurrentHoveredIndex(closestIndex)
         setCurrentHoveredData(hoveredData)
         setCurrentHoveredCoords(hoveredCoords)
     }
@@ -279,6 +281,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
         setCurrentHoveredData()
         setCurrentHoveredCoords()
         setCurrentHoveredCol(0)
+        setCurrentHoveredIndex()
     }
 
     return (
@@ -336,73 +339,83 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
                     isLoaded={isLoaded}
                 />
 
-                {isMouseMove && (
-                    // Vertical rule
-                    <>
-                        <rect
-                            className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
-                            width="1"
-                            height={dimensions.boundedHeight}
-                            x={currentHoveredCoords.x}
-                            style={{ opacity: (isMouseMove ? 1 : 0) }}
-                        />
-                    </>
-                )}
-                {/* {isMouseMove && (
+
+                <g style={{ opacity: !isLoaded ? 0 : 1, transition: `500ms ease-in-out all 200ms` }}>
+                    {isMouseMove && (
+                        // Vertical rule
+                        <>
+                            <rect
+                                className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
+                                width="1"
+                                height={dimensions.boundedHeight}
+                                x={currentHoveredCoords.x}
+                                style={{ opacity: (isMouseMove ? 1 : 0) }}
+                            />
+                        </>
+                    )}
+                    {/* {isMouseMove && (
                     <Circle cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} />
-                )} */}
-                {isMouseMove && (
-                    // Horizontal rule
-                    <>
-                        <rect
-                            className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
-                            width={dimensions.boundedWidth}
-                            height="1"
-                            x={-xRuleDistance}
-                            y={currentHoveredCoords.y}
-                            style={{ opacity: (isMouseMove ? 1 : 0) }}
-                        />
-                    </>
-                )}
-                {isMouseMove && (
-                    <text
-                        width="10"
-                        height="10"
-                        style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
-                        x={currentHoveredCoords.x}
-                        y={currentHoveredCoords.y}>
-                        {currentHoveredData.recipe}
-                    </text>
-                )}
+                    )} */}
+                    {isMouseMove && (
+                        // Horizontal rule
+                        <>
+                            <rect
+                                className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
+                                width={dimensions.boundedWidth}
+                                height="1"
+                                x={-xRuleDistance}
+                                y={currentHoveredCoords.y}
+                                style={{ opacity: (isMouseMove ? 1 : 0) }}
+                            />
+                        </>
+                    )}
+                    {isMouseMove && !parsedQueryParams.extra && (
+                        <text
+                            width="10"
+                            height="10"
+                            style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
+                            x={currentHoveredCoords.x}
+                            y={currentHoveredCoords.y}>
+                            {currentHoveredData.recipe}
+                        </text>
+                    )}
 
-                {currentLockedCoords && (
-                    <>
-                        <rect
-                            className="ScatterPlot__locked-line ScatterPlot__locked-line--vertical"
-                            width={dimensions.boundedWidth}
-                            height="1"
-                            x={-xRuleDistance}
-                            y={currentLockedCoords.y}
+                    {currentLockedCoords && (
+                        <>
+                            <rect
+                                className="ScatterPlot__locked-line ScatterPlot__locked-line--vertical"
+                                width={dimensions.boundedWidth}
+                                height="1"
+                                x={-xRuleDistance}
+                                y={currentLockedCoords.y}
 
-                        />
-                        <rect
-                            className="ScatterPlot__locked-line ScatterPlot__locked-line--vertical"
-                            width="1"
-                            height={dimensions.boundedHeight}
-                            x={currentLockedCoords.x}
-                        />
-                    </>
-                )}
+                            />
+                            <rect
+                                className="ScatterPlot__locked-line ScatterPlot__locked-line--vertical"
+                                width="1"
+                                height={dimensions.boundedHeight}
+                                x={currentLockedCoords.x}
+                            />
+                        </>
+                    )}
 
-                {parsedQueryParams.extra && parsedQueryParams.extra.includes("voronoi") && (
-                    <>
-                        {voronoiPaths && voronoiPaths.map((path, i) => (
-                            <g key={i}>
-                                <path d={path.d} fill="none" stroke="#6a6a85" strokeWidth={1} />
-                            </g>
-                        ))}
-                    </>
-                )}
+                    {parsedQueryParams.extra && parsedQueryParams.extra.includes("voronoi") && (
+                        <>
+                            {voronoiPaths && voronoiPaths.map((path, i) => (
+                                <g key={i}>
+                                    <path
+                                        style={{ transition: `100ms ease-in-out all` }}
+                                        d={path.d}
+                                        fillOpacity={currentHoveredIndex == i ? "0.25" : "0"}
+                                        fill={currentHoveredIndex == i ? "#da79ae" : "none"}
+                                        stroke="#da79ae"
+                                        strokeWidth={1} />
+                                </g>
+                            ))}
+                        </>
+                    )}
+                </g>
+
             </Chart>
         </div>
     );
