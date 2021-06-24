@@ -213,14 +213,17 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
         setFilteredDots(filteredDots);
     }
 
-    useEffect(() => {
-        setData();
-
+    let finishLoading = () => {
         if (dataDots) {
             setTimeout(function () {
                 setIsLoaded(true)
             }, 1000);
         }
+    }
+
+    useEffect(() => {
+        setData();
+        finishLoading();
     }, []);
 
     useEffect(() => {
@@ -229,8 +232,10 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
 
     useEffect(() => {
         setData();
-        parsedQueryParams.note ? setIsLoaded(false) : setIsLoaded(true);
+        parsedQueryParams.note ? setIsLoaded(false) : finishLoading();
     }, [parsedQueryParams]);
+
+
 
     const onMouseMove = e => {
         let x = e.clientX - e.currentTarget.getBoundingClientRect().x;
