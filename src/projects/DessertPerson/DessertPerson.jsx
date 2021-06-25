@@ -134,9 +134,9 @@ const DessertPerson = () => {
                 <Note agreeToSeen={agreeToSeen} />
             )}
 
-            <Button onClick={() => {changeQueryParams('credits', 'note')}}>
+            {/* <Button onClick={() => {changeQueryParams('credits', 'note')}}>
                 Note
-            </Button>
+            </Button> */}
 
             <ScatterPlot
                 data={data}
@@ -148,6 +148,12 @@ const DessertPerson = () => {
                 setCurrentLockedData={setCurrentLockedData}
                 className="DessertPerson__plot"
             />
+
+            <div className="DessertPerson__about">
+                <h1>
+                    Dessert Person Recipe Matrix
+                </h1>
+            </div>
 
             <Recipe className="DessertPerson__recipe" currentLockedData={currentLockedData}/>
 

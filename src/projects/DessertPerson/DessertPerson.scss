@@ -7,6 +7,7 @@
     display: grid;
     grid-template-columns: 3fr 1fr;
     grid-template-areas:
+        "scatter about"
         "scatter recipe"
         "filter foo";
 
@@ -21,5 +22,15 @@
     &__filter {
         grid-area: filter;
         padding-left: 4.7em;
+    }
+
+    &__about {
+        grid-area: about;
+
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 3em;
+            font-weight: 400;
+        }
     }
 }

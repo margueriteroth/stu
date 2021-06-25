@@ -145,7 +145,7 @@
     .Circles {
         &__circle {
             fill: rgba($dp-dark, 0.45);
-            transition: 50ms linear all;
+            transition: 600ms linear all;
 
             &--hovered {
                 fill: rgba($dp-dark, 0.85);
