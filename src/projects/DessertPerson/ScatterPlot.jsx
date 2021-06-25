@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClock} from '@fortawesome/free-solid-svg-icons'
 import classNames from "classnames"
 import * as d3 from "d3"
 import { Delaunay } from "d3-delaunay";
@@ -218,7 +220,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
         if (dataDots) {
             setTimeout(function () {
                 setIsLoaded(true)
-            }, 500);
+            }, 400);
         }
     }
 
@@ -286,15 +288,12 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
 
     return (
         <div className={classNames("ScatterPlot", className)} ref={ref}>
-            {/* <Tooltip
+            <Tooltip
                 currentHoveredData={currentHoveredData}
-                currentHoveredCoords={currentHoveredCoords ? [currentHoveredCoords.x, currentHoveredCoords.y] : [0,0]}
+                currentHoveredCoords={currentHoveredCoords ? [currentHoveredCoords.x, currentHoveredCoords.y] : [dimensions.boundedWidth/2, dimensions.boundedHeight]}
                 dimensions={dimensions}
                 data={currentHoveredData}
-                style={{
-                    opacity: currentHoveredCoords ? 1 : 0
-                }}
-            /> */}
+            />
 
             <Chart
                 dimensions={dimensions}
@@ -337,15 +336,16 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
                     yAccessor={yAccessorScaled}
                     parsedQueryParams={parsedQueryParams}
                     isLoaded={isLoaded}
+                    currentHoveredData={currentHoveredData}
+                    currentLockedData={currentLockedData}
                 />
-
 
                 <g style={{ opacity: !isLoaded ? 0 : 1, transition: `500ms ease-in-out all 200ms` }}>
                     {isMouseMove && (
                         // Vertical rule
                         <>
                             <rect
-                                className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
+                                className="ScatterPlot__hovered-line ScatterPlot__hovered-line--vertical"
                                 width="1"
                                 height={dimensions.boundedHeight}
                                 x={currentHoveredCoords.x}
@@ -353,33 +353,20 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
                             />
                         </>
                     )}
-                    {/* {isMouseMove && (
-                    <Circle cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} />
-                    )} */}
                     {isMouseMove && (
                         // Horizontal rule
                         <>
                             <rect
-                                className="ScatterPlot__hover-line ScatterPlot__hover-line--vertical"
+                                className="ScatterPlot__hovered-line ScatterPlot__hovered-line--vertical"
                                 width={dimensions.boundedWidth}
                                 height="1"
                                 x={-xRuleDistance}
                                 y={currentHoveredCoords.y}
                                 style={{ opacity: (isMouseMove ? 1 : 0) }}
                             />
+                            <Circle className="ScatterPlot__hovered-circle" cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} r={5}/>
                         </>
                     )}
-                    {isMouseMove && !parsedQueryParams.extra && (
-                        <text
-                            width="10"
-                            height="10"
-                            style={{ transform: 'translate(0, 3px)', textAnchor: 'middle', transition: 'all 100ms ease-out' }}
-                            x={currentHoveredCoords.x}
-                            y={currentHoveredCoords.y}>
-                            {currentHoveredData.recipe}
-                        </text>
-                    )}
-
                     {currentLockedCoords && (
                         <>
                             <rect
@@ -396,6 +383,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
                                 height={dimensions.boundedHeight}
                                 x={currentLockedCoords.x}
                             />
+                            <Circle className="ScatterPlot__locked-circle" cx={currentLockedCoords.x} cy={currentLockedCoords.y} r={6}/>
                         </>
                     )}
 
@@ -423,12 +411,11 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
 
 export default ScatterPlot;
 
-const Circle = ({ className, cx, cy, style }) => {
+const Circle = ({ className, cx, cy, r }) => {
     // For tooltip
     return (
-        <circle className={classNames("Circle", className)}
-            r={6}
-            fill="red"
+        <circle className={classNames(`Circle`, className)}
+            r={r}
             cx={cx}
             cy={cy}
         />
@@ -444,22 +431,26 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
     let mins = data ? data["minutes"] : "mins"
     let time = data ? data["minutes"] / 60 : "00:00";
 
+    //opacity: currentHoveredCoords[0] != 0 ? 1 : 0
+
     return (
         <div className="Tooltip__container"
             style={{
                 left: `${leftScrubCoord}px`,
-                top: `${topScrubCoord}px`
+                top: `${topScrubCoord}px`,
+                opacity: data ? 1 : 0
             }}>
             <div className="Tooltip">
-                <h4>
+                <div className="Tooltip__title">
                     {name}
-                </h4>
-                <p>
-                    Level: {difficulty}
-                </p>
-                <p>
-                    {time} hours, {mins} total minutes
-                </p>
+                </div>
+                <div className="Tooltip__level">
+                    Level {Math.floor(difficulty)}
+                </div>
+                <div className="Tooltip__time">
+                <FontAwesomeIcon className="Tooltip__time__icon" icon={faClock} />
+                    {time}
+                </div>
             </div>
         </div>
     )

@@ -1,8 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { accessorPropsType } from "components/utils";
+import classNames from "classnames";
 
-const Circles = ({ data, dots, isLoaded, xAccessor, yAccessor, radius, dimensions, parsedQueryParams }) => {
+const Circles = ({ data, dots, isLoaded, xAccessor, currentLockedData, currentHoveredData, radius, dimensions, parsedQueryParams }) => {
     let getRandomArbitrary = (min, max) => {
         return Math.random() * (max - min) + min;
     }
@@ -17,30 +18,23 @@ const Circles = ({ data, dots, isLoaded, xAccessor, yAccessor, radius, dimension
                 }}>
                     <circle
                         style={{ opacity: !isLoaded ? '0' : 1 }}
-                        className="Circles__circle"
+                        className={classNames("Circles__circle", {"Circles__circle--hovered" : currentHoveredData && currentHoveredData.recipe == data[i].recipe})}
                         cx={!isLoaded ? getRandomArbitrary(0, dimensions.boundedWidth) : d.x}
                         cy={!isLoaded ? dimensions.boundedHeight : d.y}
                         r={typeof radius == "function" ? radius(d) : radius}
                     />
-
-                    {/* <circle
-                        className="Circles__circle"
-                        cx={!isLoaded ? getRandomArbitrary(0, dimensions.boundedWidth) : d.x}
-                        cy={!isLoaded ? dimensions.boundedHeight : d.y}
-                        r={typeof radius == "function" ? radius(d) : radius}
-                    /> */}
-                    {/* <g>
+                    <g style={{ opacity: !isLoaded ? 0 : 1, transition: `500ms ease-in-out all 200ms` }}>
                         <text
-                            className="Circle__label"
+                            className={classNames("Circle__label", {"Circle__label--active" : (currentHoveredData && currentHoveredData.recipe == data[i].recipe) || (currentLockedData && currentLockedData.recipe == data[i].recipe)})}
                             style={{
                                 textAnchor: (xAccessor(d, i) > dimensions.boundedWidth - 100) ? "end" : "start",
-                                opacity: parsedQueryParams.extra && parsedQueryParams.extra.includes("voronoi") ? 0.1 : 1,
+                                display: (parsedQueryParams.extra && parsedQueryParams.extra.includes("voronoi")) && "none",
                                 transform: `translate(${d.x + 3}px, ${d.y - 3}px)`
                             }}
                             >
                             {data[i]["recipe"]}
                         </text>
-                    </g> */}
+                    </g>
 
                 </g>
             ))}
