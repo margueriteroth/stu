@@ -13,7 +13,7 @@ import Circles from 'projects/DessertPerson/Circles'
 
 import './ScatterPlot.scss'
 
-const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
+const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, setCurrentLockedData, parsedQueryParams, changeQueryParams, xAccessor, yAccessor, label, className, ...props }) => {
     const [ref, dimensions] = useChartDimensions({ marginTop: 10, marginLeft: 100, marginRight: 100 })
 
     const [isLoaded, setIsLoaded] = useState(false);
@@ -29,6 +29,7 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
     const [currentHoveredIndex, setCurrentHoveredIndex] = useState()
     const [currentHoveredData, setCurrentHoveredData] = useState()
     const [currentHoveredCoords, setCurrentHoveredCoords] = useState()
+    const [currentLockedIndex, setCurrentLockedIndex] = useState()
     const [currentLockedCoords, setCurrentLockedCoords] = useState()
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
@@ -338,6 +339,8 @@ const ScatterPlot = ({ data, currentLockedData, setCurrentLockedData, parsedQuer
                     isLoaded={isLoaded}
                     currentHoveredData={currentHoveredData}
                     currentLockedData={currentLockedData}
+                    sectionColors={sectionColors}
+                    bookSections={bookSections}
                 />
 
                 <g style={{ opacity: !isLoaded ? 0 : 1, transition: `500ms ease-in-out all 200ms` }}>

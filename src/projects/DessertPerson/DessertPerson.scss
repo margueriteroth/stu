@@ -1,15 +1,17 @@
 @import "./../../styles/lib";
 
+
 .DessertPerson {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    padding-bottom: 2em;
+    grid-template-columns: 1fr 24em;
     grid-template-areas:
         "scatter about"
         "scatter recipe"
-        "filter foo";
+        "filter filter";
 
     &__plot {
         grid-area: scatter;
@@ -21,7 +23,7 @@
 
     &__filter {
         grid-area: filter;
-        padding-left: 4.7em;
+        padding-left: 4.5em;
     }
 
     &__about {

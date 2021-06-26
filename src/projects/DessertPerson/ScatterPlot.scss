@@ -3,7 +3,7 @@
 .ScatterPlot {
     height: calc(90vh - 6em);
     min-height: 620px;
-    min-width: 700px;
+    min-width: 1000px;
     max-width: 1700px;
     width: calc(100% + 1em);
     //margin-bottom: 2em;
@@ -144,11 +144,11 @@
 
     .Circles {
         &__circle {
-            fill: rgba($dp-dark, 0.45);
+            //fill: rgba($dp-dark, 0.45);
             transition: 600ms linear all;
 
             &--hovered {
-                fill: rgba($dp-dark, 0.85);
+                //fill: rgba($dp-dark, 0.85);
             }
         }
     }

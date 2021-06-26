@@ -147,6 +147,8 @@ const DessertPerson = () => {
                 currentLockedData={currentLockedData}
                 setCurrentLockedData={setCurrentLockedData}
                 className="DessertPerson__plot"
+                sectionColors={sectionColors}
+                bookSections={bookSections}
             />
 
             <div className="DessertPerson__about">

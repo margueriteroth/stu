@@ -1,16 +1,39 @@
 @import "./../../styles/lib";
 
 .FilterBar {
+    &__controls,
+    &__content {
+        display: grid;
+        grid-template-columns: 1fr 24em;
+        grid-gap: 3.5em;
+    }
+
+    &__controls {
+        &--chapters {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
     &__button {
         border: 1px solid lighten($dp-taupe, 10%);
         background: white;
         font-size: 0.8em;
         padding: 0.5em 1em;
         border-radius: 3px;
+        display: flex;
+        align-items: center;
 
         &:hover {
             background: #f7f6f6;
             cursor: pointer;
+        }
+
+        &__dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            margin-right: 0.5em;
         }
 
         &--active {
@@ -21,6 +44,86 @@
                 background: $dp-taupe;
                 border-color: $dp-taupe;
             }
+        }
+    }
+
+    &__toggle {
+        border: none;
+        background-color: transparent;
+        outline: none;
+        display: flex;
+        align-items: center;
+        font-size: 0.85em;
+        font-family: "Space Mono", monospace;
+        color: $grey-700;
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &__icon {
+            margin-left: 0.25em;
+        }
+    }
+
+    &__switch input {
+        display: none;
+    }
+
+    &__slider {
+        background-color: #ccc;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: 100ms;
+    }
+
+    &__slider:before {
+        background-color: #fff;
+        bottom: 4px;
+        content: "";
+        height: 19px;
+        left: 4px;
+        position: absolute;
+        transition: 100ms;
+        width: 19px;
+    }
+
+    &__slider.round {
+        border-radius: 34px;
+    }
+
+    &__slider.round:before {
+        border-radius: 20px;
+    }
+
+    &__switch {
+        display: inline-flex;
+        height: 26px;
+        position: relative;
+        width: 40px;
+        margin-left: 0.5em;
+        transform: scale(0.75) translateY(2px);
+
+        &__container {
+            display: flex;
+            align-items: center;
+            font-size: 0.85em;
+            font-family: "Space Mono", monospace;
+            color: $grey-700;
+        }
+
+        input:checked + .FilterBar__slider {
+            background-color: $dp-pink-pink;
+        }
+
+        input:checked + .FilterBar__slider:before {
+            transform: translateX(12px);
         }
     }
 

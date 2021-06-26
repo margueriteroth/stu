@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { accessorPropsType } from "components/utils";
 import classNames from "classnames";
 
-const Circles = ({ data, dots, isLoaded, xAccessor, currentLockedData, currentHoveredData, radius, dimensions, parsedQueryParams }) => {
+const Circles = ({ data, dots, isLoaded, xAccessor, sectionColors, bookSections, currentLockedData, currentHoveredData, radius, dimensions, parsedQueryParams }) => {
     let getRandomArbitrary = (min, max) => {
         return Math.random() * (max - min) + min;
     }
@@ -22,6 +22,7 @@ const Circles = ({ data, dots, isLoaded, xAccessor, currentLockedData, currentHo
                         cx={!isLoaded ? getRandomArbitrary(0, dimensions.boundedWidth) : d.x}
                         cy={!isLoaded ? dimensions.boundedHeight : d.y}
                         r={typeof radius == "function" ? radius(d) : radius}
+                        fill={(parsedQueryParams.extra && parsedQueryParams.extra.includes("colors")) ? sectionColors[bookSections.indexOf(data[i].section)] : `#733a41`}
                     />
                     <g style={{ opacity: !isLoaded ? 0 : 1, transition: `500ms ease-in-out all 200ms` }}>
                         <text
