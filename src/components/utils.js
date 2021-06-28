@@ -99,3 +99,10 @@ export const getUrlArgs = () => {
     })
     return params;
 }
+
+export const covertMins = (mins) => {
+    // minutes to hours and mins
+    let hours = Math.floor(mins / 60);
+    let minutes = Math.round(mins % 60);
+    return { hours, minutes }
+}
