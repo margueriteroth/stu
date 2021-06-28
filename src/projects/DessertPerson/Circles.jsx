@@ -13,7 +13,7 @@ const Circles = ({ data, dots, isLoaded, xAccessor, sectionColors, bookSections,
             {dots.map((d, i) => (
                 <g key={i} style={{
                     opacity:
-                        !parsedQueryParams.category || parsedQueryParams.category.includes(data[i].section.toLowerCase().split(' ')[0]) ? 1
+                        !parsedQueryParams.chapter || parsedQueryParams.chapter.includes(data[i].section.toLowerCase().split(' ')[0]) ? 1
                             : 0.2
                 }}>
                     <circle

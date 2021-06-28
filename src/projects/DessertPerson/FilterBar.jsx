@@ -57,8 +57,8 @@ const FilterBar = ({ className, filters, sectionColors, changeQueryParams, parse
                     {shouldShowChapters && (
                         <>
                             {filters.map((filter, i) => (
-                                <button className={classNames("FilterBar__button", { "FilterBar__button--active": parsedQueryParams.category && parsedQueryParams.category.includes(filter.toLowerCase().split(' ')[0]) })}
-                                    key={i} onClick={(e) => { changeQueryParams(filter, 'category') }}>
+                                <button className={classNames("FilterBar__button", { "FilterBar__button--active": parsedQueryParams.chapter && parsedQueryParams.chapter.includes(filter.toLowerCase().split(' ')[0]) })}
+                                    key={i} onClick={(e) => { changeQueryParams(filter, 'chapter') }}>
                                     <div className="FilterBar__button__dot" style={{ background: sectionColors[i] }}></div>
                                     <div>
                                         {filter}
@@ -99,11 +99,8 @@ const FilterBar = ({ className, filters, sectionColors, changeQueryParams, parse
                                     </p>
                                 </div>
                             </Tooltip>
-
                         </div>
-
                     )}
-
                 </div>
             </div>
 

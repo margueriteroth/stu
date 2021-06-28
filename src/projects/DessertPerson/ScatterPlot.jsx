@@ -200,9 +200,9 @@ const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, set
         let voronoiPaths = voronoi.voronoiPaths;
         let voronoiData = voronoi.voronoi;
 
-        if (parsedQueryParams.category) {
+        if (parsedQueryParams.chapter) {
             // filter the data
-            filteredData = filteredData.filter(row => parsedQueryParams.category.includes(row.section.toLowerCase().split(' ')[0]));
+            filteredData = filteredData.filter(row => parsedQueryParams.chapter.includes(row.section.toLowerCase().split(' ')[0]));
             filteredDots = calculateDotCoords(filteredData);
 
             voronoiPaths = calculateVoronoi(filteredDots)["voronoiPaths"];
