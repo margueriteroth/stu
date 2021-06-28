@@ -10,8 +10,10 @@
     width: 100%;
     position: relative;
 
-    &:hover {
-        cursor: pointer;
+    .Chart__listener {
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     &Context {
@@ -235,9 +237,12 @@
         &__time {
             font-size: 0.8em;
             opacity: 0.85;
+            display: flex;
+            align-items: flex-start;
 
             &__icon {
                 margin-right: 0.5em;
+                transform: translateY(2px);
             }
         }
     }

@@ -4,9 +4,7 @@ import { faClock} from '@fortawesome/free-solid-svg-icons'
 import classNames from "classnames"
 import * as d3 from "d3"
 import { Delaunay } from "d3-delaunay";
-import { useChartDimensions } from "components/utils"
-import { usePrevious, useQuery } from "hooks"
-import { Link } from 'gatsby'
+import { useChartDimensions, covertMins } from "components/utils"
 import Axis from "projects/DessertPerson/Axis"
 import Chart from 'projects/DessertPerson/Chart'
 import Circles from 'projects/DessertPerson/Circles'
@@ -33,13 +31,6 @@ const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, set
     const [currentLockedCoords, setCurrentLockedCoords] = useState()
 
     let minuteSections = [5, 60, 90, 120, 150, 180, 210, 240, 360, 720, 1080];
-
-    let covertMins = (mins) => {
-        // minutes to hours and mins
-        let hours = Math.floor(mins / 60);
-        let minutes = Math.round(mins % 60);
-        return { hours, minutes }
-    }
 
     let getVerticalMinIntervals = () => {
         let verticalRuleMinutes = [];
@@ -434,8 +425,6 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
     let mins = data ? data["minutes"] : "mins"
     let time = data ? data["minutes"] / 60 : "00:00";
 
-    //opacity: currentHoveredCoords[0] != 0 ? 1 : 0
-
     return (
         <div className="Tooltip__container"
             style={{
@@ -451,8 +440,8 @@ const Tooltip = ({ currentHoveredCoords, dimensions, data }) => {
                     Level {Math.floor(difficulty)}
                 </div>
                 <div className="Tooltip__time">
-                <FontAwesomeIcon className="Tooltip__time__icon" icon={faClock} />
-                    {time}
+                    <FontAwesomeIcon className="Tooltip__time__icon" icon={faClock} />
+                    ~{covertMins(mins).hours} hours {covertMins(mins).minutes} mins
                 </div>
             </div>
         </div>
