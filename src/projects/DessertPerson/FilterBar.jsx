@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import Link from "components/_ui/Link/Link";
+import Tooltip from "components/_ui/Tooltip/Tooltip";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
@@ -68,16 +70,45 @@ const FilterBar = ({ className, filters, sectionColors, changeQueryParams, parse
                 </div>
                 <div className="FilterBar__extra">
                     {shouldShowExtra && (
-                        <button className={classNames("FilterBar__button", { "FilterBar__button--active": parsedQueryParams.extra && parsedQueryParams.extra.includes('voronoi') })}
-                            onClick={(e) => { changeQueryParams('voronoi', 'extra') }}>
-                            Voronoi
-                        </button>
+                        <div className="FilterBar__item">
+                            <button className={classNames("FilterBar__button", { "FilterBar__button--active": parsedQueryParams.extra && parsedQueryParams.extra.includes('voronoi') })}
+                                onClick={(e) => { changeQueryParams('voronoi', 'extra') }}>
+                                Voronoi Diagram
+                            </button>
+                            <Tooltip className="FilterBar__tooltip">
+                                <FontAwesomeIcon className="FilterBar__item__icon" icon={faQuestionCircle} />
+                                {/* <div>
+
+                                    <p>
+                                        The partitioning of a plane with n points into convex
+                                        polygons such that each polygon contains exactly one
+                                        generating point and every point in a given polygon
+                                        is closer to its generating point than to any other.
+                                    </p> */}
+                                <div>
+                                    <Link doOpenInNewTab to="https://en.wikipedia.org/wiki/Voronoi_diagram">From wikipedia:</Link>
+                                    <p>
+                                        A Voronoi diagram is a partition of a plane into
+                                        regions close to each of a given set of objects.
+                                    </p>
+                                    <p>
+                                        I'm using this figure out the tooltip data!
+                                    </p>
+                                    <p>
+                                        <Link doOpenInNewTab to="https://github.com/d3/d3-voronoi">d3-voronoi</Link>
+                                    </p>
+                                </div>
+                            </Tooltip>
+
+                        </div>
+
                     )}
+
                 </div>
             </div>
 
 
-        </div>
+        </div >
     )
 }
 

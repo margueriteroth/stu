@@ -15,6 +15,31 @@
         }
     }
 
+    &__item {
+        display: inline-grid;
+        grid-template-columns: auto auto;
+        align-items: center;
+        grid-gap: 0.5em;
+    }
+
+    &__tooltip {
+        .FilterBar__item__icon {
+            color: $grey-500;
+            transition: all 100ms linear;
+
+            &:hover {
+                color: $dp-pink-pink;
+                transition: all 100ms linear;
+            }
+        }
+
+        .UiTooltip__toggle--active {
+            .FilterBar__item__icon {
+                color: $dp-pink-pink;
+            }
+        }
+    }
+
     &__button {
         border: 1px solid lighten($dp-taupe, 10%);
         background: white;
