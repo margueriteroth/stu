@@ -7,7 +7,7 @@ import FilterBar from 'projects/DessertPerson/FilterBar'
 import Link from "components/_ui/Link/Link";
 import Note from "projects/DessertPerson/Note"
 import Recipe from "projects/DessertPerson/Recipe"
-
+import ScatterPlot from 'projects/DessertPerson/ScatterPlot'
 import data from 'projects/DessertPerson/recipes.csv'
 import './DessertPerson.scss'
 
@@ -137,6 +137,19 @@ const DessertPerson = () => {
             {/* <Button onClick={() => {changeQueryParams('credits', 'note')}}>
                 Note
             </Button> */}
+
+            <ScatterPlot
+                data={data}
+                parsedQueryParams={parsedQueryParams}
+                changeQueryParams={changeQueryParams}
+                xAccessor={minutesAccessor}
+                yAccessor={difficultyAccessor}
+                currentLockedData={currentLockedData}
+                setCurrentLockedData={setCurrentLockedData}
+                className="DessertPerson__plot"
+                sectionColors={sectionColors}
+                bookSections={bookSections}
+            />
 
             {/* <div className="DessertPerson__about">
                 <h1>
