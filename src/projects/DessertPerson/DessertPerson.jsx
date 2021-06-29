@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import queryString from 'query-string';
+import { config } from '@fortawesome/fontawesome-svg-core'
 import { navigate } from "gatsby"
 import { globalHistory } from '@reach/router'
 import Button from "components/_ui/Button/Button";
@@ -10,6 +11,8 @@ import Recipe from "projects/DessertPerson/Recipe"
 import ScatterPlot from 'projects/DessertPerson/ScatterPlot'
 import data from 'projects/DessertPerson/recipes.csv'
 import './DessertPerson.scss'
+
+config.autoAddCss = false
 
 let minutesAccessor = d => d["minutes"]
 let difficultyAccessor = d => d["difficulty"]
