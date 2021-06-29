@@ -151,19 +151,28 @@ const DessertPerson = () => {
                 bookSections={bookSections}
             />
 
-            <div className="DessertPerson__about">
+            {/* <div className="DessertPerson__about">
                 <h1>
                     Dessert Person Recipe Matrix
                 </h1>
+            </div> */}
+
+            <div className="DessertPerson__about">
+                about
             </div>
 
-            <Recipe className="DessertPerson__recipe" currentLockedData={currentLockedData}/>
+            <Recipe className="DessertPerson__recipe"
+                sectionColors={sectionColors}
+                bookSections={bookSections}
+                data={data}
+                currentLockedData={currentLockedData} />
 
             <FilterBar
                 className="DessertPerson__filter"
                 filters={bookSections}
                 currentLockedData={currentLockedData}
                 sectionColors={sectionColors}
+                setCurrentLockedData={setCurrentLockedData}
                 changeQueryParams={changeQueryParams}
                 parsedQueryParams={parsedQueryParams}
             />

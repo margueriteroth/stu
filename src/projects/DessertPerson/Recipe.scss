@@ -3,20 +3,55 @@
 
 
 .Recipe {
-    background: rgba($dp-pink-pink, 0.05);
-    padding: 1rem;
+    //background: rgba($dp-pink-pink, 0.05);
+    //padding: 1rem;
     display: flex;
     flex-direction: column;
     height: fit-content;
-    margin-top: auto;
+    //border: 1px solid $dp-pink-pink;
+    height: 400px;
+    padding-right: 2em;
 
     &__header {
 
     }
 
     &__title {
-        font-family: 'Space Mono', monospace;
+        height: 2.5em;
+        display: flex;
+        align-items: flex-end;
+    }
 
+    &__info {
+        padding-bottom: 2em;
+        border-bottom: 1px solid;
+    }
+
+    &__time {
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+
+    &__page {
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+
+    &__chapter {
+        font-size: 0.85em;
+        font-weight: 600;
+        border-radius: 3px;
+        display: inline-block;
+        display: flex;
+        margin-bottom: 1em;
+        align-items: center;
+
+        &__dot {
+            width: 10px;
+            height: 10px;
+            margin-right: 0.5em;
+            border-radius: 10px;
+        }
     }
 
     &__icon {
@@ -32,5 +67,6 @@
         color: $dp-dark;
         line-height: 1.45;
         font-size: 0.75rem;
+
     }
 }
