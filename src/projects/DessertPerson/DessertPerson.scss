@@ -9,8 +9,8 @@
     padding-bottom: 2em;
     grid-template-columns: 1fr 24em;
     grid-template-areas:
-        "scatter about"
         "scatter recipe"
+        "scatter about"
         "filter filter";
 
     &__plot {
@@ -28,11 +28,7 @@
 
     &__about {
         grid-area: about;
-
-        h1 {
-            font-family: 'Space Mono', monospace;
-            font-size: 3em;
-            font-weight: 400;
-        }
+        border: 1px solid;
+        margin-bottom: 4em;
     }
 }

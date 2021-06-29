@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClock} from '@fortawesome/free-solid-svg-icons'
+import { faClock } from '@fortawesome/free-solid-svg-icons'
 import classNames from "classnames"
 import * as d3 from "d3"
 import { Delaunay } from "d3-delaunay";
@@ -282,7 +282,7 @@ const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, set
         <div className={classNames("ScatterPlot", className)} ref={ref}>
             <Tooltip
                 currentHoveredData={currentHoveredData}
-                currentHoveredCoords={currentHoveredCoords ? [currentHoveredCoords.x, currentHoveredCoords.y] : [dimensions.boundedWidth/2, dimensions.boundedHeight]}
+                currentHoveredCoords={currentHoveredCoords ? [currentHoveredCoords.x, currentHoveredCoords.y] : [dimensions.boundedWidth / 2, dimensions.boundedHeight]}
                 dimensions={dimensions}
                 data={currentHoveredData}
             />
@@ -334,6 +334,14 @@ const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, set
                     bookSections={bookSections}
                 />
 
+                <g transform={`
+                    translate(${-xRuleDistance * 2.5}, ${yRuleDistance * 1.5})`}>
+                    <text
+                        className="ScatterPlot__title">
+                        Dessert Person Recipes
+                    </text>
+                </g>
+
                 <g style={{ opacity: !isLoaded ? 0 : 1, transition: `500ms ease-in-out all 200ms` }}>
                     {isMouseMove && (
                         // Vertical rule
@@ -358,7 +366,7 @@ const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, set
                                 y={currentHoveredCoords.y}
                                 style={{ opacity: (isMouseMove ? 1 : 0) }}
                             />
-                            <Circle className="ScatterPlot__hovered-circle" cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} r={5}/>
+                            <Circle className="ScatterPlot__hovered-circle" cx={currentHoveredCoords.x} cy={currentHoveredCoords.y} r={5} />
                         </>
                     )}
                     {currentLockedCoords && (
@@ -377,7 +385,7 @@ const ScatterPlot = ({ data, bookSections, sectionColors, currentLockedData, set
                                 height={dimensions.boundedHeight}
                                 x={currentLockedCoords.x}
                             />
-                            <Circle className="ScatterPlot__locked-circle" cx={currentLockedCoords.x} cy={currentLockedCoords.y} r={6}/>
+                            <Circle className="ScatterPlot__locked-circle" cx={currentLockedCoords.x} cy={currentLockedCoords.y} r={6} />
                         </>
                     )}
 
