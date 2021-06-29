@@ -10,7 +10,7 @@ import cardImg from './card-img.png';
 import { divide } from 'lodash';
 
 let windowGlobal = typeof window !== 'undefined' && window;
-let parsedParams = queryString.parse(windowGlobal.location.search);
+let parsedParams = windowGlobal.location ? queryString.parse(windowGlobal.location.search) : {};
 
 let feedSections = ["work & writing", "about", "contact"]
 let workSections = ["data viz", "web development", "tutorial", "beginner", "other"]
