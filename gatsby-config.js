@@ -6,7 +6,7 @@ module.exports = {
         siteUrl: "https://marguerite.io",
         image: `https://marguerite.io/og-image.png`,
         twitterImage: `https://marguerite.io/twitter-image.png`,
-        keywords: `web development, design, data, product, visualization, dashboard, analytics, currents, parse.ly, visual`,
+        keywords: `web development, design, data, product, visualization, dashboard, analytics, currents, parse.ly, visual`
     },
     plugins: [
         `gatsby-plugin-react-helmet`,
@@ -20,8 +20,8 @@ module.exports = {
         {
             resolve: `gatsby-plugin-canonical-urls`,
             options: {
-                siteUrl: `https://marguerite.io`,
-            },
+                siteUrl: `https://marguerite.io`
+            }
         },
         // {
         //     resolve: `gatsby-plugin-layout`,
@@ -36,8 +36,8 @@ module.exports = {
                     {
                         resolve: `gatsby-remark-images`,
                         options: {
-                            maxWidth: 1035,
-                        },
+                            maxWidth: 1035
+                        }
                     },
                     {
                         resolve: `gatsby-remark-prismjs`,
@@ -82,26 +82,26 @@ module.exports = {
                                     language: "superscript",
                                     extend: "javascript",
                                     definition: {
-                                        superscript_types: /(SuperType)/,
+                                        superscript_types: /(SuperType)/
                                     },
                                     insertBefore: {
                                         function: {
-                                            superscript_keywords: /(superif|superelse)/,
-                                        },
-                                    },
-                                },
+                                            superscript_keywords: /(superif|superelse)/
+                                        }
+                                    }
+                                }
                             ],
                             // Customize the prompt used in shell output
                             // Values below are default
                             prompt: {
                                 user: "root",
                                 host: "localhost",
-                                global: false,
-                            },
+                                global: false
+                            }
                         }
                     }
-                ],
-            },
+                ]
+            }
         },
         // {
         //     /**
@@ -122,8 +122,8 @@ module.exports = {
             resolve: `gatsby-source-filesystem`,
             options: {
                 name: `images`,
-                path: `${__dirname}/src/images`,
-            },
+                path: `${__dirname}/src/images`
+            }
         },
         `gatsby-transformer-sharp`,
         `gatsby-plugin-sharp`,
@@ -136,15 +136,22 @@ module.exports = {
                 background_color: `#663399`,
                 theme_color: `#663399`,
                 display: `minimal-ui`,
-                icon: `${__dirname}/src/images/gatsby-icon.png`,
-            },
+                icon: `${__dirname}/src/images/gatsby-icon.png`
+            }
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                path: `${__dirname}/src/content/blog`,
+                name: `blog`
+            }
         },
         {
             resolve: `gatsby-plugin-google-analytics`,
             options: {
                 trackingId: process.env.GOOGLE_ANALYTICS_TRACKING_ID || "none",
-                head: true,
-            },
+                head: true
+            }
         },
         {
             resolve: `gatsby-transformer-remark`,
@@ -154,11 +161,11 @@ module.exports = {
                     {
                         resolve: `gatsby-remark-images`,
                         options: {
-                            maxWidth: 1080,
-                        },
-                    },
-                ],
-            },
+                            maxWidth: 1080
+                        }
+                    }
+                ]
+            }
         },
         `gatsby-plugin-lodash`,
         `gatsby-plugin-sitemap`,
@@ -174,5 +181,5 @@ module.exports = {
         // this (optional) plugin enables Progressive Web App + Offline functionality
         // To learn more, visit: https://gatsby.dev/offline
         // `gatsby-plugin-offline`,
-    ],
+    ]
 }
