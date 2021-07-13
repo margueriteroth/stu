@@ -7,7 +7,6 @@ import Link from "components/_ui/Link/Link";
 import './Feed.scss';
 
 import cardImg from './card-img.png';
-import { divide } from 'lodash';
 
 let windowGlobal = typeof window !== 'undefined' && window;
 let parsedParams = windowGlobal.location ? queryString.parse(windowGlobal.location.search) : {};
@@ -53,14 +52,14 @@ const Feed = () => {
 
     return (
         <StaticQuery
-
+            query={FEED_QUERY}
             render={(data) => {
-                const content = data.allWpPost.edges;
+                console.log(data)
 
                 return (
                     <div className="Feed__container">
                         <div className="Feed__nav">
-                            {feedSections.map((section, i) => (
+                            {/* {feedSections.map((section, i) => (
                                 <div className="Feed__nav__section" key={i}>
                                     <div className="Feed__nav__title">
                                         {section}
@@ -76,17 +75,17 @@ const Feed = () => {
                                                         type="checkbox"
                                                         value={label}
                                                         onChange={onChange}
-                                                    /> { label}
+                                                    /> {label}
                                                 </label>
                                             ))}
                                         </div>
                                     )}
 
                                 </div>
-                            ))}
+                            ))} */}
                         </div>
                         <div className="Feed__content">
-                            {content.map((item, i) => (
+                            {/* {content.map((item, i) => (
                                 <Link key={i} className="FeedCard" to="/movies">
                                     <div className="FeedCard__metas">
                                         <div className="FeedCard__title">
@@ -106,7 +105,7 @@ const Feed = () => {
                                         https://github.com/margueriteroth/stu/tree/master/python
                                     </div>
                                 </Link>
-                            ))}
+                            ))} */}
 
                             <Link className="FeedCard" to="/movies">
                                 <div className="FeedCard__metas">
@@ -139,32 +138,21 @@ Feed.propTypes = {
 export default Feed;
 
 
-// const WP_FEED_QUERY = graphql`
-//     query WPFeedQuery {
-//         allWpPost {
-//             edges {
-//                 node {
-//                     guid
-//                     slug
-//                     title
-//                     categories {
-//                         nodes {
-//                             name
-//                         }
-//                     }
-//                     featuredImage {
-//                         node {
-//                             localFile {
-//                                 childImageSharp {
-//                                     fluid {
-//                                         ...GatsbyImageSharpFluid
-//                                     }
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// `;
+const FEED_QUERY = graphql`
+    query {
+        allMdx(filter: {fileAbsolutePath: {regex: "/blog/"}}, sort: {fields: frontmatter___date, order: DESC}) {
+          edges {
+            node {
+              id
+              fields {
+                slug
+              }
+              frontmatter {
+                title
+                date(formatString: "MMMM D, YYYY")
+              }
+            }
+          }
+        }
+      }
+`;
