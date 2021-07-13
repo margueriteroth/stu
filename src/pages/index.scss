@@ -1,0 +1,34 @@
+@import "./../styles/lib";
+@import 'node_modules/@fortawesome/fontawesome-svg-core/styles';
+
+.DessertPage {
+    padding-left: 2em;
+    padding-right: 2em;
+
+    .DessertPerson__plot {
+        margin: 0 auto;
+    }
+
+    .test {
+        width: 100%;
+        height: 30px;
+        display: flex;
+        justify-content: space-between;
+        padding-right: 1.15em;
+        padding-left: 5.25em;
+
+        div {
+            height: 100%;
+            width: 2px;
+            background: pink;
+        }
+
+        div.label {
+            width: 6em;
+            background: none;
+            text-align: center;
+            //transform: translateX(-50%);
+            border: 1px solid pink;
+        }
+    }
+}

@@ -77,14 +77,6 @@ const FilterBar = ({ className, filters, sectionColors, changeQueryParams, parse
                             </button>
                             <Tooltip className="FilterBar__tooltip">
                                 <FontAwesomeIcon className="FilterBar__item__icon" icon={faQuestionCircle} />
-                                {/* <div>
-
-                                    <p>
-                                        The partitioning of a plane with n points into convex
-                                        polygons such that each polygon contains exactly one
-                                        generating point and every point in a given polygon
-                                        is closer to its generating point than to any other.
-                                    </p> */}
                                 <div>
                                     <Link doOpenInNewTab to="https://en.wikipedia.org/wiki/Voronoi_diagram">From wikipedia:</Link>
                                     <p>
