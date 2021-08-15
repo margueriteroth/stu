@@ -43,6 +43,10 @@ a {
     text-decoration: underline;
 }
 
+.p-style {
+    margin: 1em 0;
+}
+
 img {
     max-width: 100%;
     margin-left: 0;
@@ -104,13 +108,13 @@ button {
 .Layout {
     //height: 100%;
     // TO DO: Fix height because of footer etc.
-    //display: flex;
-    //flex-direction: column;
-    //justify-content: space-between;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: space-between;
     //min-height: 100%;
-    height: 100%;
     position: relative;
     padding-top: 4em;
+
 
     &__content {
         height: 100%;
@@ -123,62 +127,6 @@ button {
 
 .MoviesPage {
     background: $grey-100;
-}
-
-.Home {
-    &__recent {
-        padding-top: 10vh;
-        padding-bottom: 8em;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 6em;
-
-        &__item {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            width: fit-content;
-            padding-right: 1.5em;
-            border-radius: 8px;
-
-            &:hover {
-                background: $pink-300;
-            }
-
-            &--post {
-                padding-left: 1.5em;
-                margin-left: -1.5em;
-
-                &:hover {
-                    background: $blue-300;
-                }
-            }
-        }
-
-        h3 {
-            margin-bottom: 0em;
-        }
-
-        p {
-            margin-top: 0.5em;
-        }
-
-        .ContestantHead {
-            width: 100px;
-            height: 100px;
-        }
-
-        @media(max-width: 1000px) {
-            grid-template-columns: 1fr;
-            grid-gap: 3em;
-        }
-    }
-
-
-    &__projects {
-        margin-top: 0vh;
-        padding-top: 10vh;
-    }
 }
 
 /*
@@ -203,8 +151,15 @@ Reach Router issue here: https: //github.com/reach/router/issues/63
 
 html,
 body,
+#gatsby-focus-wrapper,
 #___gatsby {
     height: 100%;
+}
+
+#gatsby-focus-wrapper {
+    > div {
+        height: 100%;
+    }
 }
 
 body {
