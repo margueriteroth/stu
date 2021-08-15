@@ -3,7 +3,7 @@ import classNames from "classnames"
 import PropTypes from "prop-types"
 import './Tooltip.scss'
 
-const Tooltip = ({ className, children, messageStyle, messageMinWidth }) => {
+const Tooltip = ({ className, children, messageStyle, messageMinWidth, gradientUnderline }) => {
     const [isToggleHovered, setIsToggleHovered] = useState(false)
     const [isToggleLocked, setIsToggleLocked] = useState(false)
     const toggleRef = useRef()
@@ -28,7 +28,11 @@ const Tooltip = ({ className, children, messageStyle, messageMinWidth }) => {
 
     return (
         <div className={classNames("UiTooltip", className)}>
-            <div className={classNames("UiTooltip__toggle", { "UiTooltip__toggle--active": isToggleLocked })}
+            <div className={classNames("UiTooltip__toggle",
+                {
+                    "UiTooltip__toggle--active": isToggleLocked,
+                    "UiTooltip__toggle--underline": gradientUnderline,
+                })}
                 onMouseLeave={onMouseLeave}
                 onMouseEnter={onMouseEnter}
                 onClick={onMouseClick}
