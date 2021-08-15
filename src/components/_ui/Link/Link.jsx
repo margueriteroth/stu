@@ -9,7 +9,7 @@ import { OutboundLink } from 'gatsby-plugin-google-analytics';
 import "./Link.scss";
 
 const Link = ({ to, buttonProps, isButton, doOpenInNewTab, className, children, ...props }) => {
-    const isInternal = to || /^\/(?!\/)/.test(to)
+    const isExternal = (!to || !to.startsWith('/'));
 
     const parsedClassName = useMemo(() => classNames(
         "Link",
@@ -17,7 +17,7 @@ const Link = ({ to, buttonProps, isButton, doOpenInNewTab, className, children, 
         className,
     ), [isButton, className])
 
-    if (!isInternal) return (
+    if (isExternal) return (
         <OutboundLink
             className={parsedClassName}
             href={to}
