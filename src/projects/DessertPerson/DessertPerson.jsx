@@ -161,7 +161,7 @@ const DessertPerson = () => {
             </div> */}
 
             <div className="DessertPerson__about">
-                about
+                about about
             </div>
 
             <Recipe className="DessertPerson__recipe"
