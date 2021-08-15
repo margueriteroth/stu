@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { navigate } from "@reach/router";
 import { StaticQuery, graphql } from 'gatsby';
 import queryString from 'query-string';
-import Img from 'gatsby-image';
+//import Img from 'gatsby-image';
 import Link from "components/_ui/Link/Link";
 import './Feed.scss';
 
@@ -11,8 +11,8 @@ import cardImg from './card-img.png';
 let windowGlobal = typeof window !== 'undefined' && window;
 let parsedParams = windowGlobal.location ? queryString.parse(windowGlobal.location.search) : {};
 
-let feedSections = ["work & writing", "about", "contact"]
-let workSections = ["data viz", "web development", "tutorial", "beginner", "other"]
+//let feedSections = ["work & writing", "about", "contact"]
+//let workSections = ["data viz", "web development", "tutorial", "beginner", "other"]
 
 const Feed = () => {
     const [feedQuery, setFeedQuery] = useState(parsedParams || '');
