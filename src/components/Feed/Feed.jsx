@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { navigate } from "@reach/router";
-import { StaticQuery, graphql } from 'gatsby';
 import queryString from 'query-string';
 //import Img from 'gatsby-image';
 import Link from "components/_ui/Link/Link";
@@ -11,8 +10,8 @@ import cardImg from './card-img.png';
 let windowGlobal = typeof window !== 'undefined' && window;
 let parsedParams = windowGlobal.location ? queryString.parse(windowGlobal.location.search) : {};
 
-//let feedSections = ["work & writing", "about", "contact"]
-//let workSections = ["data viz", "web development", "tutorial", "beginner", "other"]
+let feedSections = ["work & writing", "about", "contact"]
+let workSections = ["data viz", "web development", "tutorial", "beginner", "other"]
 
 const Feed = () => {
     const [feedQuery, setFeedQuery] = useState(parsedParams || '');
@@ -51,17 +50,11 @@ const Feed = () => {
     }, [feedQuery]);
 
     return (
-        <StaticQuery
-            query={FEED_QUERY}
-            render={(data) => {
-                console.log(data)
-
-                return (
-                    <div className="Feed__container">
-                        <div className="Feed__nav">
-                            {/* {feedSections.map((section, i) => (
-                                <div className="Feed__nav__section" key={i}>
-                                    <div className="Feed__nav__title">
+        <div className="Feed__container">
+            <div className="Feed__nav">
+                {feedSections.map((section, i) => (
+                    <div className="Feed__nav__section" key={i}>
+                        {/* <div className="Feed__nav__title">
                                         {section}
                                     </div>
 
@@ -79,13 +72,13 @@ const Feed = () => {
                                                 </label>
                                             ))}
                                         </div>
-                                    )}
+                                    )} */}
 
-                                </div>
-                            ))} */}
-                        </div>
-                        <div className="Feed__content">
-                            {/* {content.map((item, i) => (
+                    </div>
+                ))}
+            </div>
+            <div className="Feed__content">
+                {/* {content.map((item, i) => (
                                 <Link key={i} className="FeedCard" to="/movies">
                                     <div className="FeedCard__metas">
                                         <div className="FeedCard__title">
@@ -107,27 +100,24 @@ const Feed = () => {
                                 </Link>
                             ))} */}
 
-                            <Link className="FeedCard" to="/movies">
-                                <div className="FeedCard__metas">
-                                    <div className="FeedCard__title">
-                                        Movies Consumed
-                                    </div>
-                                    <div className="FeedCard__category">
-                                        Data Viz
-                                    </div>
-                                </div>
-                                <div className="FeedCard__image">
-                                    <img src={cardImg} alt="" />
-                                </div>
-                                <div className="FeedCard__description">
-                                    https://github.com/margueriteroth/stu/tree/master/python
-                                </div>
-                            </Link>
+                <Link className="FeedCard" to="/movies">
+                    <div className="FeedCard__metas">
+                        <div className="FeedCard__title">
+                            Movies Consumed
+                        </div>
+                        <div className="FeedCard__category">
+                            Data Viz
                         </div>
                     </div>
-                );
-            }}
-        />
+                    <div className="FeedCard__image">
+                        <img src={cardImg} alt="" />
+                    </div>
+                    <div className="FeedCard__description">
+                        https://github.com/margueriteroth/stu/tree/master/python
+                    </div>
+                </Link>
+            </div>
+        </div>
     );
 };
 
@@ -136,23 +126,3 @@ Feed.propTypes = {
 };
 
 export default Feed;
-
-
-const FEED_QUERY = graphql`
-    query {
-        allMdx(filter: {fileAbsolutePath: {regex: "/blog/"}}, sort: {fields: frontmatter___date, order: DESC}) {
-          edges {
-            node {
-              id
-              fields {
-                slug
-              }
-              frontmatter {
-                title
-                date(formatString: "MMMM D, YYYY")
-              }
-            }
-          }
-        }
-      }
-`;
