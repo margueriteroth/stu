@@ -189,7 +189,7 @@ query($slug: String!) {
         }
       }
       date(formatString: "MMMM D, YYYY")
-      updates
+      updates(formatString: "MMMM D, YYYY")
       ogimage {
        childImageSharp {
          fixed {

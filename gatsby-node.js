@@ -53,7 +53,7 @@ exports.createPages = async ({ graphql, actions }) => {
     const blogPosts = await graphql(`
         query {
             allMdx(
-                filter: { fileAbsolutePath: { regex: "/blog/" } }
+                filter: {frontmatter: {type: {ne: "internal"}}, fileAbsolutePath: {regex: "/blog/"}}
                 sort: { fields: [frontmatter___date], order: DESC }
             ) {
                 edges {
@@ -73,8 +73,6 @@ exports.createPages = async ({ graphql, actions }) => {
 
     // Create work post pages.
     const posts = blogPosts.data.allMdx.edges
-
-    console.log(posts)
 
     posts.forEach((post, index) => {
         const previous =

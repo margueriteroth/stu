@@ -28,8 +28,8 @@ export default HomePage
 const FEED_QUERY = graphql`
     query {
         allMdx(
-            filter: { fileAbsolutePath: { regex: "/blog/" } }
-            sort: { fields: frontmatter___date, order: DESC }
+            filter: {frontmatter: {type: {ne: "internal"}}, fileAbsolutePath: {regex: "/blog/"}}
+            sort: { fields: [frontmatter___date], order: DESC }
         ) {
             edges {
                 node {
