@@ -14,12 +14,12 @@
     overflow: hidden;
 
     &__type {
-        font-size: 18px;
-        font-weight: 800;
+        font-size: 1.8em;
         color: white;
         text-decoration: none;
         line-height: 1;
         transition: all 100ms ease-in-out;
+        font-family: 'Macabre', monospace;
     }
 
     // &__dot {

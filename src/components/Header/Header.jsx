@@ -8,11 +8,11 @@ import './Header.scss';
 const Header = () => {
     return (
         <div className="Header__container">
-            {/* <MaxWidth size="l" className="Header">
+            <MaxWidth size="m" className="Header">
                 <Link className="Header__logo" to="/">
                     <Logo />
                 </Link>
-            </MaxWidth> */}
+            </MaxWidth>
         </div>
     );
 };

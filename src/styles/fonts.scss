@@ -21,6 +21,14 @@ html {
 
 
 @font-face {
+    font-family: "Macabre";
+    src:
+    url("../assets/Macabre-Regular.woff2") format("woff2"),
+        url("../assets/Macabre-Regular.woff") format("woff");
+}
+
+
+@font-face {
     font-family: "Covik Sans";
     font-weight: 900;
     src:

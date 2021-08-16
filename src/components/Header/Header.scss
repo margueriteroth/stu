@@ -1,12 +1,16 @@
 @import "../../styles/lib.scss";
 
 .Header {
-    &__link {
-        display: inline;
-        text-decoration: none;
+    &__container {
+        padding: 1.25em 0;
     }
 
-    .Logo {
+    &__link {
+        display: inline;
+    }
+
+&__logo {
         display: inline-flex;
+        text-decoration: none;
     }
 }
