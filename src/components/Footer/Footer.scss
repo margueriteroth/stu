@@ -9,18 +9,36 @@
     display: flex;
     padding-top: 1em;
 
-    > div {
+    @media(max-width: $media-tablet) {
+        flex-direction: column;
+        flex-flow: column-reverse;
+    }
+
+    &__col {
         flex: 1;
         border-top: 1px solid black;
         font-size: 0.85em;
         width: 100%;
+
+        @media(max-width: $media-tablet) {
+            &:first-of-type {
+                border: none;
+                margin-top: 1em;
+            }
+        }
     }
 
     &__links {
         display: flex;
         justify-content: space-between;
-        max-width: 300px;
+        max-width: 400px;
         margin-left: auto;
         padding-top: 1em;
+
+        @media(max-width: $media-tablet) {
+            margin-left: 0;
+            max-width: 100%;
+            flex-wrap: wrap;
+        }
     }
 }

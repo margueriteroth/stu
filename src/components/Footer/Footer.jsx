@@ -9,13 +9,13 @@ const Footer = () => {
     return (
         <div className="Footer__container">
             <MaxWidth size="m" className="Footer">
-                <div>
+                <div className="Footer__col">
                     <div className="p-style">
                         Marguerite Roth is an interdisciplinary designer and developer specializing
                         analytics dashboards. With a background in <Tooltip
                             gradientUnderline
                             className="FilterBar__tooltip">
-                                print design
+                            print design
                             <div>
                                 ack empac
                             </div>

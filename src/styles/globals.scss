@@ -33,14 +33,15 @@ body {
 
 a {
     color: currentColor;
+    text-decoration: underline;
 }
 
 ul {
     margin-bottom: 2em;
 }
 
-a {
-    text-decoration: underline;
+span.arrow {
+    font-family: 'Inter', sans-serif;
 }
 
 .p-style {
