@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { navigate } from "@reach/router";
+import { globalHistory } from '@reach/router'
 import queryString from 'query-string';
 //import Img from 'gatsby-image';
 import Link from "components/_ui/Link/Link";
@@ -8,71 +9,89 @@ import './Feed.scss';
 import cardImg from './card-img.png';
 
 let windowGlobal = typeof window !== 'undefined' && window;
-let parsedParams = windowGlobal.location ? queryString.parse(windowGlobal.location.search) : {};
+let getQueryParams = (params) => {
+    Object.keys(params).forEach(key => {
+        if (!Array.isArray(params[key])) {
+            params[key] = params[key].split(" ");
+        }
+    })
+    return params
+}
 
 let feedSections = ["work & writing", "about", "contact"]
-let workSections = ["data viz", "web development", "tutorial", "beginner", "other"]
+let workSections = [["data viz", "viz"], ["web development", "development"], ["tutorial"], ["beginner"], ["other"]]
 
-const Feed = () => {
-    const [feedQuery, setFeedQuery] = useState(parsedParams || '');
+const Feed = ({ data }) => {
+    const [parsedQueryParams, setParsedQueryParams] = useState({})
 
-    const onChange = (event) => {
-        let value = event.target.value;
-        let params = { ...feedQuery } || {};
-        let isCategoryString = (typeof params.category == 'string') ? true : false;
-        let isCategoryArray = (Array.isArray(params.category)) ? true : false;
+    let changeQueryParams = (filter, key, evt) => {
+        let value = filter;
+        let params = { ...parsedQueryParams } || {};
 
-        if (isCategoryArray) {
-            // Aka multiple filter params
-            if (params.category.indexOf(value) > -1) {
-                let idx = params.category.indexOf(value)
-                params.category.splice(idx, 1);
+        if (Array.isArray(params[key])) {
+            // multiple filter params
+            if (params[key].includes(value) && params[key].length == 1) {
+                // destroy
+                delete params[key];
+            } else if (params[key].includes(value) && params[key].length > 1) {
+                // remove
+                let idx = params[key].indexOf(value);
+                params[key].splice(idx, 1);
             } else {
-                params.category.push(value);
+                // add
+                params[key].push(value);
             }
-        } else if (isCategoryString) {
-            // Aka only one filter param
-            if (params.category == value) {
-                params = {}
-            } else {
-                params = { category: [params.category, value] }
-            }
+        } else if (!Array.isArray(params[key])) {
+            // one filter param
+            // create arr
+            let paramArr = value.split(" ");
+            params[key] = paramArr;
         } else {
-            params = { category: value }
+            params[key] = value;
         }
 
-        setFeedQuery(params)
+        params = queryString.stringify(params);
+        navigate(`/` + params ? `?${params}` : "");
     };
 
     useEffect(() => {
-        let newParams = queryString.stringify(feedQuery)
-        navigate(`/?${newParams}`)
-    }, [feedQuery]);
+        let paramObj = getQueryParams(queryString.parse(windowGlobal.location.search));
+        setParsedQueryParams(paramObj);
+    }, [])
+
+    useEffect(() => {
+        return globalHistory.listen(({ location }) => {
+            let paramObj = getQueryParams(queryString.parse(location.search));
+            setParsedQueryParams(paramObj);
+        })
+    }, [])
+
+    console.log(parsedQueryParams.category)
 
     return (
         <div className="Feed__container">
             <div className="Feed__nav">
                 {feedSections.map((section, i) => (
                     <div className="Feed__nav__section" key={i}>
-                        {/* <div className="Feed__nav__title">
-                                        {section}
-                                    </div>
-
-                                    {section.indexOf("work") > -1 && (
-                                        <div className="Feed__filters">
-                                            {workSections.map((label, j) => (
-                                                <label className="Feed__filter" key={j}>
-                                                    <input
-                                                        className="Feed__checkbox"
-                                                        name={label}
-                                                        type="checkbox"
-                                                        value={label}
-                                                        onChange={onChange}
-                                                    /> {label}
-                                                </label>
-                                            ))}
-                                        </div>
-                                    )} */}
+                        <div className="Feed__nav__title">
+                            {section}
+                        </div>
+                        {section.indexOf("work") > -1 && (
+                            <div className="Feed__filters">
+                                {workSections.map((label, j) => (
+                                    <label className="Feed__filter" key={j}>
+                                        <input
+                                            className="Feed__checkbox"
+                                            name={label[0]}
+                                            value={label[0]}
+                                            type="checkbox"
+                                            defaultChecked={parsedQueryParams.category?.includes(label[1] ? label[1] : label[0])}
+                                            onChange={evt => changeQueryParams(label[1] ? label[1] : label[0], 'category', evt)}
+                                        /> {label[0]}
+                                    </label>
+                                ))}
+                            </div>
+                        )}
 
                     </div>
                 ))}
@@ -126,3 +145,28 @@ Feed.propTypes = {
 };
 
 export default Feed;
+
+export const FEED_QUERY = graphql`
+    query {
+        allMdx(
+            filter: {
+                frontmatter: { type: { ne: "internal" } }
+                fileAbsolutePath: { regex: "/blog/" }
+            }
+            sort: { fields: [frontmatter___date], order: DESC }
+        ) {
+            edges {
+                node {
+                    id
+                    fields {
+                        slug
+                    }
+                    frontmatter {
+                        title
+                        date(formatString: "MMMM D, YYYY")
+                    }
+                }
+            }
+        }
+    }
+`
