@@ -11,8 +11,8 @@ const Footer = () => {
             <MaxWidth size="m" className="Footer">
                 <div className="Footer__col">
                     <div className="p-style">
-                        Marguerite Roth is an interdisciplinary designer and developer specializing
-                        analytics dashboards. With a background in <Tooltip
+                        Marguerite Roth is an interdisciplinary designer and developer who specializes in the
+                        development of analytics dashboards. With a background in <Tooltip
                             gradientUnderline
                             className="FilterBar__tooltip">
                             print design
@@ -20,7 +20,7 @@ const Footer = () => {
                                 ack empac
                             </div>
                         </Tooltip>,
-                        she now works at the intersection of design, software development, and data visuliazation.
+                        she now works at the intersection of design, software, and data visuliazation.
                     </div>
                     <p>
                         Marguerite currently works on the Frontend Engineering
