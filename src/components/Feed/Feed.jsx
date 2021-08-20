@@ -21,8 +21,77 @@ let getQueryParams = (params) => {
 let feedSections = ["work & writing", "about", "contact"]
 let workSections = [["data viz", "viz"], ["web development", "development"], ["tutorial"], ["beginner"], ["other"]]
 
-const Feed = ({ data }) => {
+let projectData = [
+    {
+        slug: "dessert-person",
+        title: "Dessert Person viz",
+        intro: "test test",
+        section: "data-viz",
+        date: "2021-08-28",
+        status: "active",
+        updates: ["2021-08-18", "2021-08-18"]
+    },
+    {
+        slug: "movies",
+        title: "Movies Consumed",
+        intro: "test test",
+        section: "data-viz",
+        date: "2021-08-18",
+        status: "active",
+        updates: ["2021-08-18", "2021-08-18"]
+    }
+]
+
+const Feed = ({ blogData }) => {
+    const [isLoading, setIsLoading] = useState(true)
     const [parsedQueryParams, setParsedQueryParams] = useState({})
+    const [sortedFeedData, setSortedFeedData] = useState([])
+
+    let flattenBlogData = (data) => {
+        let flatData = [];
+        data.forEach(item => {
+            item = item.node;
+            let itemObj = {};
+            ["date", "title", "updates", "section", "isFeatured", "slug"].forEach(key => {
+                itemObj[key] = item.frontmatter[key];
+            })
+            itemObj.slug = `blog/${itemObj.slug}`;
+            flatData.push(itemObj);
+        });
+        return flatData;
+    }
+
+    let combineFeedDataSources = () => {
+        let flatBlogData = flattenBlogData(blogData);
+        return [...flatBlogData, ...projectData];
+    }
+
+    let sortByDate = (data, sort) => {
+        if (sort == "ascending") {
+            return data.sort((d1, d2) => {
+                return new Date(d1.date).getTime() - new Date(d2.date).getTime()
+            })
+        } else {
+            // descending
+            return data.sort((d1, d2) => {
+                return new Date(d2.date).getTime() - new Date(d1.date).getTime()
+            })
+        }
+    }
+
+    let defaultSort = "descending";
+    let setFeed = () => {
+        let feed = combineFeedDataSources();
+        feed = sortByDate(feed, defaultSort)
+        console.table(feed)
+        setSortedFeedData(feed);
+    }
+
+    useEffect(() => {
+        setFeed();
+    }, [])
+
+
 
     let changeQueryParams = (filter, key, evt) => {
         let value = filter;
@@ -66,8 +135,6 @@ const Feed = ({ data }) => {
         })
     }, [])
 
-    console.log(parsedQueryParams.category)
-
     return (
         <div className="Feed__container">
             <div className="Feed__nav">
@@ -97,44 +164,27 @@ const Feed = ({ data }) => {
                 ))}
             </div>
             <div className="Feed__content">
-                {/* {content.map((item, i) => (
-                                <Link key={i} className="FeedCard" to="/movies">
-                                    <div className="FeedCard__metas">
-                                        <div className="FeedCard__title">
-                                            {item.node.title}
-                                        </div>
-                                        <div className="FeedCard__category">
-                                            {item.node.categories.nodes[0].name}
-
-                                        </div>
-                                    </div>
-                                    {(item.node.featuredImage) && (
-                                        <div className="FeedCard__image">
-                                            <Img fluid={item.node.featuredImage.node.localFile.childImageSharp.fluid} />
-                                        </div>
-                                    )}
-                                    <div className="FeedCard__description">
-                                        https://github.com/margueriteroth/stu/tree/master/python
-                                    </div>
-                                </Link>
-                            ))} */}
-
-                <Link className="FeedCard" to="/movies">
-                    <div className="FeedCard__metas">
-                        <div className="FeedCard__title">
-                            Movies Consumed
+                {sortedFeedData.map((item, i) => (
+                    <Link key={i} className="FeedCard" to={`/${item.slug}`}>
+                        <div className="FeedCard__metas">
+                            <div className="FeedCard__title">
+                                {item.title}
+                            </div>
+                            <div className="FeedCard__category">
+                                {item.section}
+                            </div>
                         </div>
-                        <div className="FeedCard__category">
-                            Data Viz
-                        </div>
-                    </div>
-                    <div className="FeedCard__image">
                         <img src={cardImg} alt="" />
-                    </div>
-                    <div className="FeedCard__description">
-                        https://github.com/margueriteroth/stu/tree/master/python
-                    </div>
-                </Link>
+                        {/* {(item.node.featuredImage) && (
+                            <div className="FeedCard__image">
+                                <Img fluid={item.node.featuredImage.node.localFile.childImageSharp.fluid} />
+                            </div>
+                        )} */}
+                        <div className="FeedCard__description">
+                            https://github.com/margueriteroth/stu/tree/master/python
+                        </div>
+                    </Link>
+                ))}
             </div>
         </div>
     );
@@ -145,28 +195,3 @@ Feed.propTypes = {
 };
 
 export default Feed;
-
-export const FEED_QUERY = graphql`
-    query {
-        allMdx(
-            filter: {
-                frontmatter: { type: { ne: "internal" } }
-                fileAbsolutePath: { regex: "/blog/" }
-            }
-            sort: { fields: [frontmatter___date], order: DESC }
-        ) {
-            edges {
-                node {
-                    id
-                    fields {
-                        slug
-                    }
-                    frontmatter {
-                        title
-                        date(formatString: "MMMM D, YYYY")
-                    }
-                }
-            }
-        }
-    }
-`

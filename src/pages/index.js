@@ -9,7 +9,8 @@ import MoviesContainer from "components/Movies/MoviesContainer"
 import "./index.scss"
 
 const HomePage = ({ data }) => {
-    console.log(data)
+    let mdxData = data.allMdx.edges;
+    console.log(mdxData)
     return (
         <Layout>
             <MaxWidth size="m" className="Home">
@@ -17,10 +18,35 @@ const HomePage = ({ data }) => {
                 {/* <div className="Home__greeting">
                     Hello! I'm Marguerite — a designer and software engineer.
                 </div> */}
-                <Feed />
+                <Feed blogData={mdxData} />
             </MaxWidth>
         </Layout>
     )
 }
 
-export default HomePage
+export default HomePage;
+
+export const pageQuery = graphql`
+    query {
+        allMdx(
+            filter: {
+                frontmatter: { type: { ne: "internal" } }
+                fileAbsolutePath: { regex: "/blog/" }
+            }
+        ) {
+            edges {
+                node {
+                    id
+                    frontmatter {
+                        title
+                        slug
+                        date(formatString: "YYYY-MM-DD")
+                        updates(formatString: "MMMM D, YYYY")
+                        section
+                        isFeatured
+                    }
+                }
+            }
+        }
+    }
+`
