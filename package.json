@@ -37,7 +37,7 @@
     "gatsby-plugin-layout": "^2.3.0",
     "gatsby-plugin-lodash": "^4.3.0",
     "gatsby-plugin-manifest": "^3.3.0",
-    "gatsby-plugin-mdx": "^2.3.0",
+    "gatsby-plugin-mdx": "^2.14.1",
     "gatsby-plugin-parsely-analytics": "^1.0.6",
     "gatsby-plugin-react-helmet": "^4.3.0",
     "gatsby-plugin-remove-serviceworker": "^1.0.0",
