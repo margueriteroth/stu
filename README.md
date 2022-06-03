@@ -5,7 +5,7 @@
 - Gatsby
 - SCSS
 - d3
-- ~MDX~ WordPress CMS
+
 
 <br/>
 <br/>
